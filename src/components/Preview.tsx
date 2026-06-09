@@ -17,9 +17,10 @@ const NAV_ITEMS = ['Cluster', 'Workloads', 'Storage', 'Network', 'Security', 'Se
 
 interface Props {
   theme: HeadlampTheme;
+  logoDataUrl: string | null;
 }
 
-export default function Preview({ theme }: Props) {
+export default function Preview({ theme, logoDataUrl }: Props) {
   const muiTheme = themeToMui(theme);
 
   return (
@@ -40,14 +41,35 @@ export default function Preview({ theme }: Props) {
         {/* Navbar */}
         <AppBar
           position="static"
-          sx={{ bgcolor: theme.navbar.background, color: theme.navbar.color, boxShadow: 1 }}
+          sx={{
+            bgcolor: theme.navbar.background,
+            color: theme.navbar.color,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+          }}
+          elevation={0}
         >
           <Toolbar variant="dense">
-            <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: 1, color: theme.navbar.color }}>
-              headlamp
-            </Typography>
+            {logoDataUrl ? (
+              <Box
+                component="img"
+                src={logoDataUrl}
+                alt="logo"
+                sx={{ height: 28, maxWidth: 120, objectFit: 'contain', mr: 1 }}
+              />
+            ) : (
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, letterSpacing: 1, color: theme.navbar.color, fontSize: '1rem' }}
+              >
+                headlamp
+              </Typography>
+            )}
             <Box sx={{ flex: 1 }} />
-            <Chip label="my-cluster" size="small" sx={{ bgcolor: theme.primary, color: '#fff' }} />
+            <Chip
+              label="my-cluster"
+              size="small"
+              sx={{ bgcolor: theme.primary, color: '#fff', fontWeight: 600 }}
+            />
           </Toolbar>
         </AppBar>
 
@@ -55,7 +77,7 @@ export default function Preview({ theme }: Props) {
           {/* Sidebar */}
           <Box
             sx={{
-              width: 180,
+              width: 160,
               bgcolor: theme.sidebar.background,
               display: 'flex',
               flexDirection: 'column',
@@ -100,13 +122,19 @@ export default function Preview({ theme }: Props) {
                 borderColor: 'divider',
               }}
             >
-              <Typography variant="subtitle1" gutterBottom>Deployments</Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                Deployments
+              </Typography>
               <Typography variant="body2" color="text.secondary">
                 3 of 3 running
               </Typography>
               <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
-                <Button variant="contained" size="small">Create</Button>
-                <Button variant="outlined" size="small">View logs</Button>
+                <Button variant="contained" size="small">
+                  Create
+                </Button>
+                <Button variant="outlined" size="small">
+                  View logs
+                </Button>
               </Box>
             </Box>
             <Box
@@ -118,8 +146,12 @@ export default function Preview({ theme }: Props) {
                 borderColor: 'divider',
               }}
             >
-              <Typography variant="subtitle1" gutterBottom>Pods</Typography>
-              <Typography variant="body2" color="text.secondary">12 running</Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                Pods
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                12 running
+              </Typography>
             </Box>
           </Box>
         </Box>

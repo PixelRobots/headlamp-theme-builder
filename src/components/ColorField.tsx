@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Popover from '@mui/material/Popover';
@@ -14,29 +14,51 @@ export default function ColorField({ label, value, onChange }: ColorFieldProps) 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-      <Box
-        onClick={e => setAnchorEl(e.currentTarget)}
+    <Box sx={{ mb: 0.5 }}>
+      {/* Label row */}
+      <Typography
+        variant="caption"
         sx={{
-          width: 28,
-          height: 28,
-          borderRadius: 1,
-          border: '2px solid',
-          borderColor: 'divider',
-          bgcolor: value,
-          cursor: 'pointer',
-          flexShrink: 0,
+          display: 'block',
+          color: 'rgba(255,255,255,0.6)',
+          fontSize: '0.7rem',
+          mb: 0.25,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
         }}
-      />
-      <Typography variant="body2" sx={{ flex: 1, fontSize: '0.78rem' }}>
+      >
         {label}
       </Typography>
-      <Typography
-        variant="body2"
-        sx={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'text.secondary' }}
-      >
-        {value}
-      </Typography>
+
+      {/* Swatch + hex row */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box
+          onClick={e => setAnchorEl(e.currentTarget)}
+          sx={{
+            width: 32,
+            height: 24,
+            borderRadius: '4px',
+            border: '2px solid rgba(255,255,255,0.25)',
+            bgcolor: value,
+            cursor: 'pointer',
+            flexShrink: 0,
+            '&:hover': { borderColor: 'rgba(255,255,255,0.6)' },
+          }}
+        />
+        <Typography
+          variant="body2"
+          sx={{
+            fontSize: '0.75rem',
+            fontFamily: 'monospace',
+            color: 'rgba(255,255,255,0.5)',
+            cursor: 'pointer',
+          }}
+          onClick={e => setAnchorEl(e.currentTarget)}
+        >
+          {value.toUpperCase()}
+        </Typography>
+      </Box>
+
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -56,6 +78,7 @@ export default function ColorField({ label, value, onChange }: ColorFieldProps) 
               fontSize: '0.85rem',
               border: '1px solid #ccc',
               borderRadius: 4,
+              boxSizing: 'border-box',
             }}
           />
         </Box>

@@ -1,57 +1,67 @@
 import type { HeadlampTheme } from '../types/theme';
 
+/**
+ * Headlamp Classic Light — mirrors the out-of-the-box Headlamp light defaults.
+ * Primary: #0078d4 (Microsoft/Fluent blue)
+ * Sidebar/navbar: white, grey selected state
+ */
 export const defaultLight: HeadlampTheme = {
   name: 'My Light Theme',
   base: 'light',
-  primary: '#51B148',
-  secondary: '#1B1A32',
-  text: { primary: '#1B1A32' },
-  link: { color: '#3A9A33' },
+  primary: '#0078d4',
+  secondary: '#ff4081',
+  text: { primary: 'rgba(0,0,0,0.87)' },
+  link: { color: '#0078d4' },
   background: {
-    default: '#FFFFFF',
-    surface: '#FFFFFF',
-    muted: '#EBFFF3',
+    default: '#fafafa',
+    surface: '#ffffff',
+    muted: '#f3f2f1',
   },
   sidebar: {
-    background: '#1B1A32',
-    color: '#D3D3D3',
-    selectedBackground: '#51B148',
-    selectedColor: '#FFFFFF',
-    actionBackground: '#51B148',
+    background: '#ffffff',
+    color: '#333333',
+    selectedBackground: '#59636e',
+    selectedColor: '#ffffff',
+    actionBackground: '#333333',
   },
   navbar: {
-    background: '#1B1A32',
-    color: '#FFFFFF',
+    background: '#ffffff',
+    color: '#333333',
   },
   fontFamily: ['Roboto', 'sans-serif'],
-  radius: 8,
-  buttonTextTransform: 'none',
+  radius: 4,
+  buttonTextTransform: 'uppercase',
 };
 
+/**
+ * Headlamp Classic Dark — mirrors the out-of-the-box Headlamp dark defaults.
+ * Primary: #4B99EE (lighter blue for dark backgrounds)
+ * Sidebar/navbar: #1f1f1f
+ */
 export const defaultDark: HeadlampTheme = {
   name: 'My Dark Theme',
   base: 'dark',
-  primary: '#51B148',
-  secondary: '#C0FFD9',
-  text: { primary: '#FFFFFF' },
-  link: { color: '#C0FFD9' },
+  primary: '#4B99EE',
+  secondary: '#ff4081',
+  text: { primary: '#ffffff' },
+  link: { color: '#4B99EE' },
   background: {
-    default: '#13132A',
-    surface: '#1B1A32',
-    muted: '#222245',
+    default: '#121212',
+    surface: '#1e1e1e',
+    muted: '#2d2d2d',
   },
   sidebar: {
-    background: '#13132A',
-    color: '#D3D3D3',
-    selectedBackground: '#51B148',
-    selectedColor: '#FFFFFF',
-    actionBackground: '#51B148',
+    background: '#1f1f1f',
+    color: 'rgba(255,255,255,0.7)',
+    selectedBackground: '#4B99EE',
+    selectedColor: '#ffffff',
+    actionBackground: '#333333',
   },
   navbar: {
-    background: '#1B1A32',
-    color: '#FFFFFF',
+    background: '#1f1f1f',
+    color: '#ffffff',
   },
   fontFamily: ['Roboto', 'sans-serif'],
-  radius: 8,
-  buttonTextTransform: 'none',
+  radius: 4,
+  buttonTextTransform: 'uppercase',
 };
