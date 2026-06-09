@@ -4,16 +4,28 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Chip from '@mui/material/Chip';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 import { themeToMui } from '../utils/themeToMui';
 import type { HeadlampTheme } from '../types/theme';
 
 const NAV_ITEMS = ['Cluster', 'Workloads', 'Storage', 'Network', 'Security', 'Settings'];
+
+const PODS = [
+  { name: 'web-6d9f4b', namespace: 'default', status: 'Running' },
+  { name: 'api-7c8d2a', namespace: 'default', status: 'Running' },
+  { name: 'worker-3b1e9f', namespace: 'jobs', status: 'Pending' },
+];
 
 interface Props {
   theme: HeadlampTheme;
@@ -41,11 +53,7 @@ export default function Preview({ theme, logoDataUrl }: Props) {
         {/* Navbar */}
         <AppBar
           position="static"
-          sx={{
-            bgcolor: theme.navbar.background,
-            color: theme.navbar.color,
-            boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-          }}
+          sx={{ bgcolor: theme.navbar.background, color: theme.navbar.color, boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }}
           elevation={0}
         >
           <Toolbar variant="dense">
@@ -65,11 +73,7 @@ export default function Preview({ theme, logoDataUrl }: Props) {
               </Typography>
             )}
             <Box sx={{ flex: 1 }} />
-            <Chip
-              label="my-cluster"
-              size="small"
-              sx={{ bgcolor: theme.primary, color: '#fff', fontWeight: 600 }}
-            />
+            <Chip label="my-cluster" size="small" sx={{ bgcolor: theme.primary, color: '#fff', fontWeight: 600 }} />
           </Toolbar>
         </AppBar>
 
@@ -77,7 +81,7 @@ export default function Preview({ theme, logoDataUrl }: Props) {
           {/* Sidebar */}
           <Box
             sx={{
-              width: 160,
+              width: 150,
               bgcolor: theme.sidebar.background,
               display: 'flex',
               flexDirection: 'column',
@@ -98,60 +102,105 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                     mb: 0.25,
                   }}
                 >
-                  <ListItemText
-                    primary={item}
-                    primaryTypographyProps={{ fontSize: '0.8rem' }}
-                  />
+                  <ListItemText primary={item} primaryTypographyProps={{ fontSize: '0.8rem' }} />
                 </ListItemButton>
               ))}
             </List>
           </Box>
 
           {/* Main content */}
-          <Box sx={{ flex: 1, p: 2, overflow: 'auto' }}>
-            <Typography variant="h5" gutterBottom sx={{ color: 'text.primary' }}>
+          <Box sx={{ flex: 1, p: 2, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Typography variant="h5" sx={{ color: 'text.primary', fontWeight: 700, fontSize: '1.1rem' }}>
               Workloads
             </Typography>
+
+            {/* Card with primary buttons + link */}
             <Box
               sx={{
                 bgcolor: 'background.paper',
                 borderRadius: 1,
-                p: 2,
-                mb: 2,
+                p: 1.5,
                 border: '1px solid',
                 borderColor: 'divider',
               }}
             >
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom>
                 Deployments
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                3 of 3 running
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                3 of 3 running &mdash;{' '}
+                <Link href="#" underline="hover" color="primary">
+                  view events
+                </Link>
               </Typography>
-              <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
-                <Button variant="contained" size="small">
-                  Create
-                </Button>
-                <Button variant="outlined" size="small">
-                  View logs
-                </Button>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button variant="contained" size="small">Create</Button>
+                <Button variant="outlined" size="small">View logs</Button>
+                <Button variant="text" size="small">Delete</Button>
               </Box>
             </Box>
+
+            {/* Pod table */}
             <Box
               sx={{
                 bgcolor: 'background.paper',
                 borderRadius: 1,
-                p: 2,
                 border: '1px solid',
                 borderColor: 'divider',
+                overflow: 'hidden',
               }}
             >
-              <Typography variant="subtitle1" gutterBottom>
-                Pods
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                12 running
-              </Typography>
+              <Table size="small">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      bgcolor: theme.base === 'dark' ? '#000' : '#faf9f8',
+                    }}
+                  >
+                    {['Name', 'Namespace', 'Status'].map(h => (
+                      <TableCell
+                        key={h}
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: '0.72rem',
+                          color: theme.base === 'dark' ? '#aeaeae' : '#242424',
+                          borderColor: 'divider',
+                          py: 0.75,
+                        }}
+                      >
+                        {h}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {PODS.map(pod => (
+                    <TableRow key={pod.name} hover>
+                      <TableCell sx={{ py: 0.5, borderColor: 'divider' }}>
+                        <Link href="#" underline="hover" color="primary" sx={{ fontSize: '0.78rem' }}>
+                          {pod.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, borderColor: 'divider', fontSize: '0.78rem', color: 'text.secondary' }}>
+                        {pod.namespace}
+                      </TableCell>
+                      <TableCell sx={{ py: 0.5, borderColor: 'divider' }}>
+                        <Chip
+                          label={pod.status}
+                          size="small"
+                          sx={{
+                            height: 18,
+                            fontSize: '0.68rem',
+                            bgcolor: pod.status === 'Running' ? 'rgba(16,124,16,0.12)' : 'rgba(196,69,0,0.12)',
+                            color: pod.status === 'Running' ? '#107C10' : 'rgb(196,69,0)',
+                            fontWeight: 600,
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           </Box>
         </Box>
