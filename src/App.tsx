@@ -157,6 +157,7 @@ export default function App() {
             <ThemePanel
               theme={currentTheme}
               onChange={setCurrentTheme}
+              onBaseChange={setActive}
               logoDataUrl={logoDataUrl}
               onLogoChange={setLogoDataUrl}
             />

@@ -16,6 +16,8 @@ import type { HeadlampTheme } from '../types/theme';
 interface Props {
   theme: HeadlampTheme;
   onChange: (t: HeadlampTheme) => void;
+  /** Called when the user changes the Base mode dropdown, so the top toggle stays in sync */
+  onBaseChange: (base: 'light' | 'dark') => void;
   logoDataUrl: string | null;
   onLogoChange: (url: string | null) => void;
 }
@@ -79,11 +81,16 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
   },
 ];
 
-export default function ThemePanel({ theme, onChange, logoDataUrl, onLogoChange }: Props) {
+export default function ThemePanel({ theme, onChange, onBaseChange, logoDataUrl, onLogoChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (path: string) => (value: unknown) =>
     onChange(setPath(theme, path, value));
+
+  function handleBaseChange(value: string) {
+    onChange(setPath(theme, 'base', value));
+    onBaseChange(value as 'light' | 'dark');
+  }
 
   function handleLogoFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -127,7 +134,7 @@ export default function ThemePanel({ theme, onChange, logoDataUrl, onLogoChange 
         <Select
           value={theme.base}
           label="Base mode"
-          onChange={e => set('base')(e.target.value)}
+          onChange={e => handleBaseChange(e.target.value)}
           sx={{ color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.2)' } }}
         >
           <MenuItem value="light">Light</MenuItem>
