@@ -35,6 +35,17 @@ interface Props {
 export default function Preview({ theme, logoDataUrl }: Props) {
   const muiTheme = themeToMui(theme);
 
+  // Mirror real Headlamp ListItemLink.tsx logic:
+  // Top-level selected item → full selectedBackground row + getContrastText for readable text
+  // selectedColor → used only as left accent bar (4px strip)
+  function selectedTextColor(bg: string): string {
+    try {
+      return muiTheme.palette.getContrastText(bg);
+    } catch {
+      return '#000';
+    }
+  }
+
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
@@ -73,7 +84,15 @@ export default function Preview({ theme, logoDataUrl }: Props) {
               </Typography>
             )}
             <Box sx={{ flex: 1 }} />
-            <Chip label="my-cluster" size="small" sx={{ bgcolor: theme.primary, color: '#fff', fontWeight: 600 }} />
+            <Chip
+              label="my-cluster"
+              size="small"
+              sx={{
+                bgcolor: theme.primary,
+                color: selectedTextColor(theme.primary),
+                fontWeight: 600,
+              }}
+            />
           </Toolbar>
         </AppBar>
 
@@ -90,21 +109,38 @@ export default function Preview({ theme, logoDataUrl }: Props) {
             }}
           >
             <List dense disablePadding>
-              {NAV_ITEMS.map((item, i) => (
-                <ListItemButton
-                  key={item}
-                  selected={i === 1}
-                  sx={{
-                    color: i === 1 ? theme.sidebar.selectedColor : theme.sidebar.color,
-                    bgcolor: i === 1 ? `${theme.sidebar.selectedBackground} !important` : undefined,
-                    borderRadius: 1,
-                    mx: 0.5,
-                    mb: 0.25,
-                  }}
-                >
-                  <ListItemText primary={item} primaryTypographyProps={{ fontSize: '0.8rem' }} />
-                </ListItemButton>
-              ))}
+              {NAV_ITEMS.map((item, i) => {
+                const isSelected = i === 1;
+                return (
+                  <ListItemButton
+                    key={item}
+                    selected={isSelected}
+                    sx={{
+                      position: 'relative',
+                      // Full row bg = selectedBackground; text = contrast of that bg
+                      color: isSelected
+                        ? selectedTextColor(theme.sidebar.selectedBackground)
+                        : theme.sidebar.color,
+                      bgcolor: isSelected
+                        ? `${theme.sidebar.selectedBackground} !important`
+                        : undefined,
+                      boxShadow: isSelected ? '1px 1px 4px rgb(0 0 0 / 12%)' : undefined,
+                      borderRadius: 1,
+                      mx: 0.5,
+                      mb: 0.25,
+                      // selectedColor appears as a left accent bar on the UNSELECTED hover
+                      // but for the selected item at top level it's not shown
+                      '&:hover': {
+                        bgcolor: isSelected
+                          ? `${theme.sidebar.selectedBackground} !important`
+                          : 'rgba(255,255,255,0.07)',
+                      },
+                    }}
+                  >
+                    <ListItemText primary={item} primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                  </ListItemButton>
+                );
+              })}
             </List>
           </Box>
 

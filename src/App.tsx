@@ -14,24 +14,27 @@ import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { downloadPlugin } from './utils/generateCode';
 import type { HeadlampTheme } from './types/theme';
 
-/** App shell styled after Headlamp classic — dark navy + #0078d4 blue */
+// headlamp.dev colour palette
+const YELLOW = '#f2e600';
+const YELLOW_DARK = '#d4ca00';
+const HEADER_BG = '#252422';   // headlamp.dev navbar / dark app sidebar
+const PANEL_BG = '#1a1a18';    // headlamp.dev hero background
+const BORDER = 'rgba(255,255,255,0.06)';
+
+/** App shell using the headlamp.dev dark palette */
 const appTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: { main: '#0078d4' },
+    primary: { main: YELLOW, contrastText: '#1a1a18' },
     background: {
-      default: '#0d1117',
-      paper: '#161b22',
+      default: PANEL_BG,
+      paper: HEADER_BG,
     },
   },
   typography: {
     fontFamily: 'Roboto, sans-serif',
   },
 });
-
-const HEADER_BG = '#161b22';
-const PANEL_BG = '#0d1117';
-const BORDER = 'rgba(255,255,255,0.08)';
 
 export default function App() {
   const [lightTheme, setLightTheme] = useState<HeadlampTheme>(defaultLight);
@@ -48,7 +51,7 @@ export default function App() {
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: PANEL_BG }}>
 
-        {/* Top bar — Headlamp-style header */}
+        {/* Top bar — headlamp.dev style */}
         <Box
           sx={{
             display: 'flex',
@@ -61,20 +64,20 @@ export default function App() {
             flexShrink: 0,
           }}
         >
-          {/* Logo area */}
+          {/* Logo — matches headlamp.dev yellow icon */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
             <Box
               sx={{
                 width: 28,
                 height: 28,
                 borderRadius: '6px',
-                bgcolor: '#0078d4',
+                bgcolor: YELLOW,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 900,
                 fontSize: '0.75rem',
-                color: '#fff',
+                color: '#1a1a18',
                 letterSpacing: '-0.5px',
               }}
             >
@@ -89,7 +92,7 @@ export default function App() {
           <Box
             sx={{
               display: 'flex',
-              bgcolor: 'rgba(255,255,255,0.06)',
+              bgcolor: 'rgba(255,255,255,0.05)',
               borderRadius: 1,
               border: `1px solid ${BORDER}`,
               overflow: 'hidden',
@@ -106,9 +109,13 @@ export default function App() {
                   fontSize: '0.78rem',
                   textTransform: 'capitalize',
                   borderRadius: 0,
-                  bgcolor: active === mode ? '#0078d4' : 'transparent',
-                  color: active === mode ? '#fff' : 'rgba(255,255,255,0.55)',
-                  '&:hover': { bgcolor: active === mode ? '#0078d4' : 'rgba(255,255,255,0.1)' },
+                  bgcolor: active === mode ? YELLOW : 'transparent',
+                  color: active === mode ? '#1a1a18' : 'rgba(255,255,255,0.55)',
+                  fontWeight: active === mode ? 700 : 400,
+                  '&:hover': {
+                    bgcolor: active === mode ? YELLOW : 'rgba(255,255,255,0.08)',
+                    color: active === mode ? '#1a1a18' : '#fff',
+                  },
                   minWidth: 60,
                 }}
               >
@@ -133,7 +140,13 @@ export default function App() {
             size="small"
             startIcon={<DownloadIcon />}
             onClick={() => downloadPlugin([lightTheme, darkTheme])}
-            sx={{ bgcolor: '#0078d4', '&:hover': { bgcolor: '#106ebe' }, fontWeight: 600, fontSize: '0.78rem' }}
+            sx={{
+              bgcolor: YELLOW,
+              color: '#1a1a18',
+              '&:hover': { bgcolor: YELLOW_DARK },
+              fontWeight: 700,
+              fontSize: '0.78rem',
+            }}
           >
             Download plugin
           </Button>
@@ -177,7 +190,12 @@ export default function App() {
           >
             <Typography
               variant="caption"
-              sx={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.68rem' }}
+              sx={{
+                color: 'rgba(255,255,255,0.3)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                fontSize: '0.68rem',
+              }}
             >
               Live preview — {active} theme
             </Typography>
