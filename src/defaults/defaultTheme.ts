@@ -1,48 +1,48 @@
 import type { HeadlampTheme } from '../types/theme';
 
 /**
- * Headlamp Classic Light
- * Matches frontend/src/components/App/defaultAppThemes.ts – headlampClassicLightTheme
+ * Headlamp built-in "Light" theme
+ * Matches frontend/src/components/App/defaultAppThemes.ts — lightTheme
  */
 export const defaultLight: HeadlampTheme = {
-  name: 'Headlamp Classic Light',
+  name: 'My Light Theme',
   base: 'light',
-  primary: '#222',
-  secondary: '#eaeaea',
-  text: { primary: 'rgba(0,0,0,0.87)' },
+  primary: '#414141',
+  secondary: '#eff2f5',
+  text: { primary: '#44444f' },
   link: { color: '#0072c9' },
   background: {
-    default: '#fafafa',
+    default: '#ffffff',
     surface: '#ffffff',
-    muted: '#f3f2f1',
+    muted: '#f5f5f5',
   },
   sidebar: {
-    background: '#242424',
-    color: '#ffffff',
-    selectedBackground: '#ebe811',
-    selectedColor: '#ebe811',
-    actionBackground: '#605e5c',
+    background: '#f0f0f0',
+    color: '#605e5c',
+    selectedBackground: '#f2e600',
+    selectedColor: '#292827',
+    actionBackground: '#414141',
   },
   navbar: {
-    background: '#ffffff',
-    color: '#202020',
+    background: '#f0f0f0',
+    color: '#292827',
   },
   fontFamily: ['Roboto', 'sans-serif'],
-  radius: 4,
-  buttonTextTransform: 'uppercase',
+  radius: 6,
+  buttonTextTransform: 'none',
 };
 
 /**
- * Headlamp Classic Dark
- * Matches frontend/src/components/App/defaultAppThemes.ts – darkTheme
+ * Headlamp built-in "Dark" theme
+ * Matches frontend/src/components/App/defaultAppThemes.ts — darkTheme
  */
 export const defaultDark: HeadlampTheme = {
-  name: 'Headlamp Classic Dark',
+  name: 'My Dark Theme',
   base: 'dark',
   primary: '#ffffff',
   secondary: '#1b1a19',
   text: { primary: '#faf9f8' },
-  link: { color: '#6CB6F2' },
+  link: { color: '#6fb3f2' },
   background: {
     default: '#292827',
     surface: '#313131',

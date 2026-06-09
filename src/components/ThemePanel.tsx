@@ -81,6 +81,22 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
   },
 ];
 
+const FONT_OPTIONS = [
+  { label: 'Roboto (MUI default)', value: 'Roboto, sans-serif' },
+  { label: 'Inter', value: 'Inter, sans-serif' },
+  { label: 'IBM Plex Sans', value: '"IBM Plex Sans", sans-serif' },
+  { label: 'Source Sans Pro', value: '"Source Sans Pro", sans-serif' },
+  { label: 'Open Sans', value: '"Open Sans", sans-serif' },
+  { label: 'Lato', value: 'Lato, sans-serif' },
+  { label: 'Nunito', value: 'Nunito, sans-serif' },
+  { label: 'DM Sans', value: '"DM Sans", sans-serif' },
+  { label: 'System UI', value: 'system-ui, sans-serif' },
+  { label: 'Segoe UI (Windows)', value: '"Segoe UI", sans-serif' },
+  { label: 'Monospace', value: '"Courier New", monospace' },
+];
+
+const sx = { color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.2)' } } as const;
+
 export default function ThemePanel({ theme, onChange, onBaseChange, logoDataUrl, onLogoChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -92,13 +108,19 @@ export default function ThemePanel({ theme, onChange, onBaseChange, logoDataUrl,
     onBaseChange(value as 'light' | 'dark');
   }
 
+  const currentFont = theme.fontFamily?.join(', ') ?? 'Roboto, sans-serif';
+  const knownFont = FONT_OPTIONS.find(o => o.value === currentFont)?.value ?? 'Roboto, sans-serif';
+
+  function handleFontChange(value: string) {
+    onChange({ ...theme, fontFamily: [value] });
+  }
+
   function handleLogoFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => onLogoChange(ev.target?.result as string);
     reader.readAsDataURL(file);
-    // reset so the same file can be re-uploaded
     e.target.value = '';
   }
 
@@ -135,10 +157,26 @@ export default function ThemePanel({ theme, onChange, onBaseChange, logoDataUrl,
           value={theme.base}
           label="Base mode"
           onChange={e => handleBaseChange(e.target.value)}
-          sx={{ color: '#fff', '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.2)' } }}
+          sx={sx}
         >
           <MenuItem value="light">Light</MenuItem>
           <MenuItem value="dark">Dark</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl size="small" fullWidth>
+        <InputLabel sx={{ color: 'rgba(255,255,255,0.6)' }}>Font family</InputLabel>
+        <Select
+          value={knownFont}
+          label="Font family"
+          onChange={e => handleFontChange(e.target.value)}
+          sx={sx}
+        >
+          {FONT_OPTIONS.map(o => (
+            <MenuItem key={o.value} value={o.value}>
+              <span style={{ fontFamily: o.value }}>{o.label}</span>
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
