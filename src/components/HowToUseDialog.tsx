@@ -1,4 +1,3 @@
-import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -17,31 +16,24 @@ const STEPS = [
   {
     step: '2',
     title: 'Download the plugin',
-    body: 'Click "Download plugin" in the top bar. You will receive a zip file containing a complete Headlamp plugin project: src/themes.ts, src/index.tsx, package.json, tsconfig.json, and a README.',
+    body: 'Click "Download plugin" in the top bar. You will receive a zip file containing an installable, compiled Headlamp plugin folder, plus the editable source files.',
   },
   {
     step: '3',
-    title: 'Build the plugin',
-    body: 'Unzip the downloaded file, open a terminal in that folder, and run:',
-    code: 'npm install\nnpx headlamp-plugin build',
-  },
-  {
-    step: '4',
     title: 'Install the plugin',
-    body: 'Copy dist/main.js and package.json into your Headlamp user-plugins folder:',
+    body: 'Unzip the downloaded file and copy the generated plugin folder into your Headlamp user-plugins folder:',
     code:
       'Windows:\n  %APPDATA%\\Headlamp\\Config\\user-plugins\\<plugin-name>\\\n\nLinux / macOS:\n  ~/.config/Headlamp/Config/user-plugins/<plugin-name>/',
   },
   {
-    step: '5',
+    step: '4',
     title: 'Apply your theme',
     body: 'Restart Headlamp, then go to Settings → General → Theme and select your theme from the list.',
   },
   {
-    step: '6',
-    title: 'Custom logo (advanced)',
-    body: 'Upload a logo here to preview it, but note that the download does not include logo code automatically. To ship a custom logo, add a registerAppLogoComponent call to your plugin — see the Headlamp plugin docs for details.',
-    code: "import { registerAppLogoComponent } from '@kinvolk/headlamp-plugin/lib/CommonComponents';\nregisterAppLogoComponent(() => <img src={logoUrl} alt=\"logo\" />);",
+    step: '5',
+    title: 'Custom logo',
+    body: 'If you upload a logo before downloading, the generated plugin registers it with Headlamp and includes it in the compiled bundle.',
   },
 ];
 

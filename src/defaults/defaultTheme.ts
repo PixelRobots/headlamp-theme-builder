@@ -1,11 +1,29 @@
 import type { HeadlampTheme } from '../types/theme';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function mergeDeep<T>(base: T, override: unknown): T {
+  if (!isRecord(base) || !isRecord(override)) {
+    return (override ?? base) as T;
+  }
+
+  const merged: Record<string, unknown> = { ...base };
+  Object.entries(override).forEach(([key, value]) => {
+    const baseValue = merged[key];
+    merged[key] = isRecord(baseValue) && isRecord(value) ? mergeDeep(baseValue, value) : value;
+  });
+
+  return merged as T;
+}
+
 /**
  * Headlamp built-in "Light" theme
  * Matches frontend/src/components/App/defaultAppThemes.ts — lightTheme
  */
 export const defaultLight: HeadlampTheme = {
-  name: 'My Light Theme',
+  name: 'Light',
   base: 'light',
   primary: '#414141',
   secondary: '#eff2f5',
@@ -27,6 +45,11 @@ export const defaultLight: HeadlampTheme = {
     background: '#f0f0f0',
     color: '#292827',
   },
+  terminal: {
+    background: '#ffffff',
+    foreground: '#242424',
+    cursor: '#414141',
+  },
   fontFamily: ['Roboto', 'sans-serif'],
   radius: 6,
   buttonTextTransform: 'none',
@@ -37,7 +60,7 @@ export const defaultLight: HeadlampTheme = {
  * Matches frontend/src/components/App/defaultAppThemes.ts — darkTheme
  */
 export const defaultDark: HeadlampTheme = {
-  name: 'My Dark Theme',
+  name: 'Dark',
   base: 'dark',
   primary: '#ffffff',
   secondary: '#1b1a19',
@@ -59,7 +82,17 @@ export const defaultDark: HeadlampTheme = {
     background: '#252423',
     color: '#faf9f8',
   },
+  terminal: {
+    background: '#1e1e1e',
+    foreground: '#f5f5f5',
+    cursor: '#f2e600',
+  },
   fontFamily: ['Roboto', 'sans-serif'],
   radius: 6,
   buttonTextTransform: 'none',
 };
+
+export function completeTheme(theme: HeadlampTheme): HeadlampTheme {
+  const baseTheme = theme.base === 'dark' ? defaultDark : defaultLight;
+  return mergeDeep(baseTheme, theme);
+}

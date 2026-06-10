@@ -6,7 +6,8 @@ A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in th
 
 - Live preview of navbar, sidebar, cards, and buttons
 - Edit light and dark variants independently
-- Downloads a complete Headlamp plugin scaffold as a zip (includes `src/themes.ts`, `src/index.tsx`, `package.json`, `tsconfig.json`, and a `README.md`)
+- Downloads an installable compiled Headlamp plugin zip, with editable source files included
+- Includes an uploaded custom logo in the generated plugin
 
 ## Getting started
 
@@ -20,15 +21,12 @@ Open http://localhost:5173
 ## Using the downloaded plugin
 
 1. Unzip the downloaded file
-2. `cd` into the folder and run:
-   ```bash
-   npm install
-   npx headlamp-plugin build
-   ```
-3. Copy `dist/main.js` and `package.json` to your Headlamp user-plugins directory:
+2. Copy the generated plugin folder to your Headlamp user-plugins directory:
    - **Windows:** `%APPDATA%\Headlamp\Config\user-plugins\<plugin-name>\`
    - **Linux/macOS:** `~/.config/Headlamp/Config/user-plugins/<plugin-name>/`
-4. Restart Headlamp and select your theme in Settings → General → Theme.
+3. Restart Headlamp and select your theme in Settings → General → Theme.
+
+The zip includes `main.js` at the plugin root, so it is ready to install without running a build. It also includes `src/`, `tsconfig.json`, and `dist/main.js` if you want to edit or rebuild it later.
 
 ## Tech stack
 

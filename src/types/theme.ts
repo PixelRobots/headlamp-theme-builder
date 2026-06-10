@@ -25,6 +25,11 @@ export interface HeadlampTheme {
     background: string;
     color: string;
   };
+  terminal?: {
+    background?: string;
+    foreground?: string;
+    cursor?: string;
+  };
   fontFamily?: string[];
   radius?: number;
   buttonTextTransform?: 'none' | 'uppercase' | 'capitalize';
@@ -45,4 +50,7 @@ export type ColourKey =
   | 'sidebar.selectedColor'
   | 'sidebar.actionBackground'
   | 'navbar.background'
-  | 'navbar.color';
+  | 'navbar.color'
+  | 'terminal.background'
+  | 'terminal.foreground'
+  | 'terminal.cursor';

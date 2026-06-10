@@ -1,4 +1,3 @@
-import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -16,6 +15,8 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import HeadlampLogoDark from '../assets/headlamp-logo-dark.svg?raw';
+import HeadlampLogoLight from '../assets/headlamp-logo-light.svg?raw';
 import { themeToMui } from '../utils/themeToMui';
 import type { HeadlampTheme } from '../types/theme';
 
@@ -27,14 +28,22 @@ const PODS = [
   { name: 'worker-3b1e9f', namespace: 'jobs', status: 'Pending' },
 ];
 
+function svgToDataUrl(svg: string): string {
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 interface Props {
   theme: HeadlampTheme;
   logoDataUrl: string | null;
+  highlightedPath: string | null;
 }
 
-export default function Preview({ theme, logoDataUrl }: Props) {
+export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) {
   const muiTheme = themeToMui(theme);
-
+  const defaultLargeLogo = svgToDataUrl(theme.base === 'dark' ? HeadlampLogoLight : HeadlampLogoDark);
+  const terminalBackground = theme.terminal?.background ?? (theme.base === 'dark' ? '#1e1e1e' : '#ffffff');
+  const terminalForeground = theme.terminal?.foreground ?? theme.text.primary;
+  const terminalCursor = theme.terminal?.cursor ?? theme.primary;
   // Mirror real Headlamp ListItemLink.tsx logic:
   // Top-level selected item → full selectedBackground row + getContrastText for readable text
   // selectedColor → used only as left accent bar (4px strip)
@@ -45,6 +54,18 @@ export default function Preview({ theme, logoDataUrl }: Props) {
       return '#000';
     }
   }
+
+  function highlight(paths: string[]) {
+    return paths.includes(highlightedPath ?? '')
+      ? {
+          outline: '2px solid #f2e600',
+          outlineOffset: 2,
+          boxShadow: '0 0 0 4px rgba(242, 230, 0, 0.2)',
+        }
+      : {};
+  }
+
+  const highlightTransition = { transition: 'outline-color 120ms ease, box-shadow 120ms ease' };
 
   return (
     <ThemeProvider theme={muiTheme}>
@@ -64,26 +85,24 @@ export default function Preview({ theme, logoDataUrl }: Props) {
         {/* Navbar */}
         <AppBar
           position="static"
-          sx={{ bgcolor: theme.navbar.background, color: theme.navbar.color, boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }}
+          sx={{
+            bgcolor: theme.navbar.background,
+            color: theme.navbar.color,
+            boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+            ...highlight(['navbar.background', 'navbar.color']),
+            ...highlightTransition,
+          }}
           elevation={0}
         >
           <Toolbar variant="dense">
-            {logoDataUrl ? (
-              <Box
-                component="img"
-                src={logoDataUrl}
-                alt="logo"
-                sx={{ height: 28, maxWidth: 120, objectFit: 'contain', mr: 1 }}
-              />
-            ) : (
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 700, letterSpacing: 1, color: theme.navbar.color, fontSize: '1rem' }}
-              >
-                headlamp
-              </Typography>
-            )}
-            <Box sx={{ flex: 1 }} />
+            <Box
+              component="img"
+              src={logoDataUrl ?? defaultLargeLogo}
+              alt={logoDataUrl ? 'custom logo' : 'Headlamp logo'}
+              sx={{ height: 28, maxWidth: 136, objectFit: 'contain', mr: 1 }}
+            />
+              <Box sx={{ flex: 1 }} />
+
             <Chip
               label="my-cluster"
               size="small"
@@ -91,6 +110,8 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                 bgcolor: theme.primary,
                 color: selectedTextColor(theme.primary),
                 fontWeight: 600,
+                ...highlight(['primary']),
+                ...highlightTransition,
               }}
             />
           </Toolbar>
@@ -106,6 +127,8 @@ export default function Preview({ theme, logoDataUrl }: Props) {
               flexDirection: 'column',
               flexShrink: 0,
               py: 1,
+              ...highlight(['sidebar.background', 'sidebar.color']),
+              ...highlightTransition,
             }}
           >
             <List dense disablePadding>
@@ -128,6 +151,10 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                       borderRadius: 1,
                       mx: 0.5,
                       mb: 0.25,
+                      ...(isSelected
+                        ? highlight(['sidebar.selectedBackground', 'sidebar.selectedColor'])
+                        : {}),
+                      ...highlightTransition,
                       // selectedColor appears as a left accent bar on the UNSELECTED hover
                       // but for the selected item at top level it's not shown
                       '&:hover': {
@@ -145,8 +172,28 @@ export default function Preview({ theme, logoDataUrl }: Props) {
           </Box>
 
           {/* Main content */}
-          <Box sx={{ flex: 1, p: 2, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant="h5" sx={{ color: 'text.primary', fontWeight: 700, fontSize: '1.1rem' }}>
+          <Box
+            sx={{
+              flex: 1,
+              p: 2,
+              overflow: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1.5,
+              ...highlight(['background.default']),
+              ...highlightTransition,
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{
+                color: 'text.primary',
+                fontWeight: 700,
+                fontSize: '1.1rem',
+                ...highlight(['text.primary']),
+                ...highlightTransition,
+              }}
+            >
               Workloads
             </Typography>
 
@@ -158,19 +205,39 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                 p: 1.5,
                 border: '1px solid',
                 borderColor: 'divider',
+                ...highlight(['background.surface']),
+                ...highlightTransition,
               }}
             >
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ ...highlight(['text.primary']), ...highlightTransition }}
+              >
                 Deployments
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 3 of 3 running &mdash;{' '}
-                <Link href="#" underline="hover" color="primary">
+                <Link
+                  href="#"
+                  underline="hover"
+                  sx={{
+                    color: theme.link.color,
+                    ...highlight(['link.color']),
+                    ...highlightTransition,
+                  }}
+                >
                   view events
                 </Link>
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button variant="contained" size="small">Create</Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  sx={{ ...highlight(['primary']), ...highlightTransition }}
+                >
+                  Create
+                </Button>
                 <Button variant="outlined" size="small">View logs</Button>
                 <Button variant="text" size="small">Delete</Button>
               </Box>
@@ -184,13 +251,15 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                 border: '1px solid',
                 borderColor: 'divider',
                 overflow: 'hidden',
+                ...highlight(['background.surface']),
+                ...highlightTransition,
               }}
             >
               <Table size="small">
                 <TableHead>
                   <TableRow
                     sx={{
-                      bgcolor: theme.base === 'dark' ? '#000' : '#faf9f8',
+                      bgcolor: theme.base === 'dark' ? '#1f1f1f' : '#faf9f8',
                     }}
                   >
                     {['Name', 'Namespace', 'Status'].map(h => (
@@ -199,7 +268,7 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                         sx={{
                           fontWeight: 700,
                           fontSize: '0.72rem',
-                          color: theme.base === 'dark' ? '#aeaeae' : '#242424',
+                          color: theme.base === 'dark' ? '#faf9f8' : '#242424',
                           borderColor: 'divider',
                           py: 0.75,
                         }}
@@ -213,7 +282,16 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                   {PODS.map(pod => (
                     <TableRow key={pod.name} hover>
                       <TableCell sx={{ py: 0.5, borderColor: 'divider' }}>
-                        <Link href="#" underline="hover" color="primary" sx={{ fontSize: '0.78rem' }}>
+                        <Link
+                          href="#"
+                          underline="hover"
+                          sx={{
+                            fontSize: '0.78rem',
+                            color: theme.link.color,
+                            ...highlight(['link.color']),
+                            ...highlightTransition,
+                          }}
+                        >
                           {pod.name}
                         </Link>
                       </TableCell>
@@ -237,6 +315,35 @@ export default function Preview({ theme, logoDataUrl }: Props) {
                   ))}
                 </TableBody>
               </Table>
+            </Box>
+
+            <Box
+              sx={{
+                bgcolor: terminalBackground,
+                color: terminalForeground,
+                borderRadius: 1,
+                border: '1px solid',
+                borderColor: 'divider',
+                p: 1.5,
+                fontFamily: '"Courier New", monospace',
+                fontSize: '0.76rem',
+                lineHeight: 1.6,
+                ...highlight(['terminal.background', 'terminal.foreground', 'terminal.cursor']),
+                ...highlightTransition,
+              }}
+            >
+              <Box component="span" sx={{ color: terminalCursor }}>
+                $
+              </Box>{' '}
+              kubectl logs deploy/api
+              <br />
+              <Box component="span" sx={{ color: terminalForeground }}>
+                server started on :8080
+              </Box>
+              <br />
+              <Box component="span" sx={{ color: terminalCursor }}>
+                _
+              </Box>
             </Box>
           </Box>
         </Box>
