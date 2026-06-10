@@ -164,7 +164,7 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                       },
                     }}
                   >
-                    <ListItemText primary={item} primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                    <ListItemText primary={item} slotProps={{ primary: { sx: { fontSize: '0.8rem' } } }} />
                   </ListItemButton>
                 );
               })}

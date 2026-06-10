@@ -11,7 +11,6 @@ import MenuItem from '@mui/material/MenuItem';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
@@ -234,7 +233,9 @@ export default function App() {
             sx={{ color: 'rgba(255,255,255,0.55)', '&:hover': { color: '#fff' } }}
             title="How to use"
           >
-            <HelpOutlineIcon fontSize="small" />
+            <Typography component="span" sx={{ fontWeight: 700, lineHeight: 1 }}>
+              ?
+            </Typography>
           </IconButton>
 
           <Button
@@ -259,7 +260,7 @@ export default function App() {
             anchorEl={themeFileMenuAnchor}
             open={themeFileMenuOpen}
             onClose={() => setThemeFileMenuAnchor(null)}
-            MenuListProps={{ dense: true }}
+            slotProps={{ list: { dense: true } }}
           >
             <MenuItem
               onClick={() => {

@@ -73,7 +73,7 @@ export default function HowToUseDialog({ open, onClose }: Props) {
                 <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 700 }}>
                   {s.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: s.code ? 1 : 0 }}>
+                <Typography component="p" variant="body2" color="text.secondary" sx={{ mb: s.code ? 1 : 0 }}>
                   {s.body}
                 </Typography>
                 {s.code && (

@@ -7,10 +7,21 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          mui: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
-          react: ['react', 'react-dom'],
-          zip: ['jszip', 'file-saver'],
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react';
+          }
+
+          if (
+            id.includes('node_modules/@mui') ||
+            id.includes('node_modules/@emotion')
+          ) {
+            return 'mui';
+          }
+
+          if (id.includes('node_modules/jszip') || id.includes('node_modules/file-saver')) {
+            return 'zip';
+          }
         },
       },
     },

@@ -324,8 +324,10 @@ export default function ThemePanel({
             onChange={e => set('name')(e.target.value)}
             size="small"
             fullWidth
-            InputLabelProps={{ sx: { color: 'text.secondary' } }}
-            InputProps={{ sx: { color: 'text.primary' } }}
+            slotProps={{
+              inputLabel: { sx: { color: 'text.secondary' } },
+              input: { sx: { color: 'text.primary' } },
+            }}
             sx={{ '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
           />
 
