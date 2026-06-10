@@ -1,0 +1,18 @@
+version: 1.0.0
+name: headlamp-theme-builder
+displayName: Headlamp Theme Builder
+createdAt: "2026-06-10T00:00:00Z"
+description: >
+  Build, preview, apply, and export Headlamp themes from inside Headlamp.
+logoURL: https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/public/headlamp-theme-builder.png
+homeURL: https://pixelrobots.github.io/headlamp-theme-builder/
+keywords:
+  - headlamp
+  - theme
+  - branding
+  - plugin
+annotations:
+  headlamp/plugin/archive-url: "https://github.com/PixelRobots/headlamp-theme-builder/releases/download/v1.0.0/headlamp-theme-builder-1.0.0.tar.gz"
+  headlamp/plugin/archive-checksum: "SHA256:7a3f4db1a8a91c39d85ac6a2715c5a6a3dc5ff6ab4e104c133c40ec6d13688fa"
+  headlamp/plugin/version-compat: ">=0.22"
+  headlamp/plugin/distro-compat: "in-cluster,web,docker-desktop,desktop"

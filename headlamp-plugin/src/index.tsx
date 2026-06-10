@@ -1,3 +1,11 @@
+import ThemeBuilderLogoUrl from '@builder/../public/headlamp-theme-builder.png';
+import HowToUseDialog from '@builder/components/HowToUseDialog';
+import InstallInstructionsDialog from '@builder/components/InstallInstructionsDialog';
+import Preview from '@builder/components/Preview';
+import ThemePanel from '@builder/components/ThemePanel';
+import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
+import type { HeadlampTheme } from '@builder/types/theme';
+import { downloadPlugin } from '@builder/utils/generateCode';
 import {
   AppLogoProps,
   Headlamp,
@@ -7,20 +15,13 @@ import {
   registerRoute,
   registerSidebarEntry,
 } from '@kinvolk/headlamp-plugin/lib';
-import type { SidebarEntryProps } from '@kinvolk/headlamp-plugin/lib';
+import type { AppTheme } from '@kinvolk/headlamp-plugin/lib/lib/AppTheme';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
-import ThemePanel from '@builder/components/ThemePanel';
-import Preview from '@builder/components/Preview';
-import HowToUseDialog from '@builder/components/HowToUseDialog';
-import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
-import type { HeadlampTheme } from '@builder/types/theme';
-import { downloadPlugin } from '@builder/utils/generateCode';
-import ThemeBuilderLogoSvg from '@builder/../public/theme-builder-logo.svg?raw';
 
 const STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
 const THEME_PREFERENCE_KEY = 'headlampThemePreference';
@@ -32,8 +33,6 @@ const BUILT_IN_OR_LEGACY_DEFAULT_THEMES = new Set([
   'Theme Builder Light',
   'Theme Builder Dark',
 ]);
-const THEME_BUILDER_LOGO_DATA_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(ThemeBuilderLogoSvg)}`;
-
 interface BuilderPluginState {
   lightTheme: HeadlampTheme;
   darkTheme: HeadlampTheme;
@@ -87,7 +86,9 @@ function registerStoredBuilderTheme() {
     return;
   }
 
-  getCustomThemes([state.lightTheme, state.darkTheme]).forEach(theme => registerAppTheme(theme));
+  getCustomThemes([state.lightTheme, state.darkTheme]).forEach(theme =>
+    registerAppTheme(theme as AppTheme)
+  );
 
   if (state.logoDataUrl) {
     registerAppLogo(ThemeBuilderLogo);
@@ -101,7 +102,9 @@ function getCustomThemes(themes: HeadlampTheme[]) {
 function saveBuilderTheme(state: BuilderPluginState, active: 'light' | 'dark') {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
-  getCustomThemes([state.lightTheme, state.darkTheme]).forEach(theme => registerAppTheme(theme));
+  getCustomThemes([state.lightTheme, state.darkTheme]).forEach(theme =>
+    registerAppTheme(theme as AppTheme)
+  );
 
   if (state.logoDataUrl) {
     registerAppLogo(ThemeBuilderLogo);
@@ -129,6 +132,7 @@ function ThemeBuilderPage() {
   const [active, setActive] = useState<'light' | 'dark'>('light');
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(storedState?.logoDataUrl ?? null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -156,6 +160,11 @@ function ThemeBuilderPage() {
     saveBuilderTheme({ lightTheme, darkTheme, logoDataUrl }, active);
     setStatus(`Applied ${active === 'light' ? lightTheme.name : darkTheme.name}. Reloading...`);
     window.setTimeout(() => window.location.reload(), 500);
+  }
+
+  async function handleDownloadPlugin() {
+    await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
+    setInstallInstructionsOpen(true);
   }
 
   return (
@@ -186,7 +195,7 @@ function ThemeBuilderPage() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mr: 2 }}>
             <Box
               component="img"
-              src={THEME_BUILDER_LOGO_DATA_URL}
+              src={ThemeBuilderLogoUrl}
               alt="Headlamp Theme Builder logo"
               sx={{
                 width: 54,
@@ -250,7 +259,7 @@ function ThemeBuilderPage() {
           <Button
             variant="contained"
             size="small"
-            onClick={() => downloadPlugin([lightTheme, darkTheme], logoDataUrl)}
+            onClick={handleDownloadPlugin}
             sx={{
               bgcolor: primary,
               color: primaryContrast,
@@ -318,12 +327,16 @@ function ThemeBuilderPage() {
         </Box>
 
         <HowToUseDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
+        <InstallInstructionsDialog
+          open={installInstructionsOpen}
+          onClose={() => setInstallInstructionsOpen(false)}
+        />
       </Box>
     </>
   );
 }
 
-const sidebarEntries: SidebarEntryProps[] = [{
+const sidebarEntries = [{
   name: 'theme-builder-home',
   label: 'Theme Builder',
   url: '/theme-builder',

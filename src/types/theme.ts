@@ -32,7 +32,7 @@ export interface HeadlampTheme {
   };
   fontFamily?: string[];
   radius?: number;
-  buttonTextTransform?: 'none' | 'uppercase' | 'capitalize';
+  buttonTextTransform?: 'none' | 'uppercase';
 }
 
 /** All the colour fields the builder exposes, keyed for the UI. */

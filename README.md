@@ -1,5 +1,7 @@
 # Headlamp Theme Builder
 
+<img src="public/headlamp-theme-builder.png" alt="Headlamp Theme Builder logo" width="140">
+
 A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in the left panel, see them applied to a real MUI preview on the right, then download a ready-to-install Headlamp plugin zip.
 
 ## Features
@@ -30,8 +32,12 @@ The zip includes `main.js` at the plugin root, so it is ready to install without
 
 ## Tech stack
 
-- React 18 + TypeScript
-- Vite
-- MUI v6 (same component library as Headlamp)
+- React 19 + TypeScript
+- Vite 8
+- MUI v9
 - react-colorful (colour pickers)
 - JSZip + file-saver (plugin download)
+
+## Credits
+
+Logo and project author: [Pixelrobots](https://pixelrobots.co.uk).

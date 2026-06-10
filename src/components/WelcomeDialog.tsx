@@ -24,7 +24,7 @@ const FEATURES = [
   {
     icon: <ExtensionIcon fontSize="small" />,
     title: 'Export a real plugin',
-    body: 'Download an installable zip with a compiled Headlamp plugin, editable source files, and package metadata.',
+    body: 'Download an installable zip with the compiled Headlamp plugin files needed to load your theme.',
   },
   {
     icon: <AutoAwesomeIcon fontSize="small" />,

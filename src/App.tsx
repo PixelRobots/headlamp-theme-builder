@@ -16,6 +16,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
 import HowToUseDialog from './components/HowToUseDialog';
+import InstallInstructionsDialog from './components/InstallInstructionsDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { completeTheme, defaultLight, defaultDark } from './defaults/defaultTheme';
 import { downloadPlugin, downloadThemeJson } from './utils/generateCode';
@@ -28,7 +29,7 @@ const HEADER_BG = '#252422';   // headlamp.dev navbar / dark app sidebar
 const PANEL_BG = '#1a1a18';    // headlamp.dev hero background
 const BORDER = 'rgba(255,255,255,0.06)';
 const WELCOME_DISMISSED_KEY = 'headlamp-theme-builder-welcome-dismissed';
-const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}theme-builder-logo.svg`;
+const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}headlamp-theme-builder.png`;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -119,6 +120,7 @@ export default function App() {
   const [active, setActive] = useState<'light' | 'dark'>('light');
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [themeFileMenuAnchor, setThemeFileMenuAnchor] = useState<null | HTMLElement>(null);
@@ -165,6 +167,11 @@ export default function App() {
     };
     reader.readAsText(file);
     e.target.value = '';
+  }
+
+  async function handleDownloadPlugin() {
+    await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
+    setInstallInstructionsOpen(true);
   }
 
   return (
@@ -315,7 +322,7 @@ export default function App() {
             variant="contained"
             size="small"
             startIcon={<DownloadIcon />}
-            onClick={() => downloadPlugin([lightTheme, darkTheme], logoDataUrl)}
+            onClick={handleDownloadPlugin}
             sx={{
               bgcolor: YELLOW,
               color: '#1a1a18',
@@ -326,6 +333,21 @@ export default function App() {
           >
             Download plugin
           </Button>
+        </Box>
+
+        <Box
+          sx={{
+            px: 2,
+            py: 1,
+            bgcolor: 'rgba(242,230,0,0.08)',
+            borderBottom: `1px solid ${BORDER}`,
+            color: 'rgba(255,255,255,0.78)',
+            fontSize: '0.82rem',
+            flexShrink: 0,
+          }}
+        >
+          You can also install Headlamp Theme Builder into Headlamp to design, preview, and apply
+          themes from inside the app.
         </Box>
 
         {/* Main split */}
@@ -390,6 +412,10 @@ export default function App() {
           onShowHelp={showHelpFromWelcome}
         />
         <HowToUseDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
+        <InstallInstructionsDialog
+          open={installInstructionsOpen}
+          onClose={() => setInstallInstructionsOpen(false)}
+        />
       </Box>
     </ThemeProvider>
   );

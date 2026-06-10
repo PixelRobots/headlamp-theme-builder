@@ -16,7 +16,7 @@ const STEPS = [
   {
     step: '2',
     title: 'Download the plugin',
-    body: 'Click "Download plugin" in the top bar. You will receive a zip file containing an installable, compiled Headlamp plugin folder, plus the editable source files.',
+    body: 'Click "Download plugin" in the top bar. You will receive a zip file containing an installable, compiled Headlamp plugin folder with only the runtime files Headlamp needs.',
   },
   {
     step: '3',

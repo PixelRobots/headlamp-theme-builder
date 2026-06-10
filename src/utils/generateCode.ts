@@ -97,9 +97,6 @@ export function generatePackageJson(pluginName: string): string {
       version: '0.1.0',
       description: `Headlamp theme plugin: ${pluginName}`,
       main: 'main.js',
-      devDependencies: {
-        '@kinvolk/headlamp-plugin': '^0.13.1',
-      },
     },
     null,
     2
@@ -177,57 +174,8 @@ export async function downloadPlugin(themes: HeadlampTheme[], logoDataUrl?: stri
 
   const zip = new JSZip();
   const plugin = zip.folder(safe)!;
-  const src = plugin.folder('src')!;
-  src.file('themes.ts', generateThemesTs(themes));
-  src.file('index.tsx', generateIndexTsx(logoDataUrl));
   plugin.file('main.js', generateCompiledMainJs(themes, logoDataUrl));
-  plugin.folder('dist')!.file('main.js', generateCompiledMainJs(themes, logoDataUrl));
   plugin.file('package.json', generatePackageJson(pluginName));
-  plugin.file(
-    'tsconfig.json',
-    JSON.stringify(
-      {
-        compilerOptions: {
-          target: 'ES2020',
-          module: 'ESNext',
-          moduleResolution: 'bundler',
-          jsx: 'react-jsx',
-          strict: true,
-          noEmit: true,
-        },
-        include: ['src'],
-      },
-      null,
-      2
-    )
-  );
-  plugin.file(
-    'README.md',
-    [
-      `# ${pluginName} — Headlamp Theme Plugin`,
-      '',
-      '## Install',
-      'This zip already includes the compiled Headlamp plugin.',
-      '',
-      'Copy this folder to:',
-      '`%APPDATA%\\Headlamp\\Config\\user-plugins\\<plugin-name>\\` (Windows)',
-      '`~/.config/Headlamp/Config/user-plugins/<plugin-name>/` (Linux/macOS)',
-      '',
-      'Restart Headlamp and select the theme in Settings > General > Theme.',
-      '',
-      '## Logo',
-      'If you uploaded a logo, the plugin registers it with Headlamp using `registerAppLogo`.',
-      '',
-      '## Rebuild from source',
-      '```bash',
-      'npm install',
-      'npx headlamp-plugin build',
-      '```',
-      '',
-      'If you rebuild, copy `dist/main.js` over `main.js` before installing.',
-      '',
-    ].join('\n')
-  );
 
   const blob = await zip.generateAsync({ type: 'blob' });
   saveAs(blob, `${safe}-headlamp-plugin.zip`);
