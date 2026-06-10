@@ -12,6 +12,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LaunchIcon from '@mui/icons-material/Launch';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
 import HowToUseDialog from './components/HowToUseDialog';
@@ -226,6 +227,27 @@ export default function App() {
           </Box>
 
           <Box sx={{ flex: 1 }} />
+
+          <Button
+            component="a"
+            href="https://headlamp.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="text"
+            size="small"
+            endIcon={<LaunchIcon />}
+            sx={{
+              color: 'rgba(255,255,255,0.78)',
+              '&:hover': {
+                color: '#fff',
+                bgcolor: 'rgba(255,255,255,0.06)',
+              },
+              fontWeight: 700,
+              fontSize: '0.78rem',
+            }}
+          >
+            Headlamp
+          </Button>
 
           <IconButton
             size="small"
