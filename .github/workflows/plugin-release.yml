@@ -1,0 +1,81 @@
+name: Release plugin
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: headlamp-plugin/package-lock.json
+
+      - name: Install plugin dependencies
+        working-directory: headlamp-plugin
+        run: npm ci
+
+      - name: Validate tag matches plugin version
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          package_version="$(node -p "require('./headlamp-plugin/package.json').version")"
+          if [ "$tag_version" != "$package_version" ]; then
+            echo "Tag version $tag_version does not match plugin package version $package_version"
+            exit 1
+          fi
+
+      - name: Lint
+        working-directory: headlamp-plugin
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: headlamp-plugin
+        run: npm run tsc
+
+      - name: Test
+        working-directory: headlamp-plugin
+        run: npm run test
+
+      - name: Build
+        working-directory: headlamp-plugin
+        run: npm run build
+
+      - name: Package
+        working-directory: headlamp-plugin
+        run: npm run package
+
+      - name: Validate Artifact Hub checksum
+        shell: bash
+        run: |
+          package_version="$(node -p "require('./headlamp-plugin/package.json').version")"
+          tarball="headlamp-plugin/headlamp-theme-builder-${package_version}.tar.gz"
+          checksum="$(sha256sum "$tarball" | awk '{print $1}')"
+          expected="$(grep 'headlamp/plugin/archive-checksum' headlamp-plugin/artifacthub-pkg.yml | sed -E 's/.*SHA256:([a-fA-F0-9]+).*/\1/' | tr '[:upper:]' '[:lower:]')"
+          if [ "$checksum" != "$expected" ]; then
+            echo "Artifact Hub checksum does not match packaged tarball"
+            echo "Expected: $expected"
+            echo "Actual:   $checksum"
+            exit 1
+          fi
+
+      - name: Publish GitHub release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: headlamp-plugin/headlamp-theme-builder-*.tar.gz
+          generate_release_notes: true
+          make_latest: true
