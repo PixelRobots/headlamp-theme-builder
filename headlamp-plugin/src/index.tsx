@@ -1,6 +1,7 @@
 import ThemeBuilderLogoUrl from '@builder/../public/headlamp-theme-builder.png';
 import HowToUseDialog from '@builder/components/HowToUseDialog';
 import InstallInstructionsDialog from '@builder/components/InstallInstructionsDialog';
+import PluginMetadataDialog from '@builder/components/PluginMetadataDialog';
 import Preview from '@builder/components/Preview';
 import ThemeLibrary from '@builder/components/ThemeLibrary';
 import ThemePanel from '@builder/components/ThemePanel';
@@ -8,7 +9,7 @@ import ThemeValidationSummary from '@builder/components/ThemeValidationSummary';
 import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibrary';
 import type { HeadlampTheme } from '@builder/types/theme';
-import { downloadPlugin } from '@builder/utils/generateCode';
+import { downloadPlugin, type PluginMetadata } from '@builder/utils/generateCode';
 import { validateThemesForUse } from '@builder/utils/themeValidation';
 import {
   AppLogoProps,
@@ -45,6 +46,12 @@ interface BuilderPluginState {
   lightTheme: HeadlampTheme;
   darkTheme: HeadlampTheme;
   logoDataUrl: string | null;
+}
+
+interface PendingPluginDownload {
+  themes: HeadlampTheme[];
+  logoDataUrl: string | null;
+  initialName: string;
 }
 
 function readThemeState(storageKey: string): BuilderPluginState | null {
@@ -173,6 +180,8 @@ function ThemeBuilderPage() {
   const [importedLibraryEntries, setImportedLibraryEntries] = useState<ThemeLibraryEntry[]>(
     readImportedLibraryEntries
   );
+  const [pendingPluginDownload, setPendingPluginDownload] =
+    useState<PendingPluginDownload | null>(null);
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
@@ -214,8 +223,11 @@ function ThemeBuilderPage() {
       return;
     }
 
-    await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
-    setInstallInstructionsOpen(true);
+    setPendingPluginDownload({
+      themes: [lightTheme, darkTheme],
+      logoDataUrl,
+      initialName: currentTheme.name,
+    });
   }
 
   function getLibraryThemes(
@@ -261,7 +273,24 @@ function ThemeBuilderPage() {
   }
 
   async function handleDownloadLibraryEntry(entry: ThemeLibraryEntry) {
-    await downloadPlugin(entry.themes, null);
+    setPendingPluginDownload({
+      themes: entry.themes,
+      logoDataUrl: null,
+      initialName: entry.name,
+    });
+  }
+
+  async function confirmPluginDownload(metadata: PluginMetadata) {
+    if (!pendingPluginDownload) {
+      return;
+    }
+
+    await downloadPlugin(
+      pendingPluginDownload.themes,
+      pendingPluginDownload.logoDataUrl,
+      metadata
+    );
+    setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
   }
 
@@ -480,6 +509,12 @@ function ThemeBuilderPage() {
         <InstallInstructionsDialog
           open={installInstructionsOpen}
           onClose={() => setInstallInstructionsOpen(false)}
+        />
+        <PluginMetadataDialog
+          open={Boolean(pendingPluginDownload)}
+          initialName={pendingPluginDownload?.initialName ?? currentTheme.name}
+          onClose={() => setPendingPluginDownload(null)}
+          onConfirm={confirmPluginDownload}
         />
       </Box>
     </>

@@ -21,10 +21,11 @@ import ThemeLibrary from './components/ThemeLibrary';
 import ThemeValidationSummary from './components/ThemeValidationSummary';
 import HowToUseDialog from './components/HowToUseDialog';
 import InstallInstructionsDialog from './components/InstallInstructionsDialog';
+import PluginMetadataDialog from './components/PluginMetadataDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
-import { downloadPlugin, downloadThemeJson } from './utils/generateCode';
+import { downloadPlugin, downloadThemeJson, type PluginMetadata } from './utils/generateCode';
 import { getImportedLogoDataUrl, getImportedThemes } from './utils/themeImport';
 import { validateThemesForUse } from './utils/themeValidation';
 import type { HeadlampTheme } from './types/theme';
@@ -37,6 +38,12 @@ const PANEL_BG = '#1a1a18';    // headlamp.dev hero background
 const BORDER = 'rgba(255,255,255,0.06)';
 const WELCOME_DISMISSED_KEY = 'headlamp-theme-builder-welcome-dismissed';
 const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}headlamp-theme-builder.png`;
+
+interface PendingPluginDownload {
+  themes: HeadlampTheme[];
+  logoDataUrl: string | null;
+  initialName: string;
+}
 
 /** App shell using the headlamp.dev dark palette */
 const appTheme = createTheme({
@@ -66,6 +73,8 @@ export default function App() {
   const [themeFileMenuAnchor, setThemeFileMenuAnchor] = useState<null | HTMLElement>(null);
   const [view, setView] = useState<'builder' | 'library'>('builder');
   const [importedLibraryEntries, setImportedLibraryEntries] = useState<ThemeLibraryEntry[]>([]);
+  const [pendingPluginDownload, setPendingPluginDownload] =
+    useState<PendingPluginDownload | null>(null);
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
@@ -124,8 +133,11 @@ export default function App() {
       return;
     }
 
-    await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
-    setInstallInstructionsOpen(true);
+    setPendingPluginDownload({
+      themes: [lightTheme, darkTheme],
+      logoDataUrl,
+      initialName: currentTheme.name,
+    });
   }
 
   function loadLibraryEntry(entry: ThemeLibraryEntry) {
@@ -145,7 +157,24 @@ export default function App() {
   }
 
   async function handleDownloadLibraryEntry(entry: ThemeLibraryEntry) {
-    await downloadPlugin(entry.themes, null);
+    setPendingPluginDownload({
+      themes: entry.themes,
+      logoDataUrl: null,
+      initialName: entry.name,
+    });
+  }
+
+  async function confirmPluginDownload(metadata: PluginMetadata) {
+    if (!pendingPluginDownload) {
+      return;
+    }
+
+    await downloadPlugin(
+      pendingPluginDownload.themes,
+      pendingPluginDownload.logoDataUrl,
+      metadata
+    );
+    setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
   }
 
@@ -433,6 +462,12 @@ export default function App() {
         <InstallInstructionsDialog
           open={installInstructionsOpen}
           onClose={() => setInstallInstructionsOpen(false)}
+        />
+        <PluginMetadataDialog
+          open={Boolean(pendingPluginDownload)}
+          initialName={pendingPluginDownload?.initialName ?? currentTheme.name}
+          onClose={() => setPendingPluginDownload(null)}
+          onConfirm={confirmPluginDownload}
         />
       </Box>
     </ThemeProvider>

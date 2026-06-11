@@ -28,6 +28,15 @@ function slugify(value: string): string {
 
 const BUILT_IN_THEME_NAMES = ['Light', 'Dark'];
 
+export interface PluginMetadata {
+  name: string;
+  version: string;
+  description: string;
+  author?: string;
+  homepage?: string;
+  repository?: string;
+}
+
 export function generateThemesTs(themes: HeadlampTheme[]): string {
   const varNames = themes.map((_, i) => `theme${i}`);
   const declarations = themes
@@ -89,18 +98,35 @@ export function generateIndexTsx(logoDataUrl?: string | null): string {
   ].join('\n');
 }
 
-export function generatePackageJson(pluginName: string): string {
-  const safe = slugify(pluginName);
-  return JSON.stringify(
-    {
-      name: safe,
-      version: '0.1.0',
-      description: `Headlamp theme plugin: ${pluginName}`,
-      main: 'main.js',
-      devDependencies: {
-        '@kinvolk/headlamp-plugin': '^0.14.0',
-      },
+export function generatePackageJson(pluginName: string, metadata?: PluginMetadata): string {
+  const safe = slugify(metadata?.name || pluginName);
+  const packageJson: Record<string, unknown> = {
+    name: safe,
+    version: metadata?.version || '0.1.0',
+    description: metadata?.description || `Headlamp theme plugin: ${pluginName}`,
+    main: 'main.js',
+    devDependencies: {
+      '@kinvolk/headlamp-plugin': '^0.14.0',
     },
+  };
+
+  if (metadata?.author) {
+    packageJson.author = metadata.author;
+  }
+
+  if (metadata?.homepage) {
+    packageJson.homepage = metadata.homepage;
+  }
+
+  if (metadata?.repository) {
+    packageJson.repository = {
+      type: 'git',
+      url: metadata.repository,
+    };
+  }
+
+  return JSON.stringify(
+    packageJson,
     null,
     2
   );
@@ -171,14 +197,18 @@ ${logoCode}
 `;
 }
 
-export async function downloadPlugin(themes: HeadlampTheme[], logoDataUrl?: string | null): Promise<void> {
+export async function downloadPlugin(
+  themes: HeadlampTheme[],
+  logoDataUrl?: string | null,
+  metadata?: PluginMetadata
+): Promise<void> {
   const pluginName = themes[0]?.name ?? 'my-theme';
-  const safe = slugify(pluginName);
+  const safe = slugify(metadata?.name || pluginName);
 
   const zip = new JSZip();
   const plugin = zip.folder(safe)!;
   plugin.file('main.js', generateCompiledMainJs(themes, logoDataUrl));
-  plugin.file('package.json', generatePackageJson(pluginName));
+  plugin.file('package.json', generatePackageJson(pluginName, metadata));
 
   const blob = await zip.generateAsync({ type: 'blob' });
   saveAs(blob, `${safe}-headlamp-plugin.zip`);

@@ -32,11 +32,11 @@ Let users customise generated plugin metadata before downloading.
 
 Goals:
 
-- Plugin name.
-- Version.
-- Description.
-- Author/provider.
-- Optional homepage/repository.
+- Plugin name. **Done.**
+- Version. **Done.**
+- Description. **Done.**
+- Author/provider. **Done.**
+- Optional homepage/repository. **Done.**
 
 ### GitHub-Friendly URL Imports
 

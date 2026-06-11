@@ -13,6 +13,7 @@ The plugin embeds the Headlamp Theme Builder as a Headlamp route. It can:
 - Preview theme changes in a Headlamp-like UI.
 - Apply the current builder theme to the current Headlamp session.
 - Download a compiled theme plugin zip.
+- Customise generated plugin metadata before download.
 - Export and import theme JSON for sharing or later editing.
 
 ![Headlamp Theme Builder library](https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/docs/screenshots/plugin-library.png)
