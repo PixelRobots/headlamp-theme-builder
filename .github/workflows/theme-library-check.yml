@@ -69,4 +69,3 @@ jobs:
 
       - name: Build website
         run: npm run build
-          fi
