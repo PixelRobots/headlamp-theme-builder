@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -228,6 +229,33 @@ export default function ThemeLibrary({
             >
               <Box sx={{ position: 'relative' }}>
                 <MiniPreview theme={previewTheme} />
+                {onDeleteEntry && entry.tags.includes('imported') && (
+                  <IconButton
+                    size="small"
+                    color="error"
+                    aria-label={`Delete ${entry.name}`}
+                    onClick={() => onDeleteEntry(entry)}
+                    sx={{
+                      position: 'absolute',
+                      top: 6,
+                      right: 6,
+                      width: 24,
+                      height: 24,
+                      bgcolor: 'rgba(0,0,0,0.72)',
+                      color: 'error.light',
+                      border: '1px solid',
+                      borderColor: 'error.main',
+                      fontSize: 18,
+                      lineHeight: 1,
+                      '&:hover': {
+                        bgcolor: 'error.main',
+                        color: 'error.contrastText',
+                      },
+                    }}
+                  >
+                    ×
+                  </IconButton>
+                )}
                 {hasLight && hasDark && (
                   <ToggleButtonGroup
                     exclusive
@@ -305,16 +333,6 @@ export default function ThemeLibrary({
                 <Button size="small" variant="text" onClick={() => onDownload(entry)}>
                   Download plugin
                 </Button>
-                {onDeleteEntry && entry.tags.includes('imported') && (
-                  <Button
-                    size="small"
-                    variant="text"
-                    color="error"
-                    onClick={() => onDeleteEntry(entry)}
-                  >
-                    Delete
-                  </Button>
-                )}
               </Box>
             </Box>
           );
