@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const bundledSourceDir = path.join(repoRoot, 'src', 'library', 'themes');
 const communitySourceDir = path.join(repoRoot, 'library', 'themes');
+const catalogPreviewDir = path.join(repoRoot, 'library', 'previews');
 const catalogReadmePath = path.join(repoRoot, 'library', 'README.md');
 const outputDir = path.join(repoRoot, 'public', 'library');
 const outputThemeDir = path.join(outputDir, 'themes');
@@ -29,10 +30,6 @@ const ANSI_LABELS = {
   brightCyan: 'bright ANSI cyan',
   brightWhite: 'bright ANSI white',
 };
-
-function compareJson(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
 
 function escapeHtml(value) {
   return String(value)
@@ -369,7 +366,7 @@ function catalogReadme(entries) {
       const tags = Array.isArray(entry.tags) ? entry.tags.join(', ') : '';
       const previews = modes
         .map(mode => {
-          const previewPath = `../public/library/previews/${entry.id}-${mode}.svg`;
+          const previewPath = `previews/${entry.id}-${mode}.svg`;
           return `![${markdownEscape(entry.name)} ${mode} preview](${previewPath})`;
         })
         .join('<br>');
@@ -399,10 +396,10 @@ Requirements:
 - Use \`base: "light"\` or \`base: "dark"\`.
 - Check readability before opening a PR.
 
-Run this before opening a PR:
+Run this before opening a PR and commit the updated catalog files under \`library/\`:
 
 \`\`\`bash
-npm run check:library
+npm run build:library
 npm run build
 \`\`\`
 
@@ -459,25 +456,26 @@ const publicIndex = `${JSON.stringify({ version: 1, themes: publicEntries }, nul
 
 await mkdir(outputThemeDir, { recursive: true });
 await mkdir(outputPreviewDir, { recursive: true });
+await mkdir(catalogPreviewDir, { recursive: true });
 
-await writeIfChanged(path.join(outputDir, 'index.json'), publicIndex);
+if (!checkOnly) {
+  await writeIfChanged(path.join(outputDir, 'index.json'), publicIndex);
+}
 await writeIfChanged(catalogReadmePath, catalogReadme(sortedItems));
 
 for (const item of sortedItems) {
-  await writeIfChanged(
-    path.join(outputThemeDir, item.file),
-    `${JSON.stringify(item.entry, null, 2)}\n`
-  );
+  if (!checkOnly) {
+    await writeIfChanged(
+      path.join(outputThemeDir, item.file),
+      `${JSON.stringify(item.entry, null, 2)}\n`
+    );
+  }
 
   for (const preview of getPreviewFiles(item)) {
-    await writeIfChanged(path.join(outputPreviewDir, preview.file), preview.content);
-  }
-}
-
-if (checkOnly) {
-  const currentIndex = JSON.parse(await readFile(path.join(outputDir, 'index.json'), 'utf8'));
-  if (!compareJson(currentIndex, { version: 1, themes: publicEntries })) {
-    throw new Error('public/library/index.json is stale. Run npm run build:library.');
+    if (!checkOnly) {
+      await writeIfChanged(path.join(outputPreviewDir, preview.file), preview.content);
+    }
+    await writeIfChanged(path.join(catalogPreviewDir, preview.file), preview.content);
   }
 }
 

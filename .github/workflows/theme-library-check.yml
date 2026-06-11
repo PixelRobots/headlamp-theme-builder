@@ -6,27 +6,29 @@ on:
       - main
     paths:
       - 'library/**'
-      - 'public/library/**'
       - 'src/library/themes/**'
       - 'schemas/**'
       - 'scripts/build-public-library.mjs'
+      - 'scripts/theme-library-pr-comment.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/theme-library-check.yml'
   pull_request:
     paths:
       - 'library/**'
-      - 'public/library/**'
       - 'src/library/themes/**'
       - 'schemas/**'
       - 'scripts/build-public-library.mjs'
+      - 'scripts/theme-library-pr-comment.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/theme-library-check.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   validate:
@@ -45,23 +47,25 @@ jobs:
         run: npm ci
 
       - name: Generate library files
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: npm run build:library
 
-      - name: Check generated library files
+      - name: Check generated catalog files
         if: github.event_name == 'pull_request'
-        run: npm run check:library
+        run: |
+          if [ -n "$(git status --porcelain library)" ]; then
+            git status --short library
+            echo "Generated library catalog files are stale. Run npm run build:library and commit the library/ changes."
+            exit 1
+          fi
+
+      - name: Comment community theme preview
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/theme-library-pr-comment.mjs --post
 
       - name: Build website
         run: npm run build
-
-      - name: Commit generated library files
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        run: |
-          if [ -n "$(git status --porcelain library public/library)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add library public/library
-            git commit -m "chore: Update generated theme library"
-            git push
-          fi

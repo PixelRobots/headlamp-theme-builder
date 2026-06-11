@@ -1,0 +1,56 @@
+{
+  "id": "night-owl-inspired",
+  "name": "Night Owl Inspired",
+  "description": "VS Code-inspired dark blue theme with bright readable accents for late-night operations.",
+  "tags": ["dark", "developer", "terminal", "community"],
+  "themes": [
+    {
+      "name": "Night Owl Inspired",
+      "base": "dark",
+      "primary": "#82aaff",
+      "secondary": "#1d3b53",
+      "text": { "primary": "#d6deeb" },
+      "link": { "color": "#82aaff" },
+      "background": {
+        "default": "#011627",
+        "surface": "#082338",
+        "muted": "#1d3b53"
+      },
+      "sidebar": {
+        "background": "#010d18",
+        "color": "#d6deeb",
+        "selectedBackground": "#82aaff",
+        "selectedColor": "#011627",
+        "actionBackground": "#addb67"
+      },
+      "navbar": {
+        "background": "#010d18",
+        "color": "#d6deeb",
+        "searchHint": "#7fdbca"
+      },
+      "terminal": {
+        "background": "#010d18",
+        "foreground": "#d6deeb",
+        "cursor": "#80cbc4",
+        "ansi": {
+          "black": "#637777",
+          "red": "#ef5350",
+          "green": "#addb67",
+          "yellow": "#ecc48d",
+          "blue": "#82aaff",
+          "magenta": "#c792ea",
+          "cyan": "#21c7a8",
+          "white": "#d6deeb",
+          "brightBlack": "#7f9f9f",
+          "brightRed": "#ff869a",
+          "brightGreen": "#c5e478",
+          "brightYellow": "#ffd7a3",
+          "brightBlue": "#9cc4ff",
+          "brightMagenta": "#ddb4ff",
+          "brightCyan": "#7fdbca",
+          "brightWhite": "#ffffff"
+        }
+      }
+    }
+  ]
+}
