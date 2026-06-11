@@ -10,6 +10,7 @@ on:
       - 'src/library/themes/**'
       - 'schemas/**'
       - 'scripts/build-public-library.mjs'
+      - 'scripts/theme-library-pr-comment.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/theme-library-check.yml'
@@ -20,6 +21,7 @@ on:
       - 'src/library/themes/**'
       - 'schemas/**'
       - 'scripts/build-public-library.mjs'
+      - 'scripts/theme-library-pr-comment.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/theme-library-check.yml'
@@ -27,6 +29,8 @@ on:
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: read
 
 jobs:
   validate:
@@ -55,6 +59,15 @@ jobs:
             echo "Generated library catalog files are stale. Run npm run build:library and commit the library/ changes."
             exit 1
           fi
+
+      - name: Comment community theme preview
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/theme-library-pr-comment.mjs --post
 
       - name: Build website
         run: npm run build
