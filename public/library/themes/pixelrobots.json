@@ -42,7 +42,7 @@
         "foreground": "#f7f5ea",
         "cursor": "#ffea00",
         "ansi": {
-          "black": "#151512",
+          "black": "#77776f",
           "white": "#f7f5ea",
           "yellow": "#ffea00",
           "brightYellow": "#fff45c",
@@ -85,7 +85,7 @@
         "foreground": "#f7f5ea",
         "cursor": "#ffea00",
         "ansi": {
-          "black": "#10100e",
+          "black": "#73736a",
           "white": "#f7f5ea",
           "yellow": "#ffea00",
           "brightYellow": "#fff45c",

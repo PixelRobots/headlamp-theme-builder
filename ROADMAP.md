@@ -23,7 +23,7 @@ Goals:
 
 - Warn when required theme fields are missing. **Done:** missing required fields are hard errors.
 - Warn when text/background contrast falls below WCAG AA. **Done:** builder summary shows contrast warnings.
-- Warn when terminal foreground, cursor, or ANSI colours are hard to read. **Partially done:** terminal foreground and cursor checks are included.
+- Warn when terminal foreground, cursor, or ANSI colours are hard to read. **Done:** terminal foreground, cursor, and ANSI entries are checked against the terminal background.
 - Surface validation results before download or apply. **Done:** builder summary is shown and hard errors block apply/download.
 
 ### Export Metadata
@@ -71,7 +71,7 @@ Document how to add themes to the public library.
 Goals:
 
 - Add contribution rules for JSON files in `library/themes`. **Done:** `library/CONTRIBUTING.md` documents the flow.
-- Require accessible contrast checks for contributed themes.
+- Require accessible contrast checks for contributed themes. **Done:** community theme PR checks fail low text, link, sidebar, terminal, and ANSI contrast.
 - Include preview screenshots or generated preview metadata where useful. **Done:** generated SVG previews are included in `public/library/previews`.
 - Validate public theme PRs. **Done:** the theme library workflow checks generated output and website builds.
 - Add a repo catalog page with previews and descriptions. **Done:** `library/README.md` is generated.

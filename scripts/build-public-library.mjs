@@ -11,6 +11,24 @@ const outputThemeDir = path.join(outputDir, 'themes');
 const outputPreviewDir = path.join(outputDir, 'previews');
 const pagesLibraryUrl = 'https://pixelrobots.github.io/headlamp-theme-builder/library';
 const checkOnly = process.argv.includes('--check');
+const ANSI_LABELS = {
+  black: 'ANSI black',
+  red: 'ANSI red',
+  green: 'ANSI green',
+  yellow: 'ANSI yellow',
+  blue: 'ANSI blue',
+  magenta: 'ANSI magenta',
+  cyan: 'ANSI cyan',
+  white: 'ANSI white',
+  brightBlack: 'bright ANSI black',
+  brightRed: 'bright ANSI red',
+  brightGreen: 'bright ANSI green',
+  brightYellow: 'bright ANSI yellow',
+  brightBlue: 'bright ANSI blue',
+  brightMagenta: 'bright ANSI magenta',
+  brightCyan: 'bright ANSI cyan',
+  brightWhite: 'bright ANSI white',
+};
 
 function compareJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
@@ -36,6 +54,59 @@ function slugify(value) {
     .replace(/^-+|-+$/g, '') || 'theme';
 }
 
+function expandHex(value) {
+  const hex = String(value).trim().replace(/^#/, '');
+  if (hex.length === 3) {
+    return hex
+      .split('')
+      .map(char => char + char)
+      .join('');
+  }
+  return hex;
+}
+
+function hexToRgb(value) {
+  const hex = expandHex(value);
+  if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+    return null;
+  }
+
+  return [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+  ];
+}
+
+function channelToLinear(value) {
+  const channel = value / 255;
+  return channel <= 0.03928
+    ? channel / 12.92
+    : Math.pow((channel + 0.055) / 1.055, 2.4);
+}
+
+function luminance(value) {
+  const rgb = hexToRgb(value);
+  if (!rgb) {
+    return null;
+  }
+
+  const [red, green, blue] = rgb.map(channelToLinear);
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(foreground, background) {
+  const foregroundLuminance = luminance(foreground);
+  const backgroundLuminance = luminance(background);
+  if (foregroundLuminance === null || backgroundLuminance === null) {
+    return null;
+  }
+
+  const light = Math.max(foregroundLuminance, backgroundLuminance);
+  const dark = Math.min(foregroundLuminance, backgroundLuminance);
+  return (light + 0.05) / (dark + 0.05);
+}
+
 function modesFor(entry) {
   return Array.from(
     new Set(
@@ -52,11 +123,96 @@ function assertString(value, label, errors) {
   }
 }
 
+function addContrastIssue(issues, themeLabel, label, foreground, background, minimum = 4.5) {
+  if (!foreground || !background) {
+    return;
+  }
+
+  const ratio = contrastRatio(foreground, background);
+  if (ratio !== null && ratio < minimum) {
+    issues.push(
+      `${themeLabel}: ${label} is ${ratio.toFixed(1)}:1; minimum is ${minimum}:1.`
+    );
+  }
+}
+
+function themeContrastIssues(theme, themeLabel) {
+  const issues = [];
+
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'body text against page background',
+    theme?.text?.primary,
+    theme?.background?.default
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'link colour against page background',
+    theme?.link?.color,
+    theme?.background?.default
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'navbar text against navbar background',
+    theme?.navbar?.color,
+    theme?.navbar?.background
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'sidebar text against sidebar background',
+    theme?.sidebar?.color,
+    theme?.sidebar?.background
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'selected sidebar text against selected background',
+    theme?.sidebar?.selectedColor,
+    theme?.sidebar?.selectedBackground
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'terminal text against terminal background',
+    theme?.terminal?.foreground,
+    theme?.terminal?.background
+  );
+  addContrastIssue(
+    issues,
+    themeLabel,
+    'terminal cursor against terminal background',
+    theme?.terminal?.cursor,
+    theme?.terminal?.background,
+    3
+  );
+
+  Object.entries(ANSI_LABELS).forEach(([key, label]) => {
+    addContrastIssue(
+      issues,
+      themeLabel,
+      `${label} against terminal background`,
+      theme?.terminal?.ansi?.[key],
+      theme?.terminal?.background,
+      3
+    );
+  });
+
+  return issues;
+}
+
 function validateEntry(entry, file, source, seenIds) {
   const errors = [];
+  const warnings = [];
 
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
-    return [`${file} must contain a theme library entry object.`];
+    return {
+      errors: [`${file} must contain a theme library entry object.`],
+      warnings,
+    };
   }
 
   assertString(entry.id, `${file}: id`, errors);
@@ -78,6 +234,13 @@ function validateEntry(entry, file, source, seenIds) {
       if (theme?.base !== 'light' && theme?.base !== 'dark') {
         errors.push(`${file}: themes[${index}].base must be "light" or "dark".`);
       }
+
+      const contrastIssues = themeContrastIssues(theme, `${file}: themes[${index}]`);
+      if (source === 'community') {
+        errors.push(...contrastIssues);
+      } else {
+        warnings.push(...contrastIssues);
+      }
     });
   }
 
@@ -89,7 +252,7 @@ function validateEntry(entry, file, source, seenIds) {
     errors.push(`${file}: community theme filename should match its id (${entry.id}.json).`);
   }
 
-  return errors;
+  return { errors, warnings };
 }
 
 async function readThemeSource(sourceDir, source) {
@@ -276,10 +439,18 @@ const rawItems = [
 ];
 
 const seenIds = new Set();
-const errors = rawItems.flatMap(item => validateEntry(item.entry, item.file, item.source, seenIds));
+const validationResults = rawItems.map(item =>
+  validateEntry(item.entry, item.file, item.source, seenIds)
+);
+const errors = validationResults.flatMap(result => result.errors);
+const warnings = validationResults.flatMap(result => result.warnings);
 
 if (errors.length > 0) {
   throw new Error(`Theme library validation failed:\n${errors.join('\n')}`);
+}
+
+if (warnings.length > 0) {
+  console.warn(`Theme library validation warnings:\n${warnings.join('\n')}`);
 }
 
 const sortedItems = rawItems.sort((left, right) => left.entry.name.localeCompare(right.entry.name));

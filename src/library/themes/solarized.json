@@ -10,13 +10,13 @@
       "primary": "#268bd2",
       "secondary": "#eee8d5",
       "text": { "primary": "#586e75" },
-      "link": { "color": "#268bd2" },
+      "link": { "color": "#006d9c" },
       "background": { "default": "#fdf6e3", "surface": "#eee8d5", "muted": "#e5ddc8" },
       "sidebar": {
         "background": "#eee8d5",
-        "color": "#586e75",
+        "color": "#475b62",
         "selectedBackground": "#b58900",
-        "selectedColor": "#fdf6e3",
+        "selectedColor": "#002b36",
         "actionBackground": "#268bd2"
       },
       "navbar": { "background": "#073642", "color": "#fdf6e3", "searchHint": "#93a1a1" }

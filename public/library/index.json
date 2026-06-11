@@ -56,7 +56,7 @@
             "foreground": "#f5edff",
             "cursor": "#a66cff",
             "ansi": {
-              "blue": "#7b42bc",
+              "blue": "#9b6de0",
               "magenta": "#a66cff",
               "cyan": "#6bdcff",
               "green": "#7fba00",
@@ -148,7 +148,7 @@
             "background": "#21222c",
             "color": "#f8f8f2",
             "selectedBackground": "#6272a4",
-            "selectedColor": "#f8f8f2",
+            "selectedColor": "#ffffff",
             "actionBackground": "#bd93f9"
           },
           "navbar": {
@@ -392,7 +392,7 @@
             "primary": "#202124"
           },
           "link": {
-            "color": "#1a73e8"
+            "color": "#0b57d0"
           },
           "background": {
             "default": "#f8fafd",
@@ -571,7 +571,7 @@
             "background": "#242933",
             "color": "#d8dee9",
             "selectedBackground": "#5e81ac",
-            "selectedColor": "#eceff4",
+            "selectedColor": "#0a1020",
             "actionBackground": "#88c0d0"
           },
           "navbar": {
@@ -713,7 +713,7 @@
             "foreground": "#f7f5ea",
             "cursor": "#ffea00",
             "ansi": {
-              "black": "#151512",
+              "black": "#77776f",
               "white": "#f7f5ea",
               "yellow": "#ffea00",
               "brightYellow": "#fff45c",
@@ -756,7 +756,7 @@
             "foreground": "#f7f5ea",
             "cursor": "#ffea00",
             "ansi": {
-              "black": "#10100e",
+              "black": "#73736a",
               "white": "#f7f5ea",
               "yellow": "#ffea00",
               "brightYellow": "#fff45c",
@@ -798,7 +798,7 @@
             "primary": "#586e75"
           },
           "link": {
-            "color": "#268bd2"
+            "color": "#006d9c"
           },
           "background": {
             "default": "#fdf6e3",
@@ -807,9 +807,9 @@
           },
           "sidebar": {
             "background": "#eee8d5",
-            "color": "#586e75",
+            "color": "#475b62",
             "selectedBackground": "#b58900",
-            "selectedColor": "#fdf6e3",
+            "selectedColor": "#002b36",
             "actionBackground": "#268bd2"
           },
           "navbar": {

@@ -17,7 +17,7 @@
         "primary": "#586e75"
       },
       "link": {
-        "color": "#268bd2"
+        "color": "#006d9c"
       },
       "background": {
         "default": "#fdf6e3",
@@ -26,9 +26,9 @@
       },
       "sidebar": {
         "background": "#eee8d5",
-        "color": "#586e75",
+        "color": "#475b62",
         "selectedBackground": "#b58900",
-        "selectedColor": "#fdf6e3",
+        "selectedColor": "#002b36",
         "actionBackground": "#268bd2"
       },
       "navbar": {

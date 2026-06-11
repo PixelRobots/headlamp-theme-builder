@@ -10,7 +10,7 @@
       "primary": "#1a73e8",
       "secondary": "#e8f0fe",
       "text": { "primary": "#202124" },
-      "link": { "color": "#1a73e8" },
+      "link": { "color": "#0b57d0" },
       "background": { "default": "#f8fafd", "surface": "#ffffff", "muted": "#e8f0fe" },
       "sidebar": {
         "background": "#202124",

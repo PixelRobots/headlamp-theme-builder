@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defaultDark } from '../../src/defaults/defaultTheme';
 import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../../src/utils/themeImport';
+import { validateThemesForUse } from '../../src/utils/themeValidation';
 
 describe('theme import URLs', () => {
   it('converts GitHub blob URLs to raw JSON URLs', () => {
@@ -51,5 +52,28 @@ describe('theme library imports', () => {
     });
 
     expect(entry.tags).toEqual(['imported', 'dark', 'team']);
+  });
+});
+
+describe('theme validation', () => {
+  it('warns when terminal ANSI colours have low contrast', () => {
+    const result = validateThemesForUse([
+      {
+        ...defaultDark,
+        name: 'Low ANSI',
+        terminal: {
+          ...defaultDark.terminal,
+          background: '#101010',
+          ansi: {
+            ...defaultDark.terminal?.ansi,
+            black: '#101010',
+          },
+        },
+      },
+    ]);
+
+    expect(result.warnings).toContain(
+      'Low ANSI (dark): ANSI black against terminal background is 1.0:1; recommended minimum is 3:1.'
+    );
   });
 });

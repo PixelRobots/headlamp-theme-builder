@@ -74,6 +74,25 @@ const OPTIONAL_HEX_PATHS = [
   'terminal.ansi.brightWhite',
 ] as const;
 
+const TERMINAL_ANSI_LABELS: Record<string, string> = {
+  black: 'ANSI black',
+  red: 'ANSI red',
+  green: 'ANSI green',
+  yellow: 'ANSI yellow',
+  blue: 'ANSI blue',
+  magenta: 'ANSI magenta',
+  cyan: 'ANSI cyan',
+  white: 'ANSI white',
+  brightBlack: 'bright ANSI black',
+  brightRed: 'bright ANSI red',
+  brightGreen: 'bright ANSI green',
+  brightYellow: 'bright ANSI yellow',
+  brightBlue: 'bright ANSI blue',
+  brightMagenta: 'bright ANSI magenta',
+  brightCyan: 'bright ANSI cyan',
+  brightWhite: 'bright ANSI white',
+};
+
 export function validateTheme(theme: unknown, label = 'Theme'): ThemeValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -193,6 +212,26 @@ function addContrastWarnings(theme: HeadlampTheme, label: string, warnings: stri
     if (ratio !== null && ratio < minimum) {
       warnings.push(
         `${label}: ${check.label} is ${ratio.toFixed(1)}:1; recommended minimum is ${minimum}:1.`
+      );
+    }
+  });
+
+  const terminalBackground = theme.terminal?.background;
+  const terminalAnsi = theme.terminal?.ansi;
+  if (!terminalBackground || !terminalAnsi) {
+    return;
+  }
+
+  Object.entries(TERMINAL_ANSI_LABELS).forEach(([key, ansiLabel]) => {
+    const value = terminalAnsi[key as keyof typeof terminalAnsi];
+    if (!value) {
+      return;
+    }
+
+    const ratio = contrastRatio(value, terminalBackground);
+    if (ratio !== null && ratio < 3) {
+      warnings.push(
+        `${label}: ${ansiLabel} against terminal background is ${ratio.toFixed(1)}:1; recommended minimum is 3:1.`
       );
     }
   });

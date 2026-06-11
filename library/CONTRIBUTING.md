@@ -24,6 +24,7 @@ The theme library workflow validates that:
 - theme IDs are unique,
 - required library fields are present,
 - community filenames match their theme IDs,
+- contributed text, link, sidebar, terminal, and ANSI colours meet contrast thresholds,
 - the generated public index is current,
 - generated previews and `library/README.md` are current,
 - the website still builds.
