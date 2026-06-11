@@ -128,14 +128,14 @@ export default function App() {
   }
 
   async function handleDownloadPlugin() {
-    const downloadValidation = validateThemesForUse([lightTheme, darkTheme]);
+    const downloadValidation = validateThemesForUse([currentTheme]);
     if (downloadValidation.errors.length > 0) {
       window.alert(`Fix theme errors before downloading:\n${downloadValidation.errors.join('\n')}`);
       return;
     }
 
     setPendingPluginDownload({
-      themes: [lightTheme, darkTheme],
+      themes: [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
     });

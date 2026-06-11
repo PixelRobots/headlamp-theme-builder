@@ -37,8 +37,6 @@ export default function PluginMetadataDialog({
   const [version, setVersion] = useState('0.1.0');
   const [description, setDescription] = useState('');
   const [author, setAuthor] = useState('');
-  const [homepage, setHomepage] = useState('');
-  const [repository, setRepository] = useState('');
 
   useEffect(() => {
     if (!open) {
@@ -49,8 +47,6 @@ export default function PluginMetadataDialog({
     setVersion('0.1.0');
     setDescription(`Headlamp theme plugin: ${initialName}`);
     setAuthor('');
-    setHomepage('');
-    setRepository('');
   }, [initialName, open]);
 
   const packageName = slugify(name);
@@ -91,20 +87,6 @@ export default function PluginMetadataDialog({
           onChange={event => setAuthor(event.target.value)}
           fullWidth
         />
-        <TextField
-          label="Homepage"
-          value={homepage}
-          onChange={event => setHomepage(event.target.value)}
-          placeholder="https://example.com"
-          fullWidth
-        />
-        <TextField
-          label="Repository"
-          value={repository}
-          onChange={event => setRepository(event.target.value)}
-          placeholder="https://github.com/org/repo.git"
-          fullWidth
-        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -117,8 +99,6 @@ export default function PluginMetadataDialog({
               version,
               description,
               author: author || undefined,
-              homepage: homepage || undefined,
-              repository: repository || undefined,
             })
           }
         >

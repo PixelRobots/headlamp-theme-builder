@@ -36,7 +36,7 @@ Goals:
 - Version. **Done.**
 - Description. **Done.**
 - Author/provider. **Done.**
-- Optional homepage/repository. **Done.**
+- Optional homepage/repository. **Deferred:** local theme plugins do not need these fields by default.
 
 ### GitHub-Friendly URL Imports
 
@@ -50,20 +50,6 @@ Goals:
 - Show clear errors when CORS blocks a URL.
 
 ## Preview Improvements
-
-### More Headlamp Surfaces
-
-Add preview screens that cover more of the real Headlamp UI.
-
-Candidates:
-
-- Logs view.
-- Exec terminal.
-- Resource details.
-- Tables with filters and actions.
-- Forms.
-- Dialogs and drawers.
-- Error and warning states.
 
 ### Side-by-Side Light/Dark Editing
 

@@ -12,7 +12,7 @@ A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in th
 - Edit light and dark variants independently
 - Theme library with bundled palettes and import from JSON files or URLs
 - Downloads an installable compiled Headlamp theme plugin zip
-- Customise generated plugin name, version, description, author, homepage, and repository before download
+- Customise generated plugin name, version, description, and author before download
 - Includes an uploaded custom logo in the generated plugin
 - Terminal and ANSI colour controls for Headlamp terminal/log views
 

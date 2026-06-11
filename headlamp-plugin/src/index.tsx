@@ -218,14 +218,14 @@ function ThemeBuilderPage() {
   }
 
   async function handleDownloadPlugin() {
-    const downloadValidation = validateThemesForUse([lightTheme, darkTheme]);
+    const downloadValidation = validateThemesForUse([currentTheme]);
     if (downloadValidation.errors.length > 0) {
       setStatus(`Fix theme errors before downloading: ${downloadValidation.errors[0]}`);
       return;
     }
 
     setPendingPluginDownload({
-      themes: [lightTheme, darkTheme],
+      themes: [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
     });

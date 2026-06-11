@@ -4,7 +4,8 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
-- Added generated plugin metadata controls for name, version, description, author, homepage, and repository.
+- Added generated plugin metadata controls for name, version, description, and author.
+- Changed builder plugin downloads to export only the active theme being edited.
 - Added builder validation summaries and blocked apply/download when hard theme errors are present.
 - Added JSON schemas and runtime validation for imported themes and library entries.
 - Added a public roadmap for planned theme schema, validation, preview, library, sharing, and documentation improvements.
