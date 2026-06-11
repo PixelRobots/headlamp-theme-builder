@@ -412,8 +412,6 @@ ${rows}
 }
 
 async function writeIfChanged(filePath, content) {
-  const normalizeLineEndings = value => value.replace(/\r\n/g, '\n');
-
   if (checkOnly) {
     let current = null;
     try {
@@ -422,14 +420,9 @@ async function writeIfChanged(filePath, content) {
       throw new Error(`${path.relative(repoRoot, filePath)} is missing. Run npm run build:library.`);
     }
 
-    if (normalizeLineEndings(current) !== normalizeLineEndings(content)) {
+    if (current !== content) {
       throw new Error(`${path.relative(repoRoot, filePath)} is stale. Run npm run build:library.`);
     }
-    return;
-  }
-
-  const current = await readFile(filePath, 'utf8').catch(() => null);
-  if (current !== null && normalizeLineEndings(current) === normalizeLineEndings(content)) {
     return;
   }
 
