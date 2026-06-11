@@ -185,7 +185,7 @@ function ThemeBuilderPage() {
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
-  const validationResult = validateThemesForUse([lightTheme, darkTheme]);
+  const validationResult = validateThemesForUse([currentTheme]);
   const shellBackground = headlampTheme.palette.background.default;
   const panelBackground = headlampTheme.palette.background.paper;
   const borderColor = headlampTheme.palette.divider;
@@ -218,8 +218,9 @@ function ThemeBuilderPage() {
   }
 
   async function handleDownloadPlugin() {
-    if (validationResult.errors.length > 0) {
-      setStatus(`Fix theme errors before downloading: ${validationResult.errors[0]}`);
+    const downloadValidation = validateThemesForUse([lightTheme, darkTheme]);
+    if (downloadValidation.errors.length > 0) {
+      setStatus(`Fix theme errors before downloading: ${downloadValidation.errors[0]}`);
       return;
     }
 

@@ -78,7 +78,7 @@ export default function App() {
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
-  const validationResult = validateThemesForUse([lightTheme, darkTheme]);
+  const validationResult = validateThemesForUse([currentTheme]);
   const themeFileMenuOpen = Boolean(themeFileMenuAnchor);
 
   useEffect(() => {
@@ -128,8 +128,9 @@ export default function App() {
   }
 
   async function handleDownloadPlugin() {
-    if (validationResult.errors.length > 0) {
-      window.alert(`Fix theme errors before downloading:\n${validationResult.errors.join('\n')}`);
+    const downloadValidation = validateThemesForUse([lightTheme, darkTheme]);
+    if (downloadValidation.errors.length > 0) {
+      window.alert(`Fix theme errors before downloading:\n${downloadValidation.errors.join('\n')}`);
       return;
     }
 

@@ -1,5 +1,5 @@
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ThemeValidationResult } from '../utils/themeValidation';
 
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function ThemeValidationSummary({ result }: Props) {
+  const theme = useTheme();
   const visibleErrors = result.errors.slice(0, 3);
   const visibleWarnings = result.warnings.slice(0, 3);
   const hiddenCount =
@@ -18,18 +19,40 @@ export default function ThemeValidationSummary({ result }: Props) {
     return null;
   }
 
+  const isError = result.errors.length > 0;
+  const borderColor = isError ? theme.palette.error.main : theme.palette.warning.main;
+  const icon = isError ? '!' : '△';
+
   return (
-    <Alert
-      severity={result.errors.length > 0 ? 'error' : 'warning'}
-      variant="outlined"
+    <Box
       sx={{
+        display: 'grid',
+        gridTemplateColumns: 'auto 1fr',
+        gap: 1.25,
         alignItems: 'flex-start',
-        py: 0.75,
-        '& .MuiAlert-message': { width: '100%' },
+        border: '1px solid',
+        borderColor,
+        borderRadius: 1,
+        bgcolor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        px: 1.5,
+        py: 1,
       }}
     >
+      <Typography
+        aria-hidden
+        sx={{
+          color: borderColor,
+          fontWeight: 900,
+          lineHeight: 1.3,
+          fontSize: '1rem',
+        }}
+      >
+        {icon}
+      </Typography>
+      <Box>
       <Typography variant="caption" sx={{ display: 'block', fontWeight: 700, mb: 0.5 }}>
-        {result.errors.length > 0
+        {isError
           ? 'Fix theme errors before applying or downloading.'
           : 'Theme warnings'}
       </Typography>
@@ -45,6 +68,7 @@ export default function ThemeValidationSummary({ result }: Props) {
           {hiddenCount} more validation item{hiddenCount === 1 ? '' : 's'}.
         </Typography>
       )}
-    </Alert>
+      </Box>
+    </Box>
   );
 }
