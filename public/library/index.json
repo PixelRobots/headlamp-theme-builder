@@ -1,0 +1,797 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "aks-inspired",
+      "name": "AKS Inspired",
+      "description": "Azure Kubernetes Service inspired purples with clear operational contrast.",
+      "tags": [
+        "light",
+        "dark",
+        "cloud",
+        "kubernetes"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/aks-inspired.json",
+      "themes": [
+        {
+          "name": "AKS Inspired Light",
+          "base": "light",
+          "primary": "#7b42bc",
+          "secondary": "#f1e8ff",
+          "text": {
+            "primary": "#211b2d"
+          },
+          "link": {
+            "color": "#5b2a86"
+          },
+          "background": {
+            "default": "#fbf8ff",
+            "surface": "#ffffff",
+            "muted": "#f1e8ff"
+          },
+          "sidebar": {
+            "background": "#2b1747",
+            "color": "#f5edff",
+            "selectedBackground": "#7b42bc",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#a66cff"
+          },
+          "navbar": {
+            "background": "#ffffff",
+            "color": "#2b1747",
+            "searchHint": "#7b42bc"
+          },
+          "terminal": {
+            "background": "#1c102f",
+            "foreground": "#f5edff",
+            "cursor": "#a66cff",
+            "ansi": {
+              "blue": "#7b42bc",
+              "magenta": "#a66cff",
+              "cyan": "#6bdcff",
+              "green": "#7fba00",
+              "yellow": "#f2c811",
+              "red": "#f7630c"
+            }
+          }
+        },
+        {
+          "name": "AKS Inspired Dark",
+          "base": "dark",
+          "primary": "#a66cff",
+          "secondary": "#362154",
+          "text": {
+            "primary": "#f5edff"
+          },
+          "link": {
+            "color": "#c7a7ff"
+          },
+          "background": {
+            "default": "#140b22",
+            "surface": "#221339",
+            "muted": "#362154"
+          },
+          "sidebar": {
+            "background": "#0f071a",
+            "color": "#f5edff",
+            "selectedBackground": "#7b42bc",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#a66cff"
+          },
+          "navbar": {
+            "background": "#0f071a",
+            "color": "#f5edff",
+            "searchHint": "#a66cff"
+          },
+          "terminal": {
+            "background": "#090411",
+            "foreground": "#f5edff",
+            "cursor": "#a66cff",
+            "ansi": {
+              "blue": "#7b42bc",
+              "magenta": "#a66cff",
+              "cyan": "#6bdcff",
+              "green": "#7fba00",
+              "yellow": "#f2c811",
+              "red": "#ff6b5a"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dracula",
+      "name": "Dracula",
+      "description": "Dark purple developer palette with bright pink, cyan, green, and yellow accents.",
+      "tags": [
+        "dark",
+        "developer",
+        "terminal"
+      ],
+      "modes": [
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/dracula.json",
+      "themes": [
+        {
+          "name": "Dracula",
+          "base": "dark",
+          "primary": "#bd93f9",
+          "secondary": "#44475a",
+          "text": {
+            "primary": "#f8f8f2"
+          },
+          "link": {
+            "color": "#8be9fd"
+          },
+          "background": {
+            "default": "#282a36",
+            "surface": "#343746",
+            "muted": "#44475a"
+          },
+          "sidebar": {
+            "background": "#21222c",
+            "color": "#f8f8f2",
+            "selectedBackground": "#6272a4",
+            "selectedColor": "#f8f8f2",
+            "actionBackground": "#bd93f9"
+          },
+          "navbar": {
+            "background": "#21222c",
+            "color": "#f8f8f2",
+            "searchHint": "#bd93f9"
+          },
+          "terminal": {
+            "background": "#21222c",
+            "foreground": "#f8f8f2",
+            "cursor": "#f8f8f2",
+            "ansi": {
+              "red": "#ff5555",
+              "green": "#50fa7b",
+              "yellow": "#f1fa8c",
+              "blue": "#bd93f9",
+              "magenta": "#ff79c6",
+              "cyan": "#8be9fd"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "eks-inspired",
+      "name": "EKS Inspired",
+      "description": "Amazon EKS inspired slate and orange palette for cloud operations.",
+      "tags": [
+        "light",
+        "dark",
+        "cloud",
+        "kubernetes"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/eks-inspired.json",
+      "themes": [
+        {
+          "name": "EKS Inspired Light",
+          "base": "light",
+          "primary": "#ff9900",
+          "secondary": "#eef1f5",
+          "text": {
+            "primary": "#161e2d"
+          },
+          "link": {
+            "color": "#146eb4"
+          },
+          "background": {
+            "default": "#f7f8fa",
+            "surface": "#ffffff",
+            "muted": "#eef1f5"
+          },
+          "sidebar": {
+            "background": "#232f3e",
+            "color": "#f2f3f3",
+            "selectedBackground": "#ff9900",
+            "selectedColor": "#161e2d",
+            "actionBackground": "#146eb4"
+          },
+          "navbar": {
+            "background": "#232f3e",
+            "color": "#ffffff",
+            "searchHint": "#ff9900"
+          },
+          "terminal": {
+            "background": "#111827",
+            "foreground": "#f2f3f3",
+            "cursor": "#ff9900",
+            "ansi": {
+              "blue": "#146eb4",
+              "cyan": "#00a1c9",
+              "green": "#2ea44f",
+              "yellow": "#ff9900",
+              "brightYellow": "#ffd15c",
+              "red": "#d13212"
+            }
+          }
+        },
+        {
+          "name": "EKS Inspired Dark",
+          "base": "dark",
+          "primary": "#ff9900",
+          "secondary": "#2f3b4b",
+          "text": {
+            "primary": "#f2f3f3"
+          },
+          "link": {
+            "color": "#7cc7ff"
+          },
+          "background": {
+            "default": "#111827",
+            "surface": "#1b2533",
+            "muted": "#2f3b4b"
+          },
+          "sidebar": {
+            "background": "#0b111c",
+            "color": "#d5dbdb",
+            "selectedBackground": "#ff9900",
+            "selectedColor": "#111827",
+            "actionBackground": "#146eb4"
+          },
+          "navbar": {
+            "background": "#0b111c",
+            "color": "#f2f3f3",
+            "searchHint": "#ff9900"
+          },
+          "terminal": {
+            "background": "#080d15",
+            "foreground": "#f2f3f3",
+            "cursor": "#ff9900",
+            "ansi": {
+              "blue": "#7cc7ff",
+              "cyan": "#00a1c9",
+              "green": "#2ea44f",
+              "yellow": "#ff9900",
+              "brightYellow": "#ffd15c",
+              "red": "#ff6b5a"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "description": "Familiar GitHub-style neutrals with strong blue actions and readable surfaces.",
+      "tags": [
+        "light",
+        "dark",
+        "developer"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/github.json",
+      "themes": [
+        {
+          "name": "GitHub Light",
+          "base": "light",
+          "primary": "#0969da",
+          "secondary": "#f6f8fa",
+          "text": {
+            "primary": "#24292f"
+          },
+          "link": {
+            "color": "#0969da"
+          },
+          "background": {
+            "default": "#ffffff",
+            "surface": "#f6f8fa",
+            "muted": "#eaeef2"
+          },
+          "sidebar": {
+            "background": "#f6f8fa",
+            "color": "#57606a",
+            "selectedBackground": "#d0d7de",
+            "selectedColor": "#24292f",
+            "actionBackground": "#2da44e"
+          },
+          "navbar": {
+            "background": "#24292f",
+            "color": "#ffffff",
+            "searchHint": "#8c959f"
+          }
+        },
+        {
+          "name": "GitHub Dark",
+          "base": "dark",
+          "primary": "#58a6ff",
+          "secondary": "#21262d",
+          "text": {
+            "primary": "#c9d1d9"
+          },
+          "link": {
+            "color": "#58a6ff"
+          },
+          "background": {
+            "default": "#0d1117",
+            "surface": "#161b22",
+            "muted": "#21262d"
+          },
+          "sidebar": {
+            "background": "#010409",
+            "color": "#8b949e",
+            "selectedBackground": "#30363d",
+            "selectedColor": "#f0f6fc",
+            "actionBackground": "#238636"
+          },
+          "navbar": {
+            "background": "#010409",
+            "color": "#f0f6fc",
+            "searchHint": "#8b949e"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gke-inspired",
+      "name": "GKE Inspired",
+      "description": "Google Kubernetes Engine inspired blue with restrained Google color accents.",
+      "tags": [
+        "light",
+        "dark",
+        "cloud",
+        "kubernetes"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/gke-inspired.json",
+      "themes": [
+        {
+          "name": "GKE Inspired Light",
+          "base": "light",
+          "primary": "#1a73e8",
+          "secondary": "#e8f0fe",
+          "text": {
+            "primary": "#202124"
+          },
+          "link": {
+            "color": "#1a73e8"
+          },
+          "background": {
+            "default": "#f8fafd",
+            "surface": "#ffffff",
+            "muted": "#e8f0fe"
+          },
+          "sidebar": {
+            "background": "#202124",
+            "color": "#e8eaed",
+            "selectedBackground": "#1a73e8",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#34a853"
+          },
+          "navbar": {
+            "background": "#ffffff",
+            "color": "#202124",
+            "searchHint": "#5f6368"
+          },
+          "terminal": {
+            "background": "#15171a",
+            "foreground": "#e8eaed",
+            "cursor": "#1a73e8",
+            "ansi": {
+              "blue": "#1a73e8",
+              "red": "#ea4335",
+              "yellow": "#fbbc04",
+              "green": "#34a853",
+              "cyan": "#24c1e0",
+              "magenta": "#a142f4"
+            }
+          }
+        },
+        {
+          "name": "GKE Inspired Dark",
+          "base": "dark",
+          "primary": "#8ab4f8",
+          "secondary": "#283447",
+          "text": {
+            "primary": "#e8eaed"
+          },
+          "link": {
+            "color": "#8ab4f8"
+          },
+          "background": {
+            "default": "#15171a",
+            "surface": "#202124",
+            "muted": "#283447"
+          },
+          "sidebar": {
+            "background": "#111315",
+            "color": "#e8eaed",
+            "selectedBackground": "#1a73e8",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#34a853"
+          },
+          "navbar": {
+            "background": "#111315",
+            "color": "#e8eaed",
+            "searchHint": "#8ab4f8"
+          },
+          "terminal": {
+            "background": "#0f1113",
+            "foreground": "#e8eaed",
+            "cursor": "#8ab4f8",
+            "ansi": {
+              "blue": "#8ab4f8",
+              "red": "#f28b82",
+              "yellow": "#fdd663",
+              "green": "#81c995",
+              "cyan": "#78d9ec",
+              "magenta": "#c58af9"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "monokai",
+      "name": "Monokai",
+      "description": "High-energy dark editor palette with lime, pink, orange, and violet accents.",
+      "tags": [
+        "dark",
+        "developer",
+        "terminal"
+      ],
+      "modes": [
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/monokai.json",
+      "themes": [
+        {
+          "name": "Monokai",
+          "base": "dark",
+          "primary": "#a6e22e",
+          "secondary": "#3e3d32",
+          "text": {
+            "primary": "#f8f8f2"
+          },
+          "link": {
+            "color": "#66d9ef"
+          },
+          "background": {
+            "default": "#272822",
+            "surface": "#34352d",
+            "muted": "#3e3d32"
+          },
+          "sidebar": {
+            "background": "#1f201b",
+            "color": "#f8f8f2",
+            "selectedBackground": "#a6e22e",
+            "selectedColor": "#1f201b",
+            "actionBackground": "#f92672"
+          },
+          "navbar": {
+            "background": "#1f201b",
+            "color": "#f8f8f2",
+            "searchHint": "#fd971f"
+          },
+          "terminal": {
+            "background": "#1f201b",
+            "foreground": "#f8f8f2",
+            "cursor": "#a6e22e",
+            "ansi": {
+              "red": "#f92672",
+              "green": "#a6e22e",
+              "yellow": "#e6db74",
+              "blue": "#66d9ef",
+              "magenta": "#ae81ff",
+              "cyan": "#66d9ef"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "nord",
+      "name": "Nord",
+      "description": "Cool arctic blues with soft contrast and calm terminal colors.",
+      "tags": [
+        "dark",
+        "developer",
+        "terminal"
+      ],
+      "modes": [
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/nord.json",
+      "themes": [
+        {
+          "name": "Nord",
+          "base": "dark",
+          "primary": "#88c0d0",
+          "secondary": "#3b4252",
+          "text": {
+            "primary": "#eceff4"
+          },
+          "link": {
+            "color": "#81a1c1"
+          },
+          "background": {
+            "default": "#2e3440",
+            "surface": "#3b4252",
+            "muted": "#434c5e"
+          },
+          "sidebar": {
+            "background": "#242933",
+            "color": "#d8dee9",
+            "selectedBackground": "#5e81ac",
+            "selectedColor": "#eceff4",
+            "actionBackground": "#88c0d0"
+          },
+          "navbar": {
+            "background": "#242933",
+            "color": "#eceff4",
+            "searchHint": "#81a1c1"
+          },
+          "terminal": {
+            "background": "#242933",
+            "foreground": "#eceff4",
+            "cursor": "#88c0d0",
+            "ansi": {
+              "red": "#bf616a",
+              "green": "#a3be8c",
+              "yellow": "#ebcb8b",
+              "blue": "#81a1c1",
+              "magenta": "#b48ead",
+              "cyan": "#88c0d0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "one-dark-pro",
+      "name": "One Dark Pro",
+      "description": "VS Code-style dark palette with blue actions, green success, and warm editor accents.",
+      "tags": [
+        "dark",
+        "developer",
+        "terminal"
+      ],
+      "modes": [
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/one-dark-pro.json",
+      "themes": [
+        {
+          "name": "One Dark Pro",
+          "base": "dark",
+          "primary": "#61afef",
+          "secondary": "#3b4048",
+          "text": {
+            "primary": "#abb2bf"
+          },
+          "link": {
+            "color": "#61afef"
+          },
+          "background": {
+            "default": "#282c34",
+            "surface": "#313640",
+            "muted": "#3b4048"
+          },
+          "sidebar": {
+            "background": "#21252b",
+            "color": "#abb2bf",
+            "selectedBackground": "#3e4451",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#98c379"
+          },
+          "navbar": {
+            "background": "#21252b",
+            "color": "#abb2bf",
+            "searchHint": "#5c6370"
+          },
+          "terminal": {
+            "background": "#21252b",
+            "foreground": "#abb2bf",
+            "cursor": "#61afef",
+            "ansi": {
+              "red": "#e06c75",
+              "green": "#98c379",
+              "yellow": "#e5c07b",
+              "blue": "#61afef",
+              "magenta": "#c678dd",
+              "cyan": "#56b6c2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pixelrobots",
+      "name": "Pixelrobots",
+      "description": "Pixel Robots black and yellow palette using the site accent, #ffea00.",
+      "tags": [
+        "light",
+        "dark",
+        "brand",
+        "terminal"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/pixelrobots.json",
+      "themes": [
+        {
+          "name": "Pixelrobots Light",
+          "base": "light",
+          "primary": "#ffea00",
+          "secondary": "#242321",
+          "text": {
+            "primary": "#1f1e1c"
+          },
+          "link": {
+            "color": "#6a5f00"
+          },
+          "background": {
+            "default": "#f7f5ea",
+            "surface": "#ffffff",
+            "muted": "#ece7c3"
+          },
+          "sidebar": {
+            "background": "#242321",
+            "color": "#f7f5ea",
+            "selectedBackground": "#ffea00",
+            "selectedColor": "#242321",
+            "actionBackground": "#ffea00"
+          },
+          "navbar": {
+            "background": "#242321",
+            "color": "#ffffff",
+            "searchHint": "#ffea00"
+          },
+          "terminal": {
+            "background": "#151512",
+            "foreground": "#f7f5ea",
+            "cursor": "#ffea00",
+            "ansi": {
+              "black": "#151512",
+              "white": "#f7f5ea",
+              "yellow": "#ffea00",
+              "brightYellow": "#fff45c",
+              "red": "#ff5c4d",
+              "green": "#6bd66b",
+              "blue": "#4ea3ff"
+            }
+          }
+        },
+        {
+          "name": "Pixelrobots Dark",
+          "base": "dark",
+          "primary": "#ffea00",
+          "secondary": "#2f2e28",
+          "text": {
+            "primary": "#f7f5ea"
+          },
+          "link": {
+            "color": "#ffea00"
+          },
+          "background": {
+            "default": "#151512",
+            "surface": "#242321",
+            "muted": "#2f2e28"
+          },
+          "sidebar": {
+            "background": "#1b1a17",
+            "color": "#f7f5ea",
+            "selectedBackground": "#ffea00",
+            "selectedColor": "#151512",
+            "actionBackground": "#ffea00"
+          },
+          "navbar": {
+            "background": "#242321",
+            "color": "#ffffff",
+            "searchHint": "#ffea00"
+          },
+          "terminal": {
+            "background": "#10100e",
+            "foreground": "#f7f5ea",
+            "cursor": "#ffea00",
+            "ansi": {
+              "black": "#10100e",
+              "white": "#f7f5ea",
+              "yellow": "#ffea00",
+              "brightYellow": "#fff45c",
+              "red": "#ff5c4d",
+              "green": "#6bd66b",
+              "blue": "#4ea3ff"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "solarized",
+      "name": "Solarized",
+      "description": "Classic low-glare palette with balanced light and dark variants.",
+      "tags": [
+        "light",
+        "dark",
+        "developer"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/solarized.json",
+      "themes": [
+        {
+          "name": "Solarized Light",
+          "base": "light",
+          "primary": "#268bd2",
+          "secondary": "#eee8d5",
+          "text": {
+            "primary": "#586e75"
+          },
+          "link": {
+            "color": "#268bd2"
+          },
+          "background": {
+            "default": "#fdf6e3",
+            "surface": "#eee8d5",
+            "muted": "#e5ddc8"
+          },
+          "sidebar": {
+            "background": "#eee8d5",
+            "color": "#586e75",
+            "selectedBackground": "#b58900",
+            "selectedColor": "#fdf6e3",
+            "actionBackground": "#268bd2"
+          },
+          "navbar": {
+            "background": "#073642",
+            "color": "#fdf6e3",
+            "searchHint": "#93a1a1"
+          }
+        },
+        {
+          "name": "Solarized Dark",
+          "base": "dark",
+          "primary": "#268bd2",
+          "secondary": "#073642",
+          "text": {
+            "primary": "#93a1a1"
+          },
+          "link": {
+            "color": "#2aa198"
+          },
+          "background": {
+            "default": "#002b36",
+            "surface": "#073642",
+            "muted": "#0f3f4d"
+          },
+          "sidebar": {
+            "background": "#00212b",
+            "color": "#839496",
+            "selectedBackground": "#b58900",
+            "selectedColor": "#002b36",
+            "actionBackground": "#268bd2"
+          },
+          "navbar": {
+            "background": "#00212b",
+            "color": "#eee8d5",
+            "searchHint": "#839496"
+          }
+        }
+      ]
+    }
+  ]
+}

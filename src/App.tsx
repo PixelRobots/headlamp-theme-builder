@@ -40,6 +40,7 @@ const BORDER = 'rgba(255,255,255,0.06)';
 const WELCOME_DISMISSED_KEY = 'headlamp-theme-builder-welcome-dismissed';
 const MOBILE_WARNING_DISMISSED_KEY = 'headlamp-theme-builder-mobile-warning-dismissed';
 const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}headlamp-theme-builder.png`;
+const PUBLIC_LIBRARY_URL = `${import.meta.env.BASE_URL}library/index.json`;
 
 interface PendingPluginDownload {
   themes: HeadlampTheme[];
@@ -473,6 +474,7 @@ export default function App() {
                   entries.filter(existingEntry => existingEntry.id !== entry.id)
                 )
               }
+              publicLibraryUrl={PUBLIC_LIBRARY_URL}
             />
           </Box>
         )}

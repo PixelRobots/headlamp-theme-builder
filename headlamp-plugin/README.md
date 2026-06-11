@@ -18,7 +18,7 @@ The plugin embeds the Headlamp Theme Builder as a Headlamp route. It can:
 
 ![Headlamp Theme Builder library](https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/docs/screenshots/plugin-library.png)
 
-Theme JSON can be imported from a file or URL. URL imports run in the browser, so the host must allow CORS. GitHub file URLs and raw GitHub URLs work well.
+Theme JSON can be imported from a file, URL, or the public library. URL imports run in the browser, so the host must allow CORS. GitHub file URLs and raw GitHub URLs work well.
 JSON schemas are available in the
 [schemas folder](https://github.com/PixelRobots/headlamp-theme-builder/tree/main/schemas).
 

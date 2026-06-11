@@ -8,10 +8,29 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import { useRef, useState, type ChangeEvent } from 'react';
-import type { ThemeLibraryEntry } from '../library/themeLibrary';
+import { useMemo, useRef, useState, type ChangeEvent } from 'react';
+import {
+  normalizeThemeLibraryEntry,
+  type RawThemeLibraryEntry,
+  type ThemeLibraryEntry,
+} from '../library/themeLibrary';
 import type { HeadlampTheme } from '../types/theme';
 import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../utils/themeImport';
+
+const PAGE_SIZE = 12;
+
+type ThemeSource = 'bundled' | 'imported' | 'public';
+type SourceFilter = 'all' | ThemeSource;
+type ModeFilter = 'all' | 'light' | 'dark' | 'pair';
+
+interface DisplayThemeLibraryEntry {
+  entry: ThemeLibraryEntry;
+  source: ThemeSource;
+}
+
+interface PublicThemeLibraryIndex {
+  themes?: RawThemeLibraryEntry[];
+}
 
 interface ThemeLibraryProps {
   entries: ThemeLibraryEntry[];
@@ -20,6 +39,7 @@ interface ThemeLibraryProps {
   onDownload: (entry: ThemeLibraryEntry) => void;
   onImportEntry?: (entry: ThemeLibraryEntry) => void;
   onDeleteEntry?: (entry: ThemeLibraryEntry) => void;
+  publicLibraryUrl?: string;
   applyLabel?: string;
 }
 
@@ -41,6 +61,64 @@ function getPreviewThemeForMode(entry: ThemeLibraryEntry, mode?: 'light' | 'dark
     return entry.themes.find(theme => theme.base === mode) ?? getPreviewTheme(entry);
   }
   return getPreviewTheme(entry);
+}
+
+function sourceLabel(source: ThemeSource) {
+  if (source === 'public') {
+    return 'Public';
+  }
+  return source === 'imported' ? 'Imported' : 'Bundled';
+}
+
+function sourceForEntry(entry: ThemeLibraryEntry): ThemeSource {
+  return entry.tags.includes('imported') ? 'imported' : 'bundled';
+}
+
+function entryMatchesMode(entry: ThemeLibraryEntry, mode: ModeFilter) {
+  if (mode === 'all') {
+    return true;
+  }
+
+  const hasLight = entry.themes.some(theme => theme.base === 'light');
+  const hasDark = entry.themes.some(theme => theme.base === 'dark');
+
+  if (mode === 'pair') {
+    return hasLight && hasDark;
+  }
+
+  return mode === 'light' ? hasLight : hasDark;
+}
+
+function entryMatchesSearch(entry: ThemeLibraryEntry, searchTerm: string) {
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  if (!normalizedSearch) {
+    return true;
+  }
+
+  return [entry.name, entry.description, ...entry.tags]
+    .join(' ')
+    .toLowerCase()
+    .includes(normalizedSearch);
+}
+
+function getPublicIndexEntries(data: unknown): RawThemeLibraryEntry[] {
+  if (Array.isArray(data)) {
+    return data as RawThemeLibraryEntry[];
+  }
+
+  if (typeof data === 'object' && data !== null && Array.isArray((data as PublicThemeLibraryIndex).themes)) {
+    return (data as PublicThemeLibraryIndex).themes ?? [];
+  }
+
+  throw new Error('Public library index did not contain a themes array.');
+}
+
+function toImportedEntry(entry: ThemeLibraryEntry): ThemeLibraryEntry {
+  return {
+    ...entry,
+    id: `imported-${entry.id}`,
+    tags: Array.from(new Set(['imported', ...entry.tags.filter(tag => tag !== 'public')])),
+  };
 }
 
 function MiniPreview({ theme }: { theme: HeadlampTheme }) {
@@ -89,6 +167,7 @@ export default function ThemeLibrary({
   onDownload,
   onImportEntry,
   onDeleteEntry,
+  publicLibraryUrl,
   applyLabel = 'Apply',
 }: ThemeLibraryProps) {
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -99,6 +178,33 @@ export default function ThemeLibrary({
   const [previewModes, setPreviewModes] = useState<Record<string, 'light' | 'dark'>>({});
   const [importUrl, setImportUrl] = useState('');
   const [importStatus, setImportStatus] = useState<string | null>(null);
+  const [publicEntries, setPublicEntries] = useState<ThemeLibraryEntry[]>([]);
+  const [publicLibraryStatus, setPublicLibraryStatus] = useState<string | null>(null);
+  const [publicLibraryLoading, setPublicLibraryLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modeFilter, setModeFilter] = useState<ModeFilter>('all');
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const displayEntries = useMemo<DisplayThemeLibraryEntry[]>(
+    () => [
+      ...entries.map(entry => ({ entry, source: sourceForEntry(entry) })),
+      ...publicEntries.map(entry => ({ entry, source: 'public' as const })),
+    ],
+    [entries, publicEntries]
+  );
+
+  const filteredEntries = useMemo(
+    () =>
+      displayEntries.filter(({ entry, source }) =>
+        (sourceFilter === 'all' || sourceFilter === source) &&
+        entryMatchesMode(entry, modeFilter) &&
+        entryMatchesSearch(entry, searchTerm)
+      ),
+    [displayEntries, modeFilter, searchTerm, sourceFilter]
+  );
+
+  const visibleEntries = filteredEntries.slice(0, visibleCount);
 
   function getApplyableThemes(entry: ThemeLibraryEntry) {
     const lightTheme = entry.themes.find(theme => theme.base === 'light');
@@ -183,6 +289,44 @@ export default function ThemeLibrary({
     }
   }
 
+  async function loadPublicLibrary() {
+    if (!publicLibraryUrl) {
+      setPublicLibraryStatus('Public library URL is not configured.');
+      return;
+    }
+
+    setPublicLibraryLoading(true);
+    setPublicLibraryStatus(null);
+
+    try {
+      const response = await fetch(publicLibraryUrl);
+      if (!response.ok) {
+        throw new Error(`Could not load public library (${response.status}).`);
+      }
+
+      const rawEntries = getPublicIndexEntries(await response.json());
+      const normalizedEntries = rawEntries.map(entry => normalizeThemeLibraryEntry(entry));
+      setPublicEntries(normalizedEntries);
+      setSourceFilter('public');
+      setVisibleCount(PAGE_SIZE);
+      setPublicLibraryStatus(`Loaded ${normalizedEntries.length} public themes.`);
+    } catch (error) {
+      setPublicLibraryStatus(
+        error instanceof TypeError
+          ? 'Public library is unavailable. Bundled and imported themes are still available.'
+          : error instanceof Error
+            ? error.message
+            : 'Could not load the public library.'
+      );
+    } finally {
+      setPublicLibraryLoading(false);
+    }
+  }
+
+  function resetVisibleEntries() {
+    setVisibleCount(PAGE_SIZE);
+  }
+
   return (
     <Box sx={{ height: '100%', overflow: 'auto', p: 2 }}>
       <Box sx={{ mb: 2 }}>
@@ -190,7 +334,7 @@ export default function ThemeLibrary({
           Theme Library
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Pick a bundled theme to apply, edit in the builder, or download it as a dedicated Headlamp theme plugin.
+          Pick a bundled, imported, or public theme to apply, edit, import, or download.
         </Typography>
       </Box>
 
@@ -224,13 +368,81 @@ export default function ThemeLibrary({
           <Button size="small" variant="outlined" onClick={handleImportUrl}>
             Import URL
           </Button>
+          {publicLibraryUrl && (
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={loadPublicLibrary}
+              disabled={publicLibraryLoading}
+            >
+              {publicLibraryLoading ? 'Loading public library' : 'Load public library'}
+            </Button>
+          )}
           {importStatus && (
             <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
               {importStatus}
             </Typography>
           )}
+          {publicLibraryStatus && (
+            <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
+              {publicLibraryStatus}
+            </Typography>
+          )}
         </Box>
       )}
+
+      <Box
+        sx={{
+          mb: 2,
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            md: 'minmax(220px, 1fr) 180px 180px',
+          },
+          gap: 1,
+          alignItems: 'center',
+        }}
+      >
+        <TextField
+          size="small"
+          label="Search themes"
+          value={searchTerm}
+          onChange={event => {
+            setSearchTerm(event.target.value);
+            resetVisibleEntries();
+          }}
+        />
+        <TextField
+          select
+          size="small"
+          label="Mode"
+          value={modeFilter}
+          onChange={event => {
+            setModeFilter(event.target.value as ModeFilter);
+            resetVisibleEntries();
+          }}
+        >
+          <MenuItem value="all">All modes</MenuItem>
+          <MenuItem value="pair">Pairs</MenuItem>
+          <MenuItem value="light">Light</MenuItem>
+          <MenuItem value="dark">Dark</MenuItem>
+        </TextField>
+        <TextField
+          select
+          size="small"
+          label="Source"
+          value={sourceFilter}
+          onChange={event => {
+            setSourceFilter(event.target.value as SourceFilter);
+            resetVisibleEntries();
+          }}
+        >
+          <MenuItem value="all">All sources</MenuItem>
+          <MenuItem value="bundled">Bundled</MenuItem>
+          <MenuItem value="imported">Imported</MenuItem>
+          <MenuItem value="public">Public</MenuItem>
+        </TextField>
+      </Box>
 
       <Box
         sx={{
@@ -239,13 +451,13 @@ export default function ThemeLibrary({
           gap: 2,
         }}
       >
-        {entries.map(entry => {
+        {visibleEntries.map(({ entry, source }) => {
           const hasLight = entry.themes.some(theme => theme.base === 'light');
           const hasDark = entry.themes.some(theme => theme.base === 'dark');
           const previewTheme = getPreviewThemeForMode(entry, previewModes[entry.id]);
           return (
             <Box
-              key={entry.id}
+              key={`${source}-${entry.id}`}
               sx={{
                 border: '1px solid',
                 borderColor: 'divider',
@@ -328,6 +540,7 @@ export default function ThemeLibrary({
                   <Typography variant="subtitle2" sx={{ fontWeight: 700, minWidth: 0, flex: 1 }}>
                     {entry.name}
                   </Typography>
+                  <Chip size="small" label={sourceLabel(source)} />
                   <Chip size="small" label={modeLabel(entry.themes)} />
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>
@@ -342,7 +555,21 @@ export default function ThemeLibrary({
               </Box>
 
               <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
-                {onApply && (
+                {source === 'public' ? (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => {
+                      const importedEntry = toImportedEntry(entry);
+                      onImportEntry?.(importedEntry);
+                      setImportStatus(`Imported ${entry.name} from the public library.`);
+                      setSourceFilter('imported');
+                      setVisibleCount(PAGE_SIZE);
+                    }}
+                  >
+                    Import
+                  </Button>
+                ) : onApply && (
                   getApplyableThemes(entry).length > 1 ? (
                     <Button
                       size="small"
@@ -357,16 +584,34 @@ export default function ThemeLibrary({
                     </Button>
                   )
                 )}
-                <Button size="small" variant="outlined" onClick={() => onEdit(entry)}>
-                  Edit
-                </Button>
-                <Button size="small" variant="text" onClick={() => onDownload(entry)}>
-                  Download plugin
-                </Button>
+                {source !== 'public' && (
+                  <>
+                    <Button size="small" variant="outlined" onClick={() => onEdit(entry)}>
+                      Edit
+                    </Button>
+                    <Button size="small" variant="text" onClick={() => onDownload(entry)}>
+                      Download plugin
+                    </Button>
+                  </>
+                )}
               </Box>
             </Box>
           );
         })}
+      </Box>
+      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
+        <Typography variant="caption" color="text.secondary">
+          Showing {Math.min(visibleCount, filteredEntries.length)} of {filteredEntries.length} themes
+        </Typography>
+        {visibleCount < filteredEntries.length && (
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => setVisibleCount(count => count + PAGE_SIZE)}
+          >
+            Show more
+          </Button>
+        )}
       </Box>
       {onApply && (
         <Menu

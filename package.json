@@ -14,8 +14,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "build:pages": "tsc && vite build --mode github-pages",
+    "build:library": "node scripts/build-public-library.mjs",
+    "build": "npm run build:library && tsc && vite build",
+    "build:pages": "npm run build:library && tsc && vite build --mode github-pages",
     "preview": "vite preview"
   },
   "dependencies": {

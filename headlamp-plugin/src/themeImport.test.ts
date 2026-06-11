@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeThemeImportUrl } from '../../src/utils/themeImport';
+import { defaultDark } from '../../src/defaults/defaultTheme';
+import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../../src/utils/themeImport';
 
 describe('theme import URLs', () => {
   it('converts GitHub blob URLs to raw JSON URLs', () => {
@@ -30,5 +31,25 @@ describe('theme import URLs', () => {
         'https://github.com/PixelRobots/headlamp-theme-builder/blob/main/README.md'
       )
     ).toThrow('That GitHub URL does not point to a JSON file.');
+  });
+});
+
+describe('theme library imports', () => {
+  it('marks imported library entries as imported even when they already have tags', () => {
+    const entry = getImportedLibraryEntry({
+      id: 'custom',
+      name: 'Custom',
+      description: 'Custom library entry.',
+      tags: ['dark', 'team'],
+      themes: [
+        {
+          ...defaultDark,
+          name: 'Custom Dark',
+          base: 'dark',
+        },
+      ],
+    });
+
+    expect(entry.tags).toEqual(['imported', 'dark', 'team']);
   });
 });

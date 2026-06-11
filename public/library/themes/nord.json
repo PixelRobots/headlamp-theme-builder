@@ -1,0 +1,38 @@
+{
+  "id": "nord",
+  "name": "Nord",
+  "description": "Cool arctic blues with soft contrast and calm terminal colors.",
+  "tags": ["dark", "developer", "terminal"],
+  "themes": [
+    {
+      "name": "Nord",
+      "base": "dark",
+      "primary": "#88c0d0",
+      "secondary": "#3b4252",
+      "text": { "primary": "#eceff4" },
+      "link": { "color": "#81a1c1" },
+      "background": { "default": "#2e3440", "surface": "#3b4252", "muted": "#434c5e" },
+      "sidebar": {
+        "background": "#242933",
+        "color": "#d8dee9",
+        "selectedBackground": "#5e81ac",
+        "selectedColor": "#eceff4",
+        "actionBackground": "#88c0d0"
+      },
+      "navbar": { "background": "#242933", "color": "#eceff4", "searchHint": "#81a1c1" },
+      "terminal": {
+        "background": "#242933",
+        "foreground": "#eceff4",
+        "cursor": "#88c0d0",
+        "ansi": {
+          "red": "#bf616a",
+          "green": "#a3be8c",
+          "yellow": "#ebcb8b",
+          "blue": "#81a1c1",
+          "magenta": "#b48ead",
+          "cyan": "#88c0d0"
+        }
+      }
+    }
+  ]
+}

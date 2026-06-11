@@ -33,6 +33,7 @@ import { useEffect, useState } from 'react';
 const APPLIED_THEME_STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
 const BUILDER_DRAFT_STORAGE_KEY = 'headlamp-theme-builder-draft-state';
 const IMPORTED_LIBRARY_STORAGE_KEY = 'headlamp-theme-builder-imported-library';
+const PUBLIC_LIBRARY_URL = 'https://pixelrobots.github.io/headlamp-theme-builder/library/index.json';
 const THEME_PREFERENCE_KEY = 'headlampThemePreference';
 
 const PLUGIN_NAME = 'headlamp-theme-builder';
@@ -506,6 +507,7 @@ function ThemeBuilderPage() {
                   entries.filter(existingEntry => existingEntry.id !== entry.id)
                 )
               }
+              publicLibraryUrl={PUBLIC_LIBRARY_URL}
               applyLabel="Apply"
             />
           </Box>

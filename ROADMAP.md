@@ -87,6 +87,16 @@ Candidates:
 - More editor-inspired palettes.
 - Company/team brand starter themes.
 
+### Library Browsing
+
+Make the library easier to use as the number of themes grows.
+
+Goals:
+
+- Search by name, description, and tag. **Done.**
+- Filter by light, dark, pair, bundled, imported, and public themes. **Done.**
+- Avoid overloading the page when there are many themes. **Done:** the library uses show-more pagination.
+
 ## Sharing
 
 ### Shareable Theme Links
@@ -108,6 +118,8 @@ Goals:
 - Stable raw URLs for each bundled theme.
 - Index file listing available themes.
 - Clear compatibility/version notes.
+- Direct import from the public library in the website and plugin. **Done.**
+- Generate `public/library/index.json` and copied theme JSON files during website builds. **Done.**
 
 ## Documentation
 

@@ -4,6 +4,8 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added library search, mode/source filters, and show-more pagination.
+- Added public theme library generation and direct public-library imports.
 - Added GitHub file URL support for theme library imports.
 - Added light/dark preview toggles to paired theme library cards.
 - Added delete actions for imported library themes while keeping bundled themes fixed.

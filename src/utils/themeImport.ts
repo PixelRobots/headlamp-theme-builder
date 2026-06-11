@@ -125,7 +125,12 @@ export function getImportedLibraryEntry(data: unknown, fallbackName = 'Imported 
         typeof data.description === 'string'
           ? data.description
           : 'Imported theme library entry.',
-      tags: Array.isArray(data.tags) ? data.tags.filter(tag => typeof tag === 'string') : ['imported'],
+      tags: Array.from(
+        new Set([
+          'imported',
+          ...(Array.isArray(data.tags) ? data.tags.filter(tag => typeof tag === 'string') : []),
+        ])
+      ),
       themes: data.themes,
     });
   }
