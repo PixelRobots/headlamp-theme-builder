@@ -92,15 +92,17 @@ function rawUrl(relativePath) {
 
 function tableRow(entry) {
   const modes = entry.themes.map(theme => theme.base);
-  const previews = modes
-    .map(mode => {
-      const previewPath = `library/previews/${entry.id}-${mode}.svg`;
-      return `![${markdownEscape(entry.name)} ${mode} preview](${rawUrl(previewPath)})`;
-    })
-    .join('<br>');
+  const previewImages = modes.map(mode => {
+    const previewPath = `library/previews/${entry.id}-${mode}.svg`;
+    return `![${markdownEscape(entry.name)} ${mode} preview](${rawUrl(previewPath)})`;
+  });
+  const previews = previewImages.join('<br>');
   const tags = Array.isArray(entry.tags) ? entry.tags.join(', ') : '';
 
-  return `| ${previews} | \`${markdownEscape(entry.id)}\` | ${markdownEscape(entry.name)} | ${markdownEscape(entry.description)} | community | ${markdownEscape(modes.join(', '))} | ${markdownEscape(tags)} |`;
+  return {
+    previews: previewImages.join('\n\n'),
+    row: `| ${previews} | \`${markdownEscape(entry.id)}\` | ${markdownEscape(entry.name)} | ${markdownEscape(entry.description)} | community | ${markdownEscape(modes.join(', '))} | ${markdownEscape(tags)} |`,
+  };
 }
 
 async function main() {
@@ -110,12 +112,9 @@ async function main() {
 
   for (const file of changedFiles) {
     const entry = JSON.parse(await readFile(path.join(repoRoot, file), 'utf8'));
-    rows.push(tableRow(entry));
-
-    for (const theme of entry.themes) {
-      const previewPath = `library/previews/${entry.id}-${theme.base}.svg`;
-      previews.push(`![${markdownEscape(entry.name)} ${theme.base} preview](${rawUrl(previewPath)})`);
-    }
+    const themeComment = tableRow(entry);
+    previews.push(themeComment.previews);
+    rows.push(themeComment.row);
   }
 
   if (rows.length === 0) {
@@ -128,7 +127,7 @@ Community theme preview for review:
 
 ${previews.join('\n\n')}
 
-README catalog row added by this PR:
+Generated README catalog row:
 
 | Preview | ID | Theme | Description | Source | Modes | Tags |
 | --- | --- | --- | --- | --- | --- | --- |
