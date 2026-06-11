@@ -8,6 +8,7 @@ const shouldPost = args.includes('--post');
 const positionalArgs = args.filter(arg => arg !== '--post');
 const [filesPath, outputPath = 'theme-library-pr-comment.md'] = positionalArgs;
 const marker = '<!-- headlamp-theme-builder:community-preview -->';
+const previewSource = process.env.PREVIEW_SOURCE === 'artifact' ? 'artifact' : 'branch';
 
 function markdownEscape(value) {
   return String(value ?? '')
@@ -93,6 +94,10 @@ function rawUrl(relativePath) {
 function tableRow(entry) {
   const modes = entry.themes.map(theme => theme.base);
   const previewImages = modes.map(mode => {
+    if (previewSource === 'artifact') {
+      return `generated ${mode} preview`;
+    }
+
     const previewPath = `library/previews/${entry.id}-${mode}.svg`;
     return `![${markdownEscape(entry.name)} ${mode} preview](${rawUrl(previewPath)})`;
   });
@@ -122,10 +127,12 @@ async function main() {
     return;
   }
 
-  const body = `${marker}
-Community theme preview for review:
+  const previewIntro = previewSource === 'artifact'
+    ? 'Generated preview files are attached to this workflow run as the `theme-library-catalog` artifact.'
+    : `Community theme preview for review:\n\n${previews.join('\n\n')}`;
 
-${previews.join('\n\n')}
+  const body = `${marker}
+${previewIntro}
 
 Generated README catalog row:
 

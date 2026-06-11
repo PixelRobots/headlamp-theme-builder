@@ -18,6 +18,8 @@ npm run build
 
 Commit only your theme JSON under `library/themes/`. The workflow generates and commits the catalog README and preview images back to the PR branch. Do not commit generated files under `public/library`; those are build output for the website deploy.
 
+For PRs from forks, GitHub may block workflow push-back. In that case, the workflow uploads the generated catalog files as a `theme-library-catalog` artifact for maintainers to inspect or apply.
+
 ## What CI Checks
 
 The theme library workflow validates that:
