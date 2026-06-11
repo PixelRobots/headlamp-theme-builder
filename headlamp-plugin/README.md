@@ -13,8 +13,8 @@ The plugin embeds the Headlamp Theme Builder as a Headlamp route. It can:
 - Download a compiled theme plugin zip.
 - Export and import theme JSON for sharing or later editing.
 
-For Helm, CLI, upgrade, removal, and troubleshooting steps, see the
-[deployment guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/DEPLOYMENT.md).
+For maintainer release steps, see the
+[release guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/DEPLOYMENT.md).
 
 ## Install from Headlamp Desktop
 
