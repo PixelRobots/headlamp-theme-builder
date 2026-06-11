@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { useRef, useState, type ChangeEvent } from 'react';
 import type { ThemeLibraryEntry } from '../library/themeLibrary';
 import type { HeadlampTheme } from '../types/theme';
-import { getImportedLibraryEntry } from '../utils/themeImport';
+import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../utils/themeImport';
 
 interface ThemeLibraryProps {
   entries: ThemeLibraryEntry[];
@@ -110,6 +110,17 @@ export default function ThemeLibrary({
     const entry = getImportedLibraryEntry(data, fallbackName);
     onImportEntry?.(entry);
     setImportStatus(`Imported ${entry.name}.`);
+    return entry;
+  }
+
+  function importUrlFileName(url: string) {
+    try {
+      const parsedUrl = new URL(url);
+      const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+      return pathParts[pathParts.length - 1] || 'Imported URL Theme';
+    } catch {
+      return 'Imported URL Theme';
+    }
   }
 
   function handleImportFile(event: ChangeEvent<HTMLInputElement>) {
@@ -138,13 +149,32 @@ export default function ThemeLibrary({
     }
 
     try {
-      const response = await fetch(url);
+      const normalizedImport = normalizeThemeImportUrl(url);
+      const response = await fetch(normalizedImport.url);
       if (!response.ok) {
         throw new Error(`Could not fetch theme JSON (${response.status}).`);
       }
-      importEntryFromData(await response.json(), url.split('/').pop() || 'Imported URL Theme');
+      let data: unknown;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error('The URL did not return valid theme JSON.');
+      }
+      const entry = importEntryFromData(data, importUrlFileName(normalizedImport.url));
+      setImportStatus(
+        normalizedImport.wasConverted
+          ? `Converted GitHub file URL to raw JSON.\nImported ${entry.name}.`
+          : `Imported ${entry.name}.`
+      );
       setImportUrl('');
     } catch (error) {
+      if (error instanceof TypeError) {
+        setImportStatus(
+          'Could not fetch the theme JSON. The host may be blocking browser requests with CORS.'
+        );
+        return;
+      }
+
       setImportStatus(
         error instanceof Error
           ? error.message
@@ -160,7 +190,7 @@ export default function ThemeLibrary({
           Theme Library
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Pick a bundled theme to edit in the builder or download it as a dedicated Headlamp theme plugin.
+          Pick a bundled theme to apply, edit in the builder, or download it as a dedicated Headlamp theme plugin.
         </Typography>
       </Box>
 

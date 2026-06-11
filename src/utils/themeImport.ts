@@ -19,6 +19,51 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, '') || 'imported-theme';
 }
 
+export interface ThemeImportUrl {
+  url: string;
+  wasConverted: boolean;
+}
+
+export function normalizeThemeImportUrl(value: string): ThemeImportUrl {
+  let parsedUrl: URL;
+
+  try {
+    parsedUrl = new URL(value);
+  } catch {
+    throw new Error('Enter a valid HTTP or HTTPS URL.');
+  }
+
+  if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+    throw new Error('Theme URLs must start with http:// or https://.');
+  }
+
+  const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '');
+
+  if (hostname !== 'github.com') {
+    return { url: parsedUrl.toString(), wasConverted: false };
+  }
+
+  const [owner, repo, marker, ref, ...pathParts] = parsedUrl.pathname
+    .split('/')
+    .filter(Boolean);
+
+  if (!owner || !repo || marker !== 'blob' || !ref || pathParts.length < 1) {
+    throw new Error(
+      'GitHub imports must point to a JSON file, for example github.com/owner/repo/blob/main/theme.json.'
+    );
+  }
+
+  const filePath = pathParts.join('/');
+  if (!filePath.toLowerCase().endsWith('.json')) {
+    throw new Error('That GitHub URL does not point to a JSON file.');
+  }
+
+  return {
+    url: `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${filePath}`,
+    wasConverted: true,
+  };
+}
+
 function isThemeLike(value: unknown): value is Partial<HeadlampTheme> & Pick<HeadlampTheme, 'name' | 'base'> {
   return (
     isRecord(value) &&

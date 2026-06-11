@@ -48,6 +48,7 @@ Goals:
 - Convert GitHub file URLs to raw URLs automatically.
 - Keep normal raw URL imports for other hosts.
 - Show clear errors when CORS blocks a URL.
+- **Done:** GitHub file URLs are converted automatically and URL import errors are clearer.
 
 ## Preview Improvements
 

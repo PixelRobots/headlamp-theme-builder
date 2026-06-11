@@ -4,6 +4,7 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added GitHub file URL support for theme library imports.
 - Added light/dark preview toggles to paired theme library cards.
 - Added delete actions for imported library themes while keeping bundled themes fixed.
 - Added a mobile warning dialog on the website to recommend desktop or the Headlamp plugin.
