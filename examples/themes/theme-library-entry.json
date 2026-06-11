@@ -1,0 +1,72 @@
+{
+  "id": "example-pair",
+  "name": "Example Pair",
+  "description": "A paired light and dark theme entry that can be imported into the library.",
+  "tags": ["light", "dark", "example"],
+  "themes": [
+    {
+      "name": "Example Pair Light",
+      "base": "light",
+      "primary": "#111111",
+      "secondary": "#387abc",
+      "text": {
+        "primary": "#222222"
+      },
+      "link": {
+        "color": "#0072c9"
+      },
+      "background": {
+        "default": "#ffffff",
+        "surface": "#f5f5f5",
+        "muted": "#eeeeee"
+      },
+      "sidebar": {
+        "background": "#242424",
+        "color": "#ffffff",
+        "selectedBackground": "#ffea00",
+        "selectedColor": "#111111",
+        "actionBackground": "#ffea00"
+      },
+      "navbar": {
+        "background": "#ffffff",
+        "color": "#222222",
+        "searchHint": "#777777"
+      },
+      "fontFamily": ["Roboto", "sans-serif"],
+      "radius": 6,
+      "buttonTextTransform": "none"
+    },
+    {
+      "name": "Example Pair Dark",
+      "base": "dark",
+      "primary": "#ffea00",
+      "secondary": "#387abc",
+      "text": {
+        "primary": "#f5f5f5"
+      },
+      "link": {
+        "color": "#58a6ff"
+      },
+      "background": {
+        "default": "#141414",
+        "surface": "#242424",
+        "muted": "#303030"
+      },
+      "sidebar": {
+        "background": "#1f1f1f",
+        "color": "#f5f5f5",
+        "selectedBackground": "#ffea00",
+        "selectedColor": "#141414",
+        "actionBackground": "#ffea00"
+      },
+      "navbar": {
+        "background": "#1f1f1f",
+        "color": "#f5f5f5",
+        "searchHint": "#a0a0a0"
+      },
+      "fontFamily": ["Roboto", "sans-serif"],
+      "radius": 6,
+      "buttonTextTransform": "none"
+    }
+  ]
+}

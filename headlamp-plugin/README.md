@@ -6,12 +6,22 @@
 
 Build, preview, apply, and export Headlamp themes from inside Headlamp.
 
+![Headlamp Theme Builder plugin](https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/docs/screenshots/plugin-builder.png)
+
 The plugin embeds the Headlamp Theme Builder as a Headlamp route. It can:
 
 - Preview theme changes in a Headlamp-like UI.
 - Apply the current builder theme to the current Headlamp session.
 - Download a compiled theme plugin zip.
 - Export and import theme JSON for sharing or later editing.
+
+![Headlamp Theme Builder library](https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/docs/screenshots/plugin-library.png)
+
+Theme JSON can be imported from a file or URL. URL imports run in the browser, so the host must allow CORS. Raw GitHub URLs work well.
+
+If an older downloaded theme plugin shows as incompatible in Headlamp, download it again from the current builder. Newer downloads include the compatibility metadata Headlamp expects.
+
+Artifact Hub and the Headlamp Plugin Catalog can take time to refresh after a new release.
 
 For maintainer release steps, see the
 [release guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/DEPLOYMENT.md).

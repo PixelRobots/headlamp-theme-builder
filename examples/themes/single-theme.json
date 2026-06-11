@@ -1,0 +1,37 @@
+{
+  "name": "Example Dark",
+  "base": "dark",
+  "primary": "#ffea00",
+  "secondary": "#387abc",
+  "text": {
+    "primary": "#f5f5f5"
+  },
+  "link": {
+    "color": "#58a6ff"
+  },
+  "background": {
+    "default": "#141414",
+    "surface": "#242424",
+    "muted": "#303030"
+  },
+  "sidebar": {
+    "background": "#1f1f1f",
+    "color": "#f5f5f5",
+    "selectedBackground": "#ffea00",
+    "selectedColor": "#141414",
+    "actionBackground": "#ffea00"
+  },
+  "navbar": {
+    "background": "#1f1f1f",
+    "color": "#f5f5f5",
+    "searchHint": "#a0a0a0"
+  },
+  "terminal": {
+    "background": "#111111",
+    "foreground": "#f5f5f5",
+    "cursor": "#ffea00"
+  },
+  "fontFamily": ["Roboto", "sans-serif"],
+  "radius": 6,
+  "buttonTextTransform": "none"
+}

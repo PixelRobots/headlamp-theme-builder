@@ -252,7 +252,7 @@ export default function ThemeLibrary({
                   Edit
                 </Button>
                 <Button size="small" variant="text" onClick={() => onDownload(entry)}>
-                  Download
+                  Download plugin
                 </Button>
               </Box>
             </Box>

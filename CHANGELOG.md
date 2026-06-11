@@ -2,6 +2,13 @@
 
 All notable changes to Headlamp Theme Builder are documented here.
 
+## Unreleased
+
+- Added website and plugin screenshots to the README files.
+- Added example theme JSON files for single-theme and library-entry imports.
+- Clarified JSON URL import CORS expectations and older downloaded theme plugin compatibility troubleshooting.
+- Renamed library download actions to "Download plugin" for clarity.
+
 ## v1.1.0 - 2026-06-11
 
 - Added a bundled theme library to the website and Headlamp plugin.

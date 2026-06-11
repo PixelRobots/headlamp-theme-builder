@@ -4,12 +4,24 @@
 
 A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in the left panel, see them applied to a real MUI preview on the right, then download a ready-to-install Headlamp plugin zip.
 
+![Headlamp Theme Builder website](docs/screenshots/website-builder.png)
+
 ## Features
 
 - Live preview of navbar, sidebar, cards, and buttons
 - Edit light and dark variants independently
-- Downloads an installable compiled Headlamp plugin zip, with editable source files included
+- Theme library with bundled palettes and import from JSON files or URLs
+- Downloads an installable compiled Headlamp theme plugin zip
 - Includes an uploaded custom logo in the generated plugin
+- Terminal and ANSI colour controls for Headlamp terminal/log views
+
+## Theme library
+
+![Headlamp Theme Builder library](docs/screenshots/website-library.png)
+
+Use **Import JSON** for local theme files, or **Import URL** for JSON hosted somewhere public. URL imports run in the browser, so the host must allow CORS. Raw GitHub URLs work well.
+
+Example theme JSON files are in [examples/themes](examples/themes/).
 
 ## Getting started
 
@@ -29,6 +41,8 @@ Open http://localhost:5173
 3. Restart Headlamp and select your theme in Settings → General → Theme.
 
 The zip includes `main.js` at the plugin root, so it is ready to install without running a build. It also includes `src/`, `tsconfig.json`, and `dist/main.js` if you want to edit or rebuild it later.
+
+If an older downloaded theme plugin shows as incompatible in Headlamp, download it again from the current builder. Newer downloads include the compatibility metadata Headlamp expects.
 
 ## Tech stack
 
