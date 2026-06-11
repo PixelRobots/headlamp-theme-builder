@@ -21,10 +21,10 @@ Expand validation beyond the existing contrast badges.
 
 Goals:
 
-- Warn when required theme fields are missing.
-- Warn when text/background contrast falls below WCAG AA.
-- Warn when terminal foreground, cursor, or ANSI colours are hard to read.
-- Surface validation results before download or apply.
+- Warn when required theme fields are missing. **Done:** missing required fields are hard errors.
+- Warn when text/background contrast falls below WCAG AA. **Done:** builder summary shows contrast warnings.
+- Warn when terminal foreground, cursor, or ANSI colours are hard to read. **Partially done:** terminal foreground and cursor checks are included.
+- Surface validation results before download or apply. **Done:** builder summary is shown and hard errors block apply/download.
 
 ### Export Metadata
 
@@ -132,13 +132,3 @@ Goals:
 - Upgrade/removal steps.
 - Compatibility troubleshooting.
 - Difference between JSON export and compiled plugin download.
-
-### Headlamp Plugin Catalog Notes
-
-Document catalog refresh expectations and common visibility issues.
-
-Goals:
-
-- Artifact Hub indexing delay.
-- Headlamp catalog cache delay.
-- Community/unverified plugin filtering.

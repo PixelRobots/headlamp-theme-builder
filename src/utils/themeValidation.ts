@@ -1,10 +1,18 @@
 import type { HeadlampTheme } from '../types/theme';
+import { contrastRatio } from './contrast';
 
 type RawTheme = Partial<HeadlampTheme> & Pick<HeadlampTheme, 'name' | 'base'>;
 
 export interface ThemeValidationResult {
   errors: string[];
   warnings: string[];
+}
+
+interface ContrastCheck {
+  foreground: string | undefined;
+  background: string | undefined;
+  label: string;
+  minimum?: number;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -127,4 +135,80 @@ export function assertValidThemes(themes: RawTheme[]): void {
   if (errors.length > 0) {
     throw new Error(`Theme JSON validation failed:\n${errors.slice(0, 8).join('\n')}`);
   }
+}
+
+function addContrastWarnings(theme: HeadlampTheme, label: string, warnings: string[]) {
+  const checks: ContrastCheck[] = [
+    {
+      foreground: theme.text.primary,
+      background: theme.background.default,
+      label: 'body text against page background',
+    },
+    {
+      foreground: theme.link.color,
+      background: theme.background.default,
+      label: 'link colour against page background',
+    },
+    {
+      foreground: theme.navbar.color,
+      background: theme.navbar.background,
+      label: 'navbar text against navbar background',
+    },
+    {
+      foreground: theme.navbar.searchHint,
+      background: theme.navbar.background,
+      label: 'navbar search hint against navbar background',
+      minimum: 3,
+    },
+    {
+      foreground: theme.sidebar.color,
+      background: theme.sidebar.background,
+      label: 'sidebar text against sidebar background',
+    },
+    {
+      foreground: theme.sidebar.selectedColor,
+      background: theme.sidebar.selectedBackground,
+      label: 'selected sidebar text against selected background',
+    },
+    {
+      foreground: theme.terminal?.foreground,
+      background: theme.terminal?.background,
+      label: 'terminal text against terminal background',
+    },
+    {
+      foreground: theme.terminal?.cursor,
+      background: theme.terminal?.background,
+      label: 'terminal cursor against terminal background',
+      minimum: 3,
+    },
+  ];
+
+  checks.forEach(check => {
+    if (!check.foreground || !check.background) {
+      return;
+    }
+
+    const ratio = contrastRatio(check.foreground, check.background);
+    const minimum = check.minimum ?? 4.5;
+    if (ratio !== null && ratio < minimum) {
+      warnings.push(
+        `${label}: ${check.label} is ${ratio.toFixed(1)}:1; recommended minimum is ${minimum}:1.`
+      );
+    }
+  });
+}
+
+export function validateThemesForUse(themes: HeadlampTheme[]): ThemeValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  themes.forEach((theme, index) => {
+    const label = `${theme.name || `Theme ${index + 1}`} (${theme.base})`;
+    const result = validateTheme(theme, label);
+    errors.push(...result.errors);
+    warnings.push(...result.warnings);
+    addContrastWarnings(theme, label, warnings);
+  });
+
+  return { errors, warnings };
 }

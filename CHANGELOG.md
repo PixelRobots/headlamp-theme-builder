@@ -4,6 +4,7 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added builder validation summaries and blocked apply/download when hard theme errors are present.
 - Added JSON schemas and runtime validation for imported themes and library entries.
 - Added a public roadmap for planned theme schema, validation, preview, library, sharing, and documentation improvements.
 - Added website and plugin screenshots to the README files.

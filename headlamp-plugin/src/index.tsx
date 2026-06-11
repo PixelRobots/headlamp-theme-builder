@@ -4,10 +4,12 @@ import InstallInstructionsDialog from '@builder/components/InstallInstructionsDi
 import Preview from '@builder/components/Preview';
 import ThemeLibrary from '@builder/components/ThemeLibrary';
 import ThemePanel from '@builder/components/ThemePanel';
+import ThemeValidationSummary from '@builder/components/ThemeValidationSummary';
 import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibrary';
 import type { HeadlampTheme } from '@builder/types/theme';
 import { downloadPlugin } from '@builder/utils/generateCode';
+import { validateThemesForUse } from '@builder/utils/themeValidation';
 import {
   AppLogoProps,
   Headlamp,
@@ -174,6 +176,7 @@ function ThemeBuilderPage() {
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
+  const validationResult = validateThemesForUse([lightTheme, darkTheme]);
   const shellBackground = headlampTheme.palette.background.default;
   const panelBackground = headlampTheme.palette.background.paper;
   const borderColor = headlampTheme.palette.divider;
@@ -195,12 +198,22 @@ function ThemeBuilderPage() {
   }, [importedLibraryEntries]);
 
   function handleApply() {
+    if (validationResult.errors.length > 0) {
+      setStatus(`Fix theme errors before applying: ${validationResult.errors[0]}`);
+      return;
+    }
+
     saveAppliedTheme({ lightTheme, darkTheme, logoDataUrl }, active);
     setStatus(`Applied ${active === 'light' ? lightTheme.name : darkTheme.name}. Reloading...`);
     window.setTimeout(() => window.location.reload(), 500);
   }
 
   async function handleDownloadPlugin() {
+    if (validationResult.errors.length > 0) {
+      setStatus(`Fix theme errors before downloading: ${validationResult.errors[0]}`);
+      return;
+    }
+
     await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
     setInstallInstructionsOpen(true);
   }
@@ -432,6 +445,7 @@ function ThemeBuilderPage() {
               >
                 Live preview - {active} theme
               </Typography>
+              <ThemeValidationSummary result={validationResult} />
               <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
                 <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
               </Box>

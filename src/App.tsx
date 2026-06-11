@@ -18,6 +18,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
 import ThemeLibrary from './components/ThemeLibrary';
+import ThemeValidationSummary from './components/ThemeValidationSummary';
 import HowToUseDialog from './components/HowToUseDialog';
 import InstallInstructionsDialog from './components/InstallInstructionsDialog';
 import WelcomeDialog from './components/WelcomeDialog';
@@ -25,6 +26,7 @@ import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
 import { downloadPlugin, downloadThemeJson } from './utils/generateCode';
 import { getImportedLogoDataUrl, getImportedThemes } from './utils/themeImport';
+import { validateThemesForUse } from './utils/themeValidation';
 import type { HeadlampTheme } from './types/theme';
 
 // headlamp.dev colour palette
@@ -67,6 +69,7 @@ export default function App() {
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
+  const validationResult = validateThemesForUse([lightTheme, darkTheme]);
   const themeFileMenuOpen = Boolean(themeFileMenuAnchor);
 
   useEffect(() => {
@@ -116,6 +119,11 @@ export default function App() {
   }
 
   async function handleDownloadPlugin() {
+    if (validationResult.errors.length > 0) {
+      window.alert(`Fix theme errors before downloading:\n${validationResult.errors.join('\n')}`);
+      return;
+    }
+
     await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
     setInstallInstructionsOpen(true);
   }
@@ -394,6 +402,7 @@ export default function App() {
               >
                 Live preview - {active} theme
               </Typography>
+              <ThemeValidationSummary result={validationResult} />
               <Box sx={{ flex: 1, overflow: 'hidden' }}>
                 <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
               </Box>
