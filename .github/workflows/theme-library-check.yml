@@ -58,7 +58,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add library/README.md library/previews
-            git commit -m "chore: Update generated theme catalog"
+            git commit -m "chore: Update generated theme catalog [skip ci]"
             git push
           fi
           echo "PR_HEAD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
