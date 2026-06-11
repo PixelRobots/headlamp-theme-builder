@@ -4,10 +4,111 @@
 
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/headlamp-theme-builder)](https://artifacthub.io/packages/search?repo=headlamp-theme-builder)
 
-This plugin embeds the Headlamp Theme Builder inside Headlamp.
+Build, preview, apply, and export Headlamp themes from inside Headlamp.
 
-It lives in this repository as a nested Headlamp plugin package. It does not require changes to
-the Headlamp application source.
+The plugin embeds the Headlamp Theme Builder as a Headlamp route. It can:
+
+- Preview theme changes in a Headlamp-like UI.
+- Apply the current builder theme to the current Headlamp session.
+- Download a compiled theme plugin zip.
+- Export and import theme JSON for sharing or later editing.
+
+## Install from Headlamp Desktop
+
+1. Open Headlamp Desktop.
+2. Go to **Plugin Catalog**.
+3. Search for **Headlamp Theme Builder**.
+4. Open the plugin detail page and click **Install**.
+5. Restart Headlamp if prompted.
+6. Open **Theme Builder** from the sidebar.
+
+Artifact Hub package URL:
+
+```text
+https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+```
+
+If the plugin is visible on Artifact Hub but not in Headlamp's Plugin Catalog,
+turn off the catalog's **Only official plugins** filter. Headlamp's catalog can
+hide community plugins by default unless they are official or allow-listed.
+
+## Install in-cluster with Helm
+
+When Headlamp is deployed in Kubernetes, use the Headlamp plugin manager sidecar
+and point it at the Artifact Hub package URL:
+
+```yaml
+config:
+  watchPlugins: true
+
+pluginsManager:
+  enabled: true
+  configContent: |
+    plugins:
+      - name: headlamp-theme-builder
+        source: https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+        version: 1.0.0
+    installOptions:
+      parallel: true
+      maxConcurrent: 2
+```
+
+Apply it with your Headlamp Helm values:
+
+```bash
+helm upgrade --install my-headlamp headlamp/headlamp \
+  --namespace kube-system \
+  -f values.yaml
+```
+
+If you keep plugin configuration in a separate file, create `plugin.yml`:
+
+```yaml
+plugins:
+  - name: headlamp-theme-builder
+    source: https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+    version: 1.0.0
+
+installOptions:
+  parallel: true
+  maxConcurrent: 2
+```
+
+Then install or upgrade Headlamp with:
+
+```bash
+helm upgrade --install my-headlamp headlamp/headlamp \
+  --namespace kube-system \
+  -f values.yaml \
+  --set pluginsManager.configContent="$(cat plugin.yml)"
+```
+
+## Install with the Headlamp plugin CLI
+
+You can install directly from Artifact Hub with the Headlamp plugin tooling:
+
+```bash
+npx @kinvolk/headlamp-plugin install \
+  https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+```
+
+Use this route for local testing or environments where you manage the Headlamp
+plugin folder yourself.
+
+## Troubleshooting Plugin Catalog visibility
+
+- Confirm the package is listed on Artifact Hub under the **Headlamp** category.
+- Confirm `artifacthub-pkg.yml` contains:
+  - `headlamp/plugin/archive-url`
+  - `headlamp/plugin/archive-checksum`
+  - `headlamp/plugin/version-compat`
+  - `headlamp/plugin/distro-compat`
+- Confirm the archive URL points to a GitHub, GitLab, or Bitbucket release asset.
+- In Headlamp Desktop, disable **Only official plugins** in the Plugin Catalog.
+- If you are developing Headlamp from source, install the Plugin Catalog plugin
+  manually; it is not installed by default in development builds.
+- Artifact Hub rescans repositories periodically, so newly pushed metadata or
+  release assets may take a few minutes to appear.
 
 ## Development
 
@@ -23,12 +124,6 @@ npm run start
 cd headlamp-plugin
 npm run build
 ```
-
-The plugin can:
-
-- Preview theme changes in a Headlamp-like UI.
-- Download a compiled theme plugin zip.
-- Apply the current builder theme to this Headlamp session by saving the generated theme in browser storage, registering it, setting Headlamp's theme preference, and reloading.
 
 ## Release
 
