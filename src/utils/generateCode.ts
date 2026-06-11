@@ -97,6 +97,9 @@ export function generatePackageJson(pluginName: string): string {
       version: '0.1.0',
       description: `Headlamp theme plugin: ${pluginName}`,
       main: 'main.js',
+      devDependencies: {
+        '@kinvolk/headlamp-plugin': '^0.14.0',
+      },
     },
     null,
     2

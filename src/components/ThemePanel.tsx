@@ -386,21 +386,24 @@ export default function ThemePanel({
         boxSizing: 'border-box',
       }}
     >
+      <TextField
+        label="Theme name"
+        value={theme.name}
+        onChange={e => set('name')(e.target.value)}
+        size="small"
+        fullWidth
+        slotProps={{
+          inputLabel: { sx: { color: 'text.secondary' } },
+          input: { sx: { color: 'text.primary' } },
+        }}
+        sx={{
+          flexShrink: 0,
+          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' },
+        }}
+      />
+
       <Section title="Theme" open={openSections.has('Theme')} onToggle={() => toggleSection('Theme')}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-          <TextField
-            label="Theme name"
-            value={theme.name}
-            onChange={e => set('name')(e.target.value)}
-            size="small"
-            fullWidth
-            slotProps={{
-              inputLabel: { sx: { color: 'text.secondary' } },
-              input: { sx: { color: 'text.primary' } },
-            }}
-            sx={{ '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
-          />
-
           <FormControl size="small" fullWidth>
             <InputLabel sx={{ color: 'text.secondary' }}>Base mode</InputLabel>
             <Select
