@@ -10,7 +10,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import {
   normalizeThemeLibraryEntry,
   type RawThemeLibraryEntry,
@@ -194,6 +194,55 @@ export default function ThemeLibrary({
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const existingEntryIdKey = entries.map(entry => baseEntryId(entry.id)).sort().join('\0');
+
+  const loadPublicLibrary = useCallback(async () => {
+    if (!publicLibraryUrl) {
+      setPublicLibraryStatus('Public library URL is not configured.');
+      return;
+    }
+
+    setPublicLibraryLoading(true);
+    setPublicLibraryStatus(null);
+
+    try {
+      const response = await fetch(publicLibraryUrl);
+      if (!response.ok) {
+        throw new Error(`Could not load public library (${response.status}).`);
+      }
+
+      const existingIds = new Set(existingEntryIdKey.split('\0').filter(Boolean));
+      const rawEntries = getPublicIndexEntries(await response.json());
+      const normalizedEntries = rawEntries
+        .map(entry => normalizeThemeLibraryEntry(entry))
+        .filter(entry => !existingIds.has(baseEntryId(entry.id)));
+      setPublicEntries(normalizedEntries);
+      setVisibleCount(PAGE_SIZE);
+      setPublicLibraryStatus(
+        normalizedEntries.length > 0
+          ? `${normalizedEntries.length} public themes loaded. Bundled duplicates are hidden.`
+          : 'No additional public themes found. Bundled duplicates are hidden.'
+      );
+    } catch (error) {
+      setPublicLibraryStatus(
+        error instanceof TypeError
+          ? 'Public library is unavailable. Bundled and imported themes are still available.'
+          : error instanceof Error
+            ? error.message
+            : 'Could not load the public library.'
+      );
+    } finally {
+      setPublicLibraryLoading(false);
+    }
+  }, [existingEntryIdKey, publicLibraryUrl]);
+
+  useEffect(() => {
+    if (!publicLibraryUrl) {
+      return;
+    }
+
+    void loadPublicLibrary();
+  }, [loadPublicLibrary, publicLibraryUrl]);
 
   const displayEntries = useMemo<DisplayThemeLibraryEntry[]>(
     () => [
@@ -298,47 +347,6 @@ export default function ThemeLibrary({
     }
   }
 
-  async function loadPublicLibrary() {
-    if (!publicLibraryUrl) {
-      setPublicLibraryStatus('Public library URL is not configured.');
-      return;
-    }
-
-    setPublicLibraryLoading(true);
-    setPublicLibraryStatus(null);
-
-    try {
-      const response = await fetch(publicLibraryUrl);
-      if (!response.ok) {
-        throw new Error(`Could not load public library (${response.status}).`);
-      }
-
-      const existingIds = new Set(entries.map(entry => baseEntryId(entry.id)));
-      const rawEntries = getPublicIndexEntries(await response.json());
-      const normalizedEntries = rawEntries
-        .map(entry => normalizeThemeLibraryEntry(entry))
-        .filter(entry => !existingIds.has(baseEntryId(entry.id)));
-      setPublicEntries(normalizedEntries);
-      setSourceFilter('public');
-      setVisibleCount(PAGE_SIZE);
-      setPublicLibraryStatus(
-        normalizedEntries.length > 0
-          ? `Loaded ${normalizedEntries.length} public themes. Bundled duplicates were hidden.`
-          : 'No additional public themes found. Bundled duplicates were hidden.'
-      );
-    } catch (error) {
-      setPublicLibraryStatus(
-        error instanceof TypeError
-          ? 'Public library is unavailable. Bundled and imported themes are still available.'
-          : error instanceof Error
-            ? error.message
-            : 'Could not load the public library.'
-      );
-    } finally {
-      setPublicLibraryLoading(false);
-    }
-  }
-
   function resetVisibleEntries() {
     setVisibleCount(PAGE_SIZE);
   }
@@ -405,16 +413,6 @@ export default function ThemeLibrary({
           <Button size="small" variant="outlined" onClick={handleImportUrl}>
             Import URL
           </Button>
-          {publicLibraryUrl && (
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={loadPublicLibrary}
-              disabled={publicLibraryLoading}
-            >
-              {publicLibraryLoading ? 'Loading public library' : 'Load public library'}
-            </Button>
-          )}
           {importStatus && (
             <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
               {importStatus}
@@ -423,6 +421,11 @@ export default function ThemeLibrary({
           {publicLibraryStatus && (
             <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
               {publicLibraryStatus}
+            </Typography>
+          )}
+          {publicLibraryLoading && (
+            <Typography variant="caption" color="text.secondary">
+              Loading public library...
             </Typography>
           )}
         </Box>
@@ -434,7 +437,7 @@ export default function ThemeLibrary({
           display: 'grid',
           gridTemplateColumns: {
             xs: '1fr',
-            md: 'minmax(220px, 1fr) 180px 180px auto',
+            md: 'minmax(220px, 1fr) 180px 180px auto auto',
           },
           gap: 1,
           alignItems: 'center',
@@ -488,6 +491,17 @@ export default function ThemeLibrary({
         >
           Clear filters
         </Button>
+        {publicLibraryUrl && (
+          <Button
+            size="small"
+            variant="text"
+            onClick={() => void loadPublicLibrary()}
+            disabled={publicLibraryLoading}
+            sx={{ whiteSpace: 'nowrap' }}
+          >
+            Refresh public library
+          </Button>
+        )}
       </Box>
 
       <Box
