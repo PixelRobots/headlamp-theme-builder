@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Popover from '@mui/material/Popover';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
@@ -31,7 +32,36 @@ export default function ColorField({
   contrast,
 }: ColorFieldProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const pickerRef = useRef<HTMLDivElement | null>(null);
   const theme = useTheme();
+
+  useEffect(() => {
+    if (!anchorEl) {
+      return;
+    }
+
+    const currentAnchor = anchorEl;
+
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target;
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (currentAnchor.contains(target) || pickerRef.current?.contains(target)) {
+        return;
+      }
+
+      setAnchorEl(null);
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown, true);
+    return () => document.removeEventListener('pointerdown', handlePointerDown, true);
+  }, [anchorEl]);
+
+  const togglePicker = (element: HTMLElement) => {
+    setAnchorEl(current => (current ? null : element));
+  };
 
   return (
     <Box
@@ -65,7 +95,7 @@ export default function ColorField({
       {/* Swatch + hex row */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Box
-          onClick={e => setAnchorEl(e.currentTarget)}
+          onClick={e => togglePicker(e.currentTarget)}
           sx={{
             width: 32,
             height: 24,
@@ -85,7 +115,7 @@ export default function ColorField({
             color: 'text.secondary',
             cursor: 'pointer',
           }}
-          onClick={e => setAnchorEl(e.currentTarget)}
+          onClick={e => togglePicker(e.currentTarget)}
         >
           {value.toUpperCase()}
         </Typography>
@@ -129,30 +159,32 @@ export default function ColorField({
         </Tooltip>
       )}
 
-      <Popover
+      <Popper
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        placement="bottom-start"
+        sx={{ zIndex: theme.zIndex.modal }}
       >
-        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <HexColorPicker color={value} onChange={onChange} />
-          <HexColorInput
-            color={value}
-            onChange={onChange}
-            prefixed
-            style={{
-              width: '100%',
-              padding: '4px 8px',
-              fontFamily: 'monospace',
-              fontSize: '0.85rem',
-              border: '1px solid #ccc',
-              borderRadius: 4,
-              boxSizing: 'border-box',
-            }}
-          />
-        </Box>
-      </Popover>
+        <Paper ref={pickerRef} elevation={6}>
+          <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <HexColorPicker color={value} onChange={onChange} />
+            <HexColorInput
+              color={value}
+              onChange={onChange}
+              prefixed
+              style={{
+                width: '100%',
+                padding: '4px 8px',
+                fontFamily: 'monospace',
+                fontSize: '0.85rem',
+                border: '1px solid #ccc',
+                borderRadius: 4,
+                boxSizing: 'border-box',
+              }}
+            />
+          </Box>
+        </Paper>
+      </Popper>
     </Box>
   );
 }

@@ -44,6 +44,7 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
   const terminalBackground = theme.terminal?.background ?? (theme.base === 'dark' ? '#1e1e1e' : '#ffffff');
   const terminalForeground = theme.terminal?.foreground ?? theme.text.primary;
   const terminalCursor = theme.terminal?.cursor ?? theme.primary;
+  const terminalAnsi = theme.terminal?.ansi ?? {};
   // Mirror real Headlamp ListItemLink.tsx logic:
   // Top-level selected item → full selectedBackground row + getContrastText for readable text
   // selectedColor → used only as left accent bar (4px strip)
@@ -101,7 +102,25 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
               alt={logoDataUrl ? 'custom logo' : 'Headlamp logo'}
               sx={{ height: 28, maxWidth: 136, objectFit: 'contain', mr: 1 }}
             />
-              <Box sx={{ flex: 1 }} />
+            <Box sx={{ flex: 1 }} />
+
+            <Box
+              sx={{
+                mr: 1,
+                px: 1,
+                py: 0.25,
+                border: '1px solid',
+                borderColor: 'currentColor',
+                borderRadius: 1,
+                color: theme.navbar.searchHint ?? theme.navbar.color,
+                fontSize: '0.68rem',
+                opacity: 0.9,
+                ...highlight(['navbar.searchHint']),
+                ...highlightTransition,
+              }}
+            >
+              Ctrl K
+            </Box>
 
             <Chip
               label="my-cluster"
@@ -169,6 +188,22 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                 );
               })}
             </List>
+            <Button
+              size="small"
+              sx={{
+                mt: 'auto',
+                mx: 1,
+                bgcolor: theme.sidebar.actionBackground,
+                color: selectedTextColor(theme.sidebar.actionBackground),
+                fontSize: '0.7rem',
+                textTransform: theme.buttonTextTransform ?? 'none',
+                '&:hover': { bgcolor: theme.sidebar.actionBackground },
+                ...highlight(['sidebar.actionBackground', 'buttonTextTransform']),
+                ...highlightTransition,
+              }}
+            >
+              Create
+            </Button>
           </Box>
 
           {/* Main content */}
@@ -339,6 +374,16 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
               <br />
               <Box component="span" sx={{ color: terminalForeground }}>
                 server started on :8080
+              </Box>
+              <br />
+              <Box component="span" sx={{ color: terminalAnsi.green ?? terminalForeground }}>
+                status=ok
+              </Box>{' '}
+              <Box component="span" sx={{ color: terminalAnsi.yellow ?? terminalForeground }}>
+                warnings=1
+              </Box>{' '}
+              <Box component="span" sx={{ color: terminalAnsi.red ?? terminalForeground }}>
+                errors=0
               </Box>
               <br />
               <Box component="span" sx={{ color: terminalCursor }}>

@@ -58,6 +58,9 @@ function getPath(obj: HeadlampTheme, path: string): string {
   return typeof cur === 'string' ? cur : '#000000';
 }
 
+const MIN_RADIUS = 0;
+const MAX_RADIUS = 24;
+
 const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] }[] = [
   {
     group: 'Brand',
@@ -88,6 +91,7 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
       { label: 'Item text', path: 'sidebar.color' },
       { label: 'Selected background', path: 'sidebar.selectedBackground' },
       { label: 'Selected text', path: 'sidebar.selectedColor' },
+      { label: 'Action button', path: 'sidebar.actionBackground' },
     ],
   },
   {
@@ -95,6 +99,7 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
     fields: [
       { label: 'Background', path: 'navbar.background' },
       { label: 'Text', path: 'navbar.color' },
+      { label: 'Search hint', path: 'navbar.searchHint' },
     ],
   },
   {
@@ -103,6 +108,27 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
       { label: 'Background', path: 'terminal.background' },
       { label: 'Text', path: 'terminal.foreground' },
       { label: 'Cursor', path: 'terminal.cursor' },
+    ],
+  },
+  {
+    group: 'Terminal ANSI',
+    fields: [
+      { label: 'Black', path: 'terminal.ansi.black' },
+      { label: 'Red', path: 'terminal.ansi.red' },
+      { label: 'Green', path: 'terminal.ansi.green' },
+      { label: 'Yellow', path: 'terminal.ansi.yellow' },
+      { label: 'Blue', path: 'terminal.ansi.blue' },
+      { label: 'Magenta', path: 'terminal.ansi.magenta' },
+      { label: 'Cyan', path: 'terminal.ansi.cyan' },
+      { label: 'White', path: 'terminal.ansi.white' },
+      { label: 'Bright black', path: 'terminal.ansi.brightBlack' },
+      { label: 'Bright red', path: 'terminal.ansi.brightRed' },
+      { label: 'Bright green', path: 'terminal.ansi.brightGreen' },
+      { label: 'Bright yellow', path: 'terminal.ansi.brightYellow' },
+      { label: 'Bright blue', path: 'terminal.ansi.brightBlue' },
+      { label: 'Bright magenta', path: 'terminal.ansi.brightMagenta' },
+      { label: 'Bright cyan', path: 'terminal.ansi.brightCyan' },
+      { label: 'Bright white', path: 'terminal.ansi.brightWhite' },
     ],
   },
 ];
@@ -133,11 +159,29 @@ const FIELD_DESCRIPTIONS: Record<string, string> = {
   'sidebar.color': 'Default text colour for unselected sidebar items.',
   'sidebar.selectedBackground': 'Background colour for the active sidebar item.',
   'sidebar.selectedColor': 'Accent and text colour associated with selected sidebar states.',
+  'sidebar.actionBackground': 'Background colour for the create/action button in the sidebar link area.',
   'navbar.background': 'Top header and navbar background.',
   'navbar.color': 'Text and logo colour area in the top header.',
+  'navbar.searchHint': 'Shortcut hint colour shown in the global search field.',
   'terminal.background': 'Background colour used by Headlamp terminal and log viewer surfaces.',
   'terminal.foreground': 'Default readable text colour used inside terminal and log viewers.',
   'terminal.cursor': 'Cursor colour used by the xterm.js terminal.',
+  'terminal.ansi.black': 'ANSI black used by terminal program output.',
+  'terminal.ansi.red': 'ANSI red used by terminal program output.',
+  'terminal.ansi.green': 'ANSI green used by terminal program output.',
+  'terminal.ansi.yellow': 'ANSI yellow used by terminal program output.',
+  'terminal.ansi.blue': 'ANSI blue used by terminal program output.',
+  'terminal.ansi.magenta': 'ANSI magenta used by terminal program output.',
+  'terminal.ansi.cyan': 'ANSI cyan used by terminal program output.',
+  'terminal.ansi.white': 'ANSI white used by terminal program output.',
+  'terminal.ansi.brightBlack': 'Bright ANSI black used by terminal program output.',
+  'terminal.ansi.brightRed': 'Bright ANSI red used by terminal program output.',
+  'terminal.ansi.brightGreen': 'Bright ANSI green used by terminal program output.',
+  'terminal.ansi.brightYellow': 'Bright ANSI yellow used by terminal program output.',
+  'terminal.ansi.brightBlue': 'Bright ANSI blue used by terminal program output.',
+  'terminal.ansi.brightMagenta': 'Bright ANSI magenta used by terminal program output.',
+  'terminal.ansi.brightCyan': 'Bright ANSI cyan used by terminal program output.',
+  'terminal.ansi.brightWhite': 'Bright ANSI white used by terminal program output.',
 };
 
 function getContrastForPath(theme: HeadlampTheme, path: string) {
@@ -177,6 +221,16 @@ function getContrastForPath(theme: HeadlampTheme, path: string) {
       background: theme.sidebar.selectedBackground,
       against: 'selected background',
     },
+    'sidebar.actionBackground': {
+      foreground: theme.text.primary,
+      background: theme.sidebar.actionBackground,
+      against: 'action button background',
+    },
+    'navbar.searchHint': {
+      foreground: theme.navbar.searchHint ?? theme.navbar.color,
+      background: theme.navbar.background,
+      against: 'navbar background',
+    },
     'terminal.foreground': {
       foreground: theme.terminal?.foreground ?? theme.text.primary,
       background: theme.terminal?.background ?? theme.background.default,
@@ -198,6 +252,52 @@ function getContrastForPath(theme: HeadlampTheme, path: string) {
   return result ? { ...result, against: check.against } : null;
 }
 
+function Section({
+  title,
+  open,
+  onToggle,
+  children,
+}: {
+  title: string;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <Box
+      sx={{
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        flexShrink: 0,
+      }}
+    >
+      <Button
+        fullWidth
+        onClick={onToggle}
+        sx={{
+          justifyContent: 'space-between',
+          color: 'text.primary',
+          bgcolor: 'transparent',
+          borderRadius: 0,
+          px: 0,
+          py: 1.25,
+          fontWeight: 700,
+          textTransform: 'none',
+          '&:hover': {
+            bgcolor: 'transparent',
+          },
+        }}
+      >
+        <span>{title}</span>
+        <span aria-hidden>{open ? '-' : '+'}</span>
+      </Button>
+      <Collapse in={open} unmountOnExit>
+        <Box sx={{ pb: 1.5 }}>{children}</Box>
+      </Collapse>
+    </Box>
+  );
+}
+
 export default function ThemePanel({
   theme,
   onChange,
@@ -213,6 +313,7 @@ export default function ThemePanel({
     () =>
       new Set([
         'Theme',
+        'Shape & buttons',
         'Logo',
         'Brand',
         'Text & links',
@@ -242,6 +343,15 @@ export default function ThemePanel({
     onChange({ ...theme, fontFamily: [value] });
   }
 
+  function handleRadiusChange(value: string) {
+    const radius = Number(value);
+    if (!Number.isFinite(radius)) {
+      return;
+    }
+
+    onChange({ ...theme, radius: Math.min(MAX_RADIUS, Math.max(MIN_RADIUS, radius)) });
+  }
+
   function handleLogoFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -263,46 +373,6 @@ export default function ThemePanel({
     });
   }
 
-  function Section({ title, children }: { title: string; children: ReactNode }) {
-    const open = openSections.has(title);
-
-    return (
-      <Box
-        sx={{
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          flexShrink: 0,
-        }}
-      >
-        <Button
-          fullWidth
-          onClick={() => toggleSection(title)}
-          sx={{
-            justifyContent: 'space-between',
-            color: 'text.primary',
-            bgcolor: 'transparent',
-            borderRadius: 0,
-            px: 0,
-            py: 1.25,
-            fontWeight: 700,
-            textTransform: 'none',
-            '&:hover': {
-              bgcolor: 'transparent',
-            },
-          }}
-        >
-          <span>{title}</span>
-          <span aria-hidden>{open ? '-' : '+'}</span>
-        </Button>
-        <Collapse in={open} unmountOnExit>
-          <Box sx={{ pb: 1.5 }}>
-            {children}
-          </Box>
-        </Collapse>
-      </Box>
-    );
-  }
-
   return (
     <Box
       sx={{
@@ -316,7 +386,7 @@ export default function ThemePanel({
         boxSizing: 'border-box',
       }}
     >
-      <Section title="Theme">
+      <Section title="Theme" open={openSections.has('Theme')} onToggle={() => toggleSection('Theme')}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           <TextField
             label="Theme name"
@@ -359,10 +429,49 @@ export default function ThemePanel({
               ))}
             </Select>
           </FormControl>
+
         </Box>
       </Section>
 
-      <Section title="Logo">
+      <Section
+        title="Shape & buttons"
+        open={openSections.has('Shape & buttons')}
+        onToggle={() => toggleSection('Shape & buttons')}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          <TextField
+            label="Corner radius"
+            type="number"
+            value={theme.radius ?? 6}
+            onChange={e => handleRadiusChange(e.target.value)}
+            size="small"
+            fullWidth
+            helperText="Controls rounding for buttons, popups, cards, and other surfaces."
+            slotProps={{
+              htmlInput: { min: MIN_RADIUS, max: MAX_RADIUS, step: 1 },
+              inputLabel: { sx: { color: 'text.secondary' } },
+              input: { sx: { color: 'text.primary' } },
+              formHelperText: { sx: { color: 'text.secondary', mx: 0 } },
+            }}
+            sx={{ '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+          />
+
+          <FormControl size="small" fullWidth>
+            <InputLabel sx={{ color: 'text.secondary' }}>Button text style</InputLabel>
+            <Select
+              value={theme.buttonTextTransform ?? 'none'}
+              label="Button text style"
+              onChange={e => set('buttonTextTransform')(e.target.value)}
+              sx={fieldSx}
+            >
+              <MenuItem value="none">Normal case</MenuItem>
+              <MenuItem value="uppercase">Uppercase</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Section>
+
+      <Section title="Logo" open={openSections.has('Logo')} onToggle={() => toggleSection('Logo')}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.64rem' }}>
             Used in Headlamp's normal desktop logo locations. A wide logo with text usually works best.
@@ -415,7 +524,12 @@ export default function ThemePanel({
 
       {/* Colour groups */}
       {COLOUR_GROUPS.map(group => (
-        <Section key={group.group} title={group.group}>
+        <Section
+          key={group.group}
+          title={group.group}
+          open={openSections.has(group.group)}
+          onToggle={() => toggleSection(group.group)}
+        >
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
             {group.fields.map(f => (
               <ColorField

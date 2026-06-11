@@ -24,11 +24,30 @@ export interface HeadlampTheme {
   navbar: {
     background: string;
     color: string;
+    searchHint?: string;
   };
   terminal?: {
     background?: string;
     foreground?: string;
     cursor?: string;
+    ansi?: {
+      black?: string;
+      red?: string;
+      green?: string;
+      yellow?: string;
+      blue?: string;
+      magenta?: string;
+      cyan?: string;
+      white?: string;
+      brightBlack?: string;
+      brightRed?: string;
+      brightGreen?: string;
+      brightYellow?: string;
+      brightBlue?: string;
+      brightMagenta?: string;
+      brightCyan?: string;
+      brightWhite?: string;
+    };
   };
   fontFamily?: string[];
   radius?: number;
@@ -53,4 +72,20 @@ export type ColourKey =
   | 'navbar.color'
   | 'terminal.background'
   | 'terminal.foreground'
-  | 'terminal.cursor';
+  | 'terminal.cursor'
+  | 'terminal.ansi.black'
+  | 'terminal.ansi.red'
+  | 'terminal.ansi.green'
+  | 'terminal.ansi.yellow'
+  | 'terminal.ansi.blue'
+  | 'terminal.ansi.magenta'
+  | 'terminal.ansi.cyan'
+  | 'terminal.ansi.white'
+  | 'terminal.ansi.brightBlack'
+  | 'terminal.ansi.brightRed'
+  | 'terminal.ansi.brightGreen'
+  | 'terminal.ansi.brightYellow'
+  | 'terminal.ansi.brightBlue'
+  | 'terminal.ansi.brightMagenta'
+  | 'terminal.ansi.brightCyan'
+  | 'terminal.ansi.brightWhite';
