@@ -2,7 +2,7 @@
 
 All notable changes to Headlamp Theme Builder are documented here.
 
-## Unreleased
+## v1.1.0 - 2026-06-11
 
 - Added a bundled theme library to the website and Headlamp plugin.
 - Added Pixelrobots, AKS Inspired, EKS Inspired, GKE Inspired, GitHub, Dracula, Nord, Solarized, Monokai, and One Dark Pro library themes.
