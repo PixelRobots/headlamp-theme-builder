@@ -5,6 +5,8 @@ All notable changes to Headlamp Theme Builder are documented here.
 ## Unreleased
 
 - Added shareable website theme links for the current light/dark theme state.
+- Added a share-link dialog and compact share-link format.
+- Added Catppuccin Inspired as a community/public library theme.
 - Added High Contrast and Kubernetes Classic built-in theme pairs.
 - Added a downloaded theme plugin guide for install, upgrade, removal, and compatibility troubleshooting.
 - Added library search, mode/source filters, and show-more pagination.

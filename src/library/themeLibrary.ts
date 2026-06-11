@@ -18,6 +18,7 @@ export interface ThemeLibraryEntry {
   name: string;
   description: string;
   tags: string[];
+  jsonUrl?: string;
   themes: HeadlampTheme[];
 }
 
@@ -26,6 +27,7 @@ export interface RawThemeLibraryEntry {
   name: string;
   description: string;
   tags?: string[];
+  jsonUrl?: string;
   themes: Array<Partial<HeadlampTheme> & Pick<HeadlampTheme, 'name' | 'base'>>;
 }
 
@@ -35,6 +37,7 @@ export function normalizeThemeLibraryEntry(entry: RawThemeLibraryEntry): ThemeLi
     name: entry.name,
     description: entry.description,
     tags: entry.tags ?? [],
+    jsonUrl: entry.jsonUrl,
     themes: entry.themes.map(theme => completeTheme(theme as HeadlampTheme)),
   };
 }

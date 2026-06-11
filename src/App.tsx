@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -24,6 +26,7 @@ import HowToUseDialog from './components/HowToUseDialog';
 import InstallInstructionsDialog from './components/InstallInstructionsDialog';
 import MobileWarningDialog from './components/MobileWarningDialog';
 import PluginMetadataDialog from './components/PluginMetadataDialog';
+import ShareLinkDialog from './components/ShareLinkDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
@@ -81,6 +84,8 @@ export default function App() {
   const [importedLibraryEntries, setImportedLibraryEntries] = useState<ThemeLibraryEntry[]>([]);
   const [pendingPluginDownload, setPendingPluginDownload] =
     useState<PendingPluginDownload | null>(null);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const [shareUrl, setShareUrl] = useState('');
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
@@ -226,7 +231,7 @@ export default function App() {
     setInstallInstructionsOpen(true);
   }
 
-  async function copyShareLink() {
+  function getShareUrl() {
     const url = new URL(window.location.href);
     url.searchParams.set(
       'theme',
@@ -237,12 +242,22 @@ export default function App() {
     );
     url.hash = '';
 
+    return url.toString();
+  }
+
+  async function copyTextToClipboard(value: string) {
     try {
-      await navigator.clipboard.writeText(url.toString());
-      window.alert('Share link copied. It includes the current theme colours, but not uploaded logos.');
+      await navigator.clipboard.writeText(value);
+      setSnackbarMessage('Share link copied. Uploaded logos are not included.');
     } catch {
-      window.prompt('Copy this share link:', url.toString());
+      window.prompt('Copy this share link:', value);
     }
+  }
+
+  async function copyShareLink() {
+    const nextShareUrl = getShareUrl();
+    setShareUrl(nextShareUrl);
+    await copyTextToClipboard(nextShareUrl);
   }
 
   return (
@@ -552,6 +567,22 @@ export default function App() {
           onClose={() => setPendingPluginDownload(null)}
           onConfirm={confirmPluginDownload}
         />
+        <ShareLinkDialog
+          open={Boolean(shareUrl)}
+          shareUrl={shareUrl}
+          onClose={() => setShareUrl('')}
+          onCopy={() => void copyTextToClipboard(shareUrl)}
+        />
+        <Snackbar
+          open={Boolean(snackbarMessage)}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarMessage(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert severity="success" variant="filled" onClose={() => setSnackbarMessage(null)}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </ThemeProvider>
   );

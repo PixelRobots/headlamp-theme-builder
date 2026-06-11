@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultDark } from '../../src/defaults/defaultTheme';
+import { defaultDark, defaultLight } from '../../src/defaults/defaultTheme';
 import { decodeSharedThemeState, encodeSharedThemeState } from '../../src/utils/shareTheme';
 import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../../src/utils/themeImport';
 import { validateThemesForUse } from '../../src/utils/themeValidation';
@@ -57,6 +57,13 @@ describe('theme library imports', () => {
 });
 
 describe('theme validation', () => {
+  it('does not warn for the default starter themes', () => {
+    const result = validateThemesForUse([defaultLight, defaultDark]);
+
+    expect(result.errors).toEqual([]);
+    expect(result.warnings).toEqual([]);
+  });
+
   it('warns when terminal ANSI colours have low contrast', () => {
     const result = validateThemesForUse([
       {
@@ -81,15 +88,26 @@ describe('theme validation', () => {
 
 describe('shared theme links', () => {
   it('round trips shared theme state', () => {
+    const customDark = {
+      ...defaultDark,
+      name: 'Custom Dark',
+      primary: '#ffea00',
+      sidebar: {
+        ...defaultDark.sidebar,
+        selectedColor: '#101010',
+      },
+    };
     const encoded = encodeSharedThemeState({
       active: 'dark',
-      themes: [defaultDark],
+      themes: [customDark],
     });
 
     expect(decodeSharedThemeState(encoded)).toEqual({
-      version: 1,
+      version: 2,
       active: 'dark',
-      themes: [defaultDark],
+      themes: [customDark],
     });
+    expect(encoded.length).toBeLessThan(160);
   });
+
 });

@@ -45,9 +45,6 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
   const terminalForeground = theme.terminal?.foreground ?? theme.text.primary;
   const terminalCursor = theme.terminal?.cursor ?? theme.primary;
   const terminalAnsi = theme.terminal?.ansi ?? {};
-  // Mirror real Headlamp ListItemLink.tsx logic:
-  // Top-level selected item → full selectedBackground row + getContrastText for readable text
-  // selectedColor → used only as left accent bar (4px strip)
   function selectedTextColor(bg: string): string {
     try {
       return muiTheme.palette.getContrastText(bg);
@@ -159,9 +156,8 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                     selected={isSelected}
                     sx={{
                       position: 'relative',
-                      // Full row bg = selectedBackground; text = contrast of that bg
                       color: isSelected
-                        ? selectedTextColor(theme.sidebar.selectedBackground)
+                        ? theme.sidebar.selectedColor
                         : theme.sidebar.color,
                       bgcolor: isSelected
                         ? `${theme.sidebar.selectedBackground} !important`
@@ -174,8 +170,6 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                         ? highlight(['sidebar.selectedBackground', 'sidebar.selectedColor'])
                         : {}),
                       ...highlightTransition,
-                      // selectedColor appears as a left accent bar on the UNSELECTED hover
-                      // but for the selected item at top level it's not shown
                       '&:hover': {
                         bgcolor: isSelected
                           ? `${theme.sidebar.selectedBackground} !important`

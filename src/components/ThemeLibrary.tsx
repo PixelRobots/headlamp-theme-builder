@@ -8,6 +8,8 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { useMemo, useRef, useState, type ChangeEvent } from 'react';
 import {
   normalizeThemeLibraryEntry,
@@ -72,6 +74,10 @@ function sourceLabel(source: ThemeSource) {
 
 function sourceForEntry(entry: ThemeLibraryEntry): ThemeSource {
   return entry.tags.includes('imported') ? 'imported' : 'bundled';
+}
+
+function baseEntryId(entryId: string) {
+  return entryId.replace(/^imported-/, '');
 }
 
 function entryMatchesMode(entry: ThemeLibraryEntry, mode: ModeFilter) {
@@ -141,7 +147,9 @@ function MiniPreview({ theme }: { theme: HeadlampTheme }) {
       <Box sx={{ display: 'flex', height: 'calc(100% - 24px)' }}>
         <Box sx={{ width: 54, bgcolor: theme.sidebar.background, p: 0.75 }}>
           <Box sx={{ height: 9, mb: 0.75, borderRadius: 0.5, bgcolor: theme.sidebar.color, opacity: 0.7 }} />
-          <Box sx={{ height: 14, mb: 0.75, borderRadius: 0.75, bgcolor: theme.sidebar.selectedBackground }} />
+          <Box sx={{ height: 14, mb: 0.75, borderRadius: 0.75, bgcolor: theme.sidebar.selectedBackground, p: '3px 5px' }}>
+            <Box sx={{ height: 8, width: '82%', borderRadius: 0.5, bgcolor: theme.sidebar.selectedColor }} />
+          </Box>
           <Box sx={{ height: 9, mb: 0.75, borderRadius: 0.5, bgcolor: theme.sidebar.color, opacity: 0.45 }} />
           <Box sx={{ height: 13, mt: 3.5, borderRadius: 0.75, bgcolor: theme.sidebar.actionBackground }} />
         </Box>
@@ -185,6 +193,7 @@ export default function ThemeLibrary({
   const [modeFilter, setModeFilter] = useState<ModeFilter>('all');
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
 
   const displayEntries = useMemo<DisplayThemeLibraryEntry[]>(
     () => [
@@ -304,12 +313,19 @@ export default function ThemeLibrary({
         throw new Error(`Could not load public library (${response.status}).`);
       }
 
+      const existingIds = new Set(entries.map(entry => baseEntryId(entry.id)));
       const rawEntries = getPublicIndexEntries(await response.json());
-      const normalizedEntries = rawEntries.map(entry => normalizeThemeLibraryEntry(entry));
+      const normalizedEntries = rawEntries
+        .map(entry => normalizeThemeLibraryEntry(entry))
+        .filter(entry => !existingIds.has(baseEntryId(entry.id)));
       setPublicEntries(normalizedEntries);
       setSourceFilter('public');
       setVisibleCount(PAGE_SIZE);
-      setPublicLibraryStatus(`Loaded ${normalizedEntries.length} public themes.`);
+      setPublicLibraryStatus(
+        normalizedEntries.length > 0
+          ? `Loaded ${normalizedEntries.length} public themes. Bundled duplicates were hidden.`
+          : 'No additional public themes found. Bundled duplicates were hidden.'
+      );
     } catch (error) {
       setPublicLibraryStatus(
         error instanceof TypeError
@@ -325,6 +341,27 @@ export default function ThemeLibrary({
 
   function resetVisibleEntries() {
     setVisibleCount(PAGE_SIZE);
+  }
+
+  function clearFilters() {
+    setSearchTerm('');
+    setModeFilter('all');
+    setSourceFilter('all');
+    resetVisibleEntries();
+  }
+
+  async function copyJsonUrl(entry: ThemeLibraryEntry) {
+    if (!entry.jsonUrl) {
+      setSnackbarMessage('This theme does not have a public JSON URL.');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(entry.jsonUrl);
+      setSnackbarMessage(`Copied ${entry.name} JSON URL.`);
+    } catch {
+      window.prompt('Copy this JSON URL:', entry.jsonUrl);
+    }
   }
 
   return (
@@ -397,7 +434,7 @@ export default function ThemeLibrary({
           display: 'grid',
           gridTemplateColumns: {
             xs: '1fr',
-            md: 'minmax(220px, 1fr) 180px 180px',
+            md: 'minmax(220px, 1fr) 180px 180px auto',
           },
           gap: 1,
           alignItems: 'center',
@@ -442,6 +479,15 @@ export default function ThemeLibrary({
           <MenuItem value="imported">Imported</MenuItem>
           <MenuItem value="public">Public Library</MenuItem>
         </TextField>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={clearFilters}
+          disabled={!searchTerm && modeFilter === 'all' && sourceFilter === 'all'}
+          sx={{ whiteSpace: 'nowrap' }}
+        >
+          Clear filters
+        </Button>
       </Box>
 
       <Box
@@ -556,19 +602,29 @@ export default function ThemeLibrary({
 
               <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
                 {source === 'public' ? (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={() => {
-                      const importedEntry = toImportedEntry(entry);
-                      onImportEntry?.(importedEntry);
-                      setImportStatus(`Imported ${entry.name} from the public library.`);
-                      setSourceFilter('imported');
-                      setVisibleCount(PAGE_SIZE);
-                    }}
-                  >
-                    Import
-                  </Button>
+                  <>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      onClick={() => {
+                        const importedEntry = toImportedEntry(entry);
+                        onImportEntry?.(importedEntry);
+                        setImportStatus(`Imported ${entry.name} from the public library.`);
+                        setSourceFilter('imported');
+                        setVisibleCount(PAGE_SIZE);
+                      }}
+                    >
+                      Import
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => void copyJsonUrl(entry)}
+                      disabled={!entry.jsonUrl}
+                    >
+                      Copy JSON URL
+                    </Button>
+                  </>
                 ) : onApply && (
                   getApplyableThemes(entry).length > 1 ? (
                     <Button
@@ -631,9 +687,19 @@ export default function ThemeLibrary({
               >
                 {theme.base === 'light' ? 'Apply light theme' : 'Apply dark theme'}
               </MenuItem>
-            ))}
+          ))}
         </Menu>
       )}
+      <Snackbar
+        open={Boolean(snackbarMessage)}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" variant="filled" onClose={() => setSnackbarMessage(null)}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
