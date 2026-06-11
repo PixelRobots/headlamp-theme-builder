@@ -1,0 +1,42 @@
+{
+  "id": "github",
+  "name": "GitHub",
+  "description": "Familiar GitHub-style neutrals with strong blue actions and readable surfaces.",
+  "tags": ["light", "dark", "developer"],
+  "themes": [
+    {
+      "name": "GitHub Light",
+      "base": "light",
+      "primary": "#0969da",
+      "secondary": "#f6f8fa",
+      "text": { "primary": "#24292f" },
+      "link": { "color": "#0969da" },
+      "background": { "default": "#ffffff", "surface": "#f6f8fa", "muted": "#eaeef2" },
+      "sidebar": {
+        "background": "#f6f8fa",
+        "color": "#57606a",
+        "selectedBackground": "#d0d7de",
+        "selectedColor": "#24292f",
+        "actionBackground": "#2da44e"
+      },
+      "navbar": { "background": "#24292f", "color": "#ffffff", "searchHint": "#8c959f" }
+    },
+    {
+      "name": "GitHub Dark",
+      "base": "dark",
+      "primary": "#58a6ff",
+      "secondary": "#21262d",
+      "text": { "primary": "#c9d1d9" },
+      "link": { "color": "#58a6ff" },
+      "background": { "default": "#0d1117", "surface": "#161b22", "muted": "#21262d" },
+      "sidebar": {
+        "background": "#010409",
+        "color": "#8b949e",
+        "selectedBackground": "#30363d",
+        "selectedColor": "#f0f6fc",
+        "actionBackground": "#238636"
+      },
+      "navbar": { "background": "#010409", "color": "#f0f6fc", "searchHint": "#8b949e" }
+    }
+  ]
+}

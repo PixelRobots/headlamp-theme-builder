@@ -2,8 +2,10 @@ import ThemeBuilderLogoUrl from '@builder/../public/headlamp-theme-builder.png';
 import HowToUseDialog from '@builder/components/HowToUseDialog';
 import InstallInstructionsDialog from '@builder/components/InstallInstructionsDialog';
 import Preview from '@builder/components/Preview';
+import ThemeLibrary from '@builder/components/ThemeLibrary';
 import ThemePanel from '@builder/components/ThemePanel';
 import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
+import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibrary';
 import type { HeadlampTheme } from '@builder/types/theme';
 import { downloadPlugin } from '@builder/utils/generateCode';
 import {
@@ -19,11 +21,15 @@ import type { AppTheme } from '@kinvolk/headlamp-plugin/lib/lib/AppTheme';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
+const APPLIED_THEME_STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
+const BUILDER_DRAFT_STORAGE_KEY = 'headlamp-theme-builder-draft-state';
+const IMPORTED_LIBRARY_STORAGE_KEY = 'headlamp-theme-builder-imported-library';
 const THEME_PREFERENCE_KEY = 'headlampThemePreference';
 
 const PLUGIN_NAME = 'headlamp-theme-builder';
@@ -39,8 +45,8 @@ interface BuilderPluginState {
   logoDataUrl: string | null;
 }
 
-function readStoredState(): BuilderPluginState | null {
-  const raw = localStorage.getItem(STORAGE_KEY);
+function readThemeState(storageKey: string): BuilderPluginState | null {
+  const raw = localStorage.getItem(storageKey);
   if (!raw) {
     return null;
   }
@@ -57,8 +63,30 @@ function readStoredState(): BuilderPluginState | null {
   }
 }
 
+function readAppliedState(): BuilderPluginState | null {
+  return readThemeState(APPLIED_THEME_STORAGE_KEY);
+}
+
+function readBuilderDraftState(): BuilderPluginState | null {
+  return readThemeState(BUILDER_DRAFT_STORAGE_KEY);
+}
+
+function readImportedLibraryEntries(): ThemeLibraryEntry[] {
+  const raw = localStorage.getItem(IMPORTED_LIBRARY_STORAGE_KEY);
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const entries = JSON.parse(raw);
+    return Array.isArray(entries) ? entries : [];
+  } catch {
+    return [];
+  }
+}
+
 function ThemeBuilderLogo(props: AppLogoProps) {
-  const state = readStoredState();
+  const state = readAppliedState();
   if (!state?.logoDataUrl) {
     return null;
   }
@@ -81,7 +109,7 @@ function ThemeBuilderLogo(props: AppLogoProps) {
 }
 
 function registerStoredBuilderTheme() {
-  const state = readStoredState();
+  const state = readAppliedState();
   if (!state) {
     return;
   }
@@ -99,8 +127,12 @@ function getCustomThemes(themes: HeadlampTheme[]) {
   return themes.filter(theme => !BUILT_IN_OR_LEGACY_DEFAULT_THEMES.has(theme.name));
 }
 
-function saveBuilderTheme(state: BuilderPluginState, active: 'light' | 'dark') {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+function saveBuilderDraft(state: BuilderPluginState) {
+  localStorage.setItem(BUILDER_DRAFT_STORAGE_KEY, JSON.stringify(state));
+}
+
+function saveAppliedTheme(state: BuilderPluginState, active: 'light' | 'dark') {
+  localStorage.setItem(APPLIED_THEME_STORAGE_KEY, JSON.stringify(state));
 
   getCustomThemes([state.lightTheme, state.darkTheme]).forEach(theme =>
     registerAppTheme(theme as AppTheme)
@@ -117,14 +149,14 @@ function saveBuilderTheme(state: BuilderPluginState, active: 'light' | 'dark') {
 }
 
 function resetBuilderTheme() {
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(APPLIED_THEME_STORAGE_KEY);
   localStorage.removeItem(THEME_PREFERENCE_KEY);
   window.location.reload();
 }
 
 function ThemeBuilderPage() {
   const headlampTheme = useTheme();
-  const storedState = readStoredState();
+  const storedState = readBuilderDraftState();
   const [lightTheme, setLightTheme] = useState<HeadlampTheme>(
     storedState?.lightTheme ?? defaultLight
   );
@@ -135,6 +167,10 @@ function ThemeBuilderPage() {
   const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [view, setView] = useState<'builder' | 'library'>('builder');
+  const [importedLibraryEntries, setImportedLibraryEntries] = useState<ThemeLibraryEntry[]>(
+    readImportedLibraryEntries
+  );
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
@@ -148,22 +184,71 @@ function ThemeBuilderPage() {
 
   useEffect(() => {
     registerStoredBuilderTheme();
-    if (storedState) {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ lightTheme, darkTheme, logoDataUrl })
-      );
-    }
   }, []);
 
+  useEffect(() => {
+    saveBuilderDraft({ lightTheme, darkTheme, logoDataUrl });
+  }, [lightTheme, darkTheme, logoDataUrl]);
+
+  useEffect(() => {
+    localStorage.setItem(IMPORTED_LIBRARY_STORAGE_KEY, JSON.stringify(importedLibraryEntries));
+  }, [importedLibraryEntries]);
+
   function handleApply() {
-    saveBuilderTheme({ lightTheme, darkTheme, logoDataUrl }, active);
+    saveAppliedTheme({ lightTheme, darkTheme, logoDataUrl }, active);
     setStatus(`Applied ${active === 'light' ? lightTheme.name : darkTheme.name}. Reloading...`);
     window.setTimeout(() => window.location.reload(), 500);
   }
 
   async function handleDownloadPlugin() {
     await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
+    setInstallInstructionsOpen(true);
+  }
+
+  function getLibraryThemes(
+    entry: ThemeLibraryEntry,
+    selectedTheme: HeadlampTheme | undefined,
+    fallbackState: BuilderPluginState
+  ) {
+    const entryLight = entry.themes.find(theme => theme.base === 'light');
+    const entryDark = entry.themes.find(theme => theme.base === 'dark');
+    const preferredTheme = selectedTheme ?? entryDark ?? entryLight ?? entry.themes[0];
+    const nextLightTheme = entryLight ?? fallbackState.lightTheme;
+    const nextDarkTheme = entryDark ?? fallbackState.darkTheme;
+
+    return {
+      activeTheme: preferredTheme.base,
+      lightTheme: nextLightTheme,
+      darkTheme: nextDarkTheme,
+    };
+  }
+
+  function loadLibraryEntry(entry: ThemeLibraryEntry) {
+    const nextState = getLibraryThemes(entry, undefined, { lightTheme, darkTheme, logoDataUrl });
+
+    setLightTheme(nextState.lightTheme);
+    setDarkTheme(nextState.darkTheme);
+    setLogoDataUrl(null);
+    setActive(nextState.activeTheme);
+    setView('builder');
+  }
+
+  function applyLibraryEntry(entry: ThemeLibraryEntry, selectedTheme?: HeadlampTheme) {
+    const fallbackState = readAppliedState() ?? { lightTheme: defaultLight, darkTheme: defaultDark, logoDataUrl: null };
+    const nextState = getLibraryThemes(entry, selectedTheme, fallbackState);
+    const nextBuilderState = {
+      lightTheme: nextState.lightTheme,
+      darkTheme: nextState.darkTheme,
+      logoDataUrl: null,
+    };
+
+    saveAppliedTheme(nextBuilderState, nextState.activeTheme);
+    setStatus(`Applied ${entry.name}. Reloading...`);
+    window.setTimeout(() => window.location.reload(), 500);
+  }
+
+  async function handleDownloadLibraryEntry(entry: ThemeLibraryEntry) {
+    await downloadPlugin(entry.themes, null);
     setInstallInstructionsOpen(true);
   }
 
@@ -272,59 +357,110 @@ function ThemeBuilderPage() {
           </Button>
         </Box>
 
-        <Box sx={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-          <Box
-            sx={{
-              width: 300,
-              flexShrink: 0,
-              height: '100%',
-              bgcolor: panelBackground,
-              borderRight: `1px solid ${borderColor}`,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: 0,
-            }}
-          >
-            <ThemePanel
-              theme={currentTheme}
-              onChange={setCurrentTheme}
-              onBaseChange={setActive}
-              logoDataUrl={logoDataUrl}
-              onLogoChange={setLogoDataUrl}
-              onHighlightPath={setHighlightedPath}
-            />
-          </Box>
+        <Tabs
+          value={view}
+          onChange={(_, nextView: 'builder' | 'library') => setView(nextView)}
+          sx={{
+            px: 2,
+            minHeight: 40,
+            bgcolor: panelBackground,
+            borderBottom: `1px solid ${borderColor}`,
+            '& .MuiTab-root': {
+              minHeight: 40,
+              color: subduedText,
+              fontWeight: 700,
+              fontSize: '0.78rem',
+            },
+            '& .Mui-selected': {
+              color: `${primary} !important`,
+            },
+            '& .MuiTabs-indicator': {
+              bgcolor: primary,
+            },
+          }}
+        >
+          <Tab value="builder" label="Builder" />
+          <Tab value="library" label="Library" />
+        </Tabs>
 
+        {view === 'builder' ? (
+          <Box sx={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+            <Box
+              sx={{
+                width: 300,
+                flexShrink: 0,
+                height: '100%',
+                bgcolor: panelBackground,
+                borderRight: `1px solid ${borderColor}`,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: 0,
+              }}
+            >
+              <ThemePanel
+                theme={currentTheme}
+                onChange={setCurrentTheme}
+                onBaseChange={setActive}
+                logoDataUrl={logoDataUrl}
+                onLogoChange={setLogoDataUrl}
+                onHighlightPath={setHighlightedPath}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                flex: 1,
+                p: 3,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                bgcolor: shellBackground,
+                minWidth: 0,
+                minHeight: 0,
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'text.secondary',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontSize: '0.68rem',
+                }}
+              >
+                Live preview - {active} theme
+              </Typography>
+              <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
+                <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
+              </Box>
+            </Box>
+          </Box>
+        ) : (
           <Box
             sx={{
               flex: 1,
-              p: 3,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-              bgcolor: shellBackground,
-              minWidth: 0,
               minHeight: 0,
+              overflow: 'hidden',
+              bgcolor: shellBackground,
             }}
           >
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.secondary',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontSize: '0.68rem',
-              }}
-            >
-              Live preview - {active} theme
-            </Typography>
-            <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
-              <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
-            </Box>
+            <ThemeLibrary
+              entries={[...themeLibrary, ...importedLibraryEntries]}
+              onApply={applyLibraryEntry}
+              onEdit={loadLibraryEntry}
+              onDownload={handleDownloadLibraryEntry}
+              onImportEntry={entry =>
+                setImportedLibraryEntries(entries => [
+                  ...entries.filter(existingEntry => existingEntry.id !== entry.id),
+                  entry,
+                ])
+              }
+              applyLabel="Apply"
+            />
           </Box>
-        </Box>
+        )}
 
         <HowToUseDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
         <InstallInstructionsDialog

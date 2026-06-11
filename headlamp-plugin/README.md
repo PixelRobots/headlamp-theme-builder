@@ -1,6 +1,6 @@
 # Headlamp Theme Builder Plugin
 
-<img src="../public/headlamp-theme-builder.png" alt="Headlamp Theme Builder logo" width="140">
+<img src="https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/main/public/headlamp-theme-builder.png" alt="Headlamp Theme Builder logo" width="140">
 
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/headlamp-theme-builder)](https://artifacthub.io/packages/search?repo=headlamp-theme-builder)
 

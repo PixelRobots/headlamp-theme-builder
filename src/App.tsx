@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
@@ -15,11 +17,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import LaunchIcon from '@mui/icons-material/Launch';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
+import ThemeLibrary from './components/ThemeLibrary';
 import HowToUseDialog from './components/HowToUseDialog';
 import InstallInstructionsDialog from './components/InstallInstructionsDialog';
 import WelcomeDialog from './components/WelcomeDialog';
-import { completeTheme, defaultLight, defaultDark } from './defaults/defaultTheme';
+import { defaultLight, defaultDark } from './defaults/defaultTheme';
+import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
 import { downloadPlugin, downloadThemeJson } from './utils/generateCode';
+import { getImportedLogoDataUrl, getImportedThemes } from './utils/themeImport';
 import type { HeadlampTheme } from './types/theme';
 
 // headlamp.dev colour palette
@@ -30,73 +35,6 @@ const PANEL_BG = '#1a1a18';    // headlamp.dev hero background
 const BORDER = 'rgba(255,255,255,0.06)';
 const WELCOME_DISMISSED_KEY = 'headlamp-theme-builder-welcome-dismissed';
 const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}headlamp-theme-builder.png`;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function isTheme(value: unknown): value is HeadlampTheme {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  return (
-    typeof value.name === 'string' &&
-    (value.base === 'light' || value.base === 'dark') &&
-    typeof value.primary === 'string' &&
-    typeof value.secondary === 'string' &&
-    isRecord(value.text) &&
-    typeof value.text.primary === 'string' &&
-    isRecord(value.link) &&
-    typeof value.link.color === 'string' &&
-    isRecord(value.background) &&
-    typeof value.background.default === 'string' &&
-    typeof value.background.surface === 'string' &&
-    typeof value.background.muted === 'string' &&
-    isRecord(value.sidebar) &&
-    typeof value.sidebar.background === 'string' &&
-    typeof value.sidebar.color === 'string' &&
-    typeof value.sidebar.selectedBackground === 'string' &&
-    typeof value.sidebar.selectedColor === 'string' &&
-    isRecord(value.navbar) &&
-    typeof value.navbar.background === 'string' &&
-    typeof value.navbar.color === 'string' &&
-    (value.terminal === undefined ||
-      (isRecord(value.terminal) &&
-        (value.terminal.background === undefined ||
-          typeof value.terminal.background === 'string') &&
-        (value.terminal.foreground === undefined ||
-          typeof value.terminal.foreground === 'string') &&
-        (value.terminal.cursor === undefined || typeof value.terminal.cursor === 'string')))
-  );
-}
-
-function getImportedThemes(data: unknown): HeadlampTheme[] {
-  const rawThemes = Array.isArray(data)
-    ? data
-    : isRecord(data) && Array.isArray(data.themes)
-      ? data.themes
-      : null;
-
-  if (!rawThemes) {
-    throw new Error('Theme JSON must contain a themes array.');
-  }
-
-  const themes = rawThemes.filter(isTheme);
-  if (themes.length < 2) {
-    throw new Error('Theme JSON must contain at least two valid themes.');
-  }
-
-  return themes.map(completeTheme);
-}
-
-function getImportedLogoDataUrl(data: unknown): string | null {
-  if (!isRecord(data)) {
-    return null;
-  }
-
-  return typeof data.logoDataUrl === 'string' ? data.logoDataUrl : null;
-}
 
 /** App shell using the headlamp.dev dark palette */
 const appTheme = createTheme({
@@ -124,6 +62,8 @@ export default function App() {
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [themeFileMenuAnchor, setThemeFileMenuAnchor] = useState<null | HTMLElement>(null);
+  const [view, setView] = useState<'builder' | 'library'>('builder');
+  const [importedLibraryEntries, setImportedLibraryEntries] = useState<ThemeLibraryEntry[]>([]);
 
   const currentTheme = active === 'light' ? lightTheme : darkTheme;
   const setCurrentTheme = active === 'light' ? setLightTheme : setDarkTheme;
@@ -154,13 +94,19 @@ export default function App() {
       try {
         const data = JSON.parse(String(event.target?.result ?? ''));
         const themes = getImportedThemes(data);
-        const importedLight = themes.find(theme => theme.base === 'light') ?? themes[0];
-        const importedDark = themes.find(theme => theme.base === 'dark') ?? themes[1];
+        const importedLight = themes.find(theme => theme.base === 'light');
+        const importedDark = themes.find(theme => theme.base === 'dark');
+        const preferredTheme = importedDark ?? importedLight ?? themes[0];
 
-        setLightTheme(importedLight);
-        setDarkTheme(importedDark);
+        if (importedLight) {
+          setLightTheme(importedLight);
+        }
+        if (importedDark) {
+          setDarkTheme(importedDark);
+        }
         setLogoDataUrl(getImportedLogoDataUrl(data));
-        setActive(importedLight.base);
+        setActive(preferredTheme.base);
+        setView('builder');
       } catch (error) {
         window.alert(error instanceof Error ? error.message : 'Could not import theme JSON.');
       }
@@ -171,6 +117,27 @@ export default function App() {
 
   async function handleDownloadPlugin() {
     await downloadPlugin([lightTheme, darkTheme], logoDataUrl);
+    setInstallInstructionsOpen(true);
+  }
+
+  function loadLibraryEntry(entry: ThemeLibraryEntry) {
+    const entryLight = entry.themes.find(theme => theme.base === 'light');
+    const entryDark = entry.themes.find(theme => theme.base === 'dark');
+    const preferredTheme = entryDark ?? entryLight ?? entry.themes[0];
+
+    if (entryLight) {
+      setLightTheme(entryLight);
+    }
+    if (entryDark) {
+      setDarkTheme(entryDark);
+    }
+    setLogoDataUrl(null);
+    setActive(preferredTheme.base);
+    setView('builder');
+  }
+
+  async function handleDownloadLibraryEntry(entry: ThemeLibraryEntry) {
+    await downloadPlugin(entry.themes, null);
     setInstallInstructionsOpen(true);
   }
 
@@ -350,61 +317,103 @@ export default function App() {
           themes from inside the app.
         </Box>
 
+        <Tabs
+          value={view}
+          onChange={(_, nextView: 'builder' | 'library') => setView(nextView)}
+          sx={{
+            px: 2,
+            minHeight: 40,
+            bgcolor: HEADER_BG,
+            borderBottom: `1px solid ${BORDER}`,
+            '& .MuiTab-root': {
+              minHeight: 40,
+              color: 'rgba(255,255,255,0.62)',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+            },
+            '& .Mui-selected': {
+              color: `${YELLOW} !important`,
+            },
+            '& .MuiTabs-indicator': {
+              bgcolor: YELLOW,
+            },
+          }}
+        >
+          <Tab value="builder" label="Builder" />
+          <Tab value="library" label="Library" />
+        </Tabs>
+
         {/* Main split */}
-        <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {view === 'builder' ? (
+          <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
-          {/* Left: controls */}
-          <Box
-            sx={{
-              width: 280,
-              flexShrink: 0,
-              bgcolor: HEADER_BG,
-              borderRight: `1px solid ${BORDER}`,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <ThemePanel
-              theme={currentTheme}
-              onChange={setCurrentTheme}
-              onBaseChange={setActive}
-              logoDataUrl={logoDataUrl}
-              onLogoChange={setLogoDataUrl}
-              onHighlightPath={setHighlightedPath}
-              uploadIcon={<UploadFileIcon fontSize="small" />}
-              deleteIcon={<DeleteIcon fontSize="small" />}
-            />
-          </Box>
-
-          {/* Right: live preview */}
-          <Box
-            sx={{
-              flex: 1,
-              p: 3,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-              bgcolor: PANEL_BG,
-            }}
-          >
-            <Typography
-              variant="caption"
+            {/* Left: controls */}
+            <Box
               sx={{
-                color: 'rgba(255,255,255,0.3)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontSize: '0.68rem',
+                width: 280,
+                flexShrink: 0,
+                bgcolor: HEADER_BG,
+                borderRight: `1px solid ${BORDER}`,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
-              Live preview — {active} theme
-            </Typography>
-            <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
+              <ThemePanel
+                theme={currentTheme}
+                onChange={setCurrentTheme}
+                onBaseChange={setActive}
+                logoDataUrl={logoDataUrl}
+                onLogoChange={setLogoDataUrl}
+                onHighlightPath={setHighlightedPath}
+                uploadIcon={<UploadFileIcon fontSize="small" />}
+                deleteIcon={<DeleteIcon fontSize="small" />}
+              />
+            </Box>
+
+            {/* Right: live preview */}
+            <Box
+              sx={{
+                flex: 1,
+                p: 3,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                bgcolor: PANEL_BG,
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'rgba(255,255,255,0.3)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontSize: '0.68rem',
+                }}
+              >
+                Live preview - {active} theme
+              </Typography>
+              <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                <Preview theme={currentTheme} logoDataUrl={logoDataUrl} highlightedPath={highlightedPath} />
+              </Box>
             </Box>
           </Box>
-        </Box>
+        ) : (
+          <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden', bgcolor: PANEL_BG }}>
+            <ThemeLibrary
+              entries={[...themeLibrary, ...importedLibraryEntries]}
+              onEdit={loadLibraryEntry}
+              onDownload={handleDownloadLibraryEntry}
+              onImportEntry={entry =>
+                setImportedLibraryEntries(entries => [
+                  ...entries.filter(existingEntry => existingEntry.id !== entry.id),
+                  entry,
+                ])
+              }
+            />
+          </Box>
+        )}
 
         <WelcomeDialog
           open={welcomeOpen}
