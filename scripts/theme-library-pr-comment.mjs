@@ -140,7 +140,15 @@ This PR is only for testing the community theme contribution workflow. It does n
   await writeFile(outputPath, body);
 
   if (shouldPost) {
-    await postComment(body);
+    await postComment(body).catch(async error => {
+      if (!String(error.message).includes('403')) {
+        throw error;
+      }
+
+      console.warn(`Could not post community theme preview comment: ${error.message}`);
+      console.warn('The comment markdown was generated successfully but the GitHub token cannot write PR comments in this run.');
+      await appendStepSummary(body);
+    });
   }
 }
 
@@ -168,4 +176,14 @@ async function postComment(body) {
     method: 'POST',
     body: JSON.stringify({ body }),
   });
+}
+
+async function appendStepSummary(body) {
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (!summaryPath) {
+    return;
+  }
+
+  const { appendFile } = await import('node:fs/promises');
+  await appendFile(summaryPath, `## Community Theme Preview\n\n${body}\n`);
 }
