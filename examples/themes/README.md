@@ -8,4 +8,6 @@ Supported shapes:
 - `theme-library-entry.json`: a library card with one or more themes.
 - Builder exports from **Save / Load**, which contain a `themes` array and optional `logoDataUrl`.
 
+Schemas are available in [../../schemas](../../schemas).
+
 URL imports run in the browser, so the host must allow CORS. Raw GitHub URLs are a good option for shared themes.

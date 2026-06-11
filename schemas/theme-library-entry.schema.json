@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrobots.github.io/headlamp-theme-builder/schemas/theme-library-entry.schema.json",
+  "title": "Headlamp Theme Builder Library Entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "description", "themes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "headlamp-theme.schema.json"
+      }
+    }
+  }
+}

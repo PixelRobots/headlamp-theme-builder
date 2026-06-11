@@ -4,6 +4,7 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added JSON schemas and runtime validation for imported themes and library entries.
 - Added a public roadmap for planned theme schema, validation, preview, library, sharing, and documentation improvements.
 - Added website and plugin screenshots to the README files.
 - Added example theme JSON files for single-theme and library-entry imports.

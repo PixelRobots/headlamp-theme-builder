@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pixelrobots.github.io/headlamp-theme-builder/schemas/headlamp-theme.schema.json",
+  "title": "Headlamp Theme Builder Theme",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "name",
+    "base",
+    "primary",
+    "secondary",
+    "text",
+    "link",
+    "background",
+    "sidebar",
+    "navbar"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "base": { "enum": ["light", "dark"] },
+    "primary": { "$ref": "#/$defs/hexColour" },
+    "secondary": { "$ref": "#/$defs/hexColour" },
+    "text": {
+      "type": "object",
+      "required": ["primary"],
+      "properties": {
+        "primary": { "$ref": "#/$defs/hexColour" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["color"],
+      "properties": {
+        "color": { "$ref": "#/$defs/hexColour" }
+      }
+    },
+    "background": {
+      "type": "object",
+      "required": ["default", "surface", "muted"],
+      "properties": {
+        "default": { "$ref": "#/$defs/hexColour" },
+        "surface": { "$ref": "#/$defs/hexColour" },
+        "muted": { "$ref": "#/$defs/hexColour" }
+      }
+    },
+    "sidebar": {
+      "type": "object",
+      "required": [
+        "background",
+        "color",
+        "selectedBackground",
+        "selectedColor",
+        "actionBackground"
+      ],
+      "properties": {
+        "background": { "$ref": "#/$defs/hexColour" },
+        "color": { "$ref": "#/$defs/hexColour" },
+        "selectedBackground": { "$ref": "#/$defs/hexColour" },
+        "selectedColor": { "$ref": "#/$defs/hexColour" },
+        "actionBackground": { "$ref": "#/$defs/hexColour" }
+      }
+    },
+    "navbar": {
+      "type": "object",
+      "required": ["background", "color"],
+      "properties": {
+        "background": { "$ref": "#/$defs/hexColour" },
+        "color": { "$ref": "#/$defs/hexColour" },
+        "searchHint": { "$ref": "#/$defs/hexColour" }
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "properties": {
+        "background": { "$ref": "#/$defs/hexColour" },
+        "foreground": { "$ref": "#/$defs/hexColour" },
+        "cursor": { "$ref": "#/$defs/hexColour" },
+        "ansi": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/hexColour" }
+        }
+      }
+    },
+    "fontFamily": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "radius": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 24
+    },
+    "buttonTextTransform": {
+      "enum": ["none", "uppercase"]
+    }
+  },
+  "$defs": {
+    "hexColour": {
+      "type": "string",
+      "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+    }
+  }
+}

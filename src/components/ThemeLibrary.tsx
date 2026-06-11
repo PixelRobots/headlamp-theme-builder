@@ -182,7 +182,7 @@ export default function ThemeLibrary({
             Import URL
           </Button>
           {importStatus && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
               {importStatus}
             </Typography>
           )}

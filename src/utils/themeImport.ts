@@ -5,6 +5,7 @@ import {
   type ThemeLibraryEntry,
 } from '../library/themeLibrary';
 import type { HeadlampTheme } from '../types/theme';
+import { assertValidThemes } from './themeValidation';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -57,6 +58,7 @@ export function getImportedThemes(data: unknown): HeadlampTheme[] {
     throw new Error('Theme JSON must contain at least one valid theme.');
   }
 
+  assertValidThemes(themes);
   return themes.map(theme => completeTheme(theme as HeadlampTheme));
 }
 
@@ -70,6 +72,7 @@ export function getImportedLogoDataUrl(data: unknown): string | null {
 
 export function getImportedLibraryEntry(data: unknown, fallbackName = 'Imported Theme'): ThemeLibraryEntry {
   if (isThemeLibraryEntryLike(data)) {
+    assertValidThemes(data.themes);
     return normalizeThemeLibraryEntry({
       id: typeof data.id === 'string' ? data.id : slugify(data.name),
       name: data.name,

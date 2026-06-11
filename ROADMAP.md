@@ -10,9 +10,9 @@ Publish a formal JSON schema for importable themes and library entries.
 
 Goals:
 
-- Validate single theme files.
-- Validate paired light/dark theme bundles.
-- Validate library entries used by `src/library/themes`.
+- Validate single theme files. **Done:** schema and runtime validation added.
+- Validate paired light/dark theme bundles. **Done:** each imported theme in a bundle is validated.
+- Validate library entries used by `src/library/themes`. **Done:** library-entry schema added.
 - Make it easier for users to catch missing or invalid fields before import.
 
 ### Theme Validation
