@@ -133,8 +133,6 @@ README catalog row added by this PR:
 | Preview | ID | Theme | Description | Source | Modes | Tags |
 | --- | --- | --- | --- | --- | --- | --- |
 ${rows.join('\n')}
-
-This PR is only for testing the community theme contribution workflow. It does not update the changelog and does not commit generated \`public/library\` output.
 `;
 
   await writeFile(outputPath, body);
