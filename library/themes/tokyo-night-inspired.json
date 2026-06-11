@@ -1,0 +1,56 @@
+{
+  "id": "tokyo-night-inspired",
+  "name": "Tokyo Night Inspired",
+  "description": "Deep blue developer theme with calm contrast, bright code-style accents, and readable terminal colours.",
+  "tags": ["dark", "developer", "terminal", "community"],
+  "themes": [
+    {
+      "name": "Tokyo Night Inspired",
+      "base": "dark",
+      "primary": "#7aa2f7",
+      "secondary": "#24283b",
+      "text": { "primary": "#c0caf5" },
+      "link": { "color": "#7aa2f7" },
+      "background": {
+        "default": "#1a1b26",
+        "surface": "#1f2335",
+        "muted": "#24283b"
+      },
+      "sidebar": {
+        "background": "#16161e",
+        "color": "#c0caf5",
+        "selectedBackground": "#7aa2f7",
+        "selectedColor": "#11131a",
+        "actionBackground": "#9ece6a"
+      },
+      "navbar": {
+        "background": "#16161e",
+        "color": "#c0caf5",
+        "searchHint": "#a9b1d6"
+      },
+      "terminal": {
+        "background": "#16161e",
+        "foreground": "#c0caf5",
+        "cursor": "#7dcfff",
+        "ansi": {
+          "black": "#6b728f",
+          "red": "#f7768e",
+          "green": "#9ece6a",
+          "yellow": "#e0af68",
+          "blue": "#7aa2f7",
+          "magenta": "#bb9af7",
+          "cyan": "#7dcfff",
+          "white": "#c0caf5",
+          "brightBlack": "#8b93b5",
+          "brightRed": "#ff9aa2",
+          "brightGreen": "#b9f27c",
+          "brightYellow": "#ffd27a",
+          "brightBlue": "#9abdf5",
+          "brightMagenta": "#d5b3ff",
+          "brightCyan": "#9df5ff",
+          "brightWhite": "#ffffff"
+        }
+      }
+    }
+  ]
+}
