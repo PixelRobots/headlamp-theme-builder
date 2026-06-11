@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*.*.*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: Plugin version to release, without the leading v
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -15,6 +20,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release version
+        shell: bash
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="${{ inputs.version }}"
+          fi
+
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Version must use x.y.z format"
+            exit 1
+          fi
+
+          echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=v$version" >> "$GITHUB_ENV"
+
+      - name: Prepare release metadata
+        run: node scripts/prepare-plugin-release.mjs "$RELEASE_VERSION"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -26,17 +53,6 @@ jobs:
       - name: Install plugin dependencies
         working-directory: headlamp-plugin
         run: npm ci
-
-      - name: Validate tag matches plugin version
-        if: github.ref_type == 'tag'
-        shell: bash
-        run: |
-          tag_version="${GITHUB_REF_NAME#v}"
-          package_version="$(node -p "require('./headlamp-plugin/package.json').version")"
-          if [ "$tag_version" != "$package_version" ]; then
-            echo "Tag version $tag_version does not match plugin package version $package_version"
-            exit 1
-          fi
 
       - name: Lint
         working-directory: headlamp-plugin
@@ -58,25 +74,18 @@ jobs:
         working-directory: headlamp-plugin
         run: npm run package
 
-      - name: Validate Artifact Hub checksum
+      - name: Update Artifact Hub checksum
         shell: bash
         run: |
-          package_version="$(node -p "require('./headlamp-plugin/package.json').version")"
-          tarball="headlamp-plugin/headlamp-theme-builder-${package_version}.tar.gz"
+          tarball="headlamp-plugin/headlamp-theme-builder-${RELEASE_VERSION}.tar.gz"
           checksum="$(sha256sum "$tarball" | awk '{print $1}')"
-          expected="$(grep 'headlamp/plugin/archive-checksum' headlamp-plugin/artifacthub-pkg.yml | sed -E 's/.*SHA256:([a-fA-F0-9]+).*/\1/' | tr '[:upper:]' '[:lower:]')"
-          if [ "$checksum" != "$expected" ]; then
-            echo "Artifact Hub checksum does not match packaged tarball"
-            echo "Expected: $expected"
-            echo "Actual:   $checksum"
-            exit 1
-          fi
+          node scripts/prepare-plugin-release.mjs "$RELEASE_VERSION" --checksum="$checksum"
+          echo "PACKAGE_CHECKSUM=$checksum" >> "$GITHUB_ENV"
 
       - name: Extract changelog
-        if: github.ref_type == 'tag'
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME}"
+          version="${RELEASE_TAG}"
           awk -v version="$version" '
             $0 ~ "^## " version "([ -]|$)" { found=1; print; next }
             found && /^## / { exit }
@@ -88,9 +97,50 @@ jobs:
           fi
 
       - name: Publish GitHub release
-        if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          target_commitish: ${{ github.sha }}
           files: headlamp-plugin/headlamp-theme-builder-*.tar.gz
           body_path: release-notes.md
           make_latest: true
+
+      - name: Push release metadata to main
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            tmp_dir="$(mktemp -d)"
+            cp CHANGELOG.md "$tmp_dir/CHANGELOG.md"
+            cp headlamp-plugin/package.json "$tmp_dir/package.json"
+            cp headlamp-plugin/package-lock.json "$tmp_dir/package-lock.json"
+            cp headlamp-plugin/artifacthub-pkg.yml "$tmp_dir/artifacthub-pkg.yml"
+            cp headlamp-plugin/README.md "$tmp_dir/README.md"
+            cp headlamp-plugin/DEPLOYMENT.md "$tmp_dir/DEPLOYMENT.md"
+
+            git fetch origin main
+            git switch -C release-metadata origin/main
+
+            cp "$tmp_dir/CHANGELOG.md" CHANGELOG.md
+            cp "$tmp_dir/package.json" headlamp-plugin/package.json
+            cp "$tmp_dir/package-lock.json" headlamp-plugin/package-lock.json
+            cp "$tmp_dir/artifacthub-pkg.yml" headlamp-plugin/artifacthub-pkg.yml
+            cp "$tmp_dir/README.md" headlamp-plugin/README.md
+            cp "$tmp_dir/DEPLOYMENT.md" headlamp-plugin/DEPLOYMENT.md
+          fi
+
+          git add CHANGELOG.md \
+            headlamp-plugin/package.json \
+            headlamp-plugin/package-lock.json \
+            headlamp-plugin/artifacthub-pkg.yml \
+            headlamp-plugin/README.md \
+            headlamp-plugin/DEPLOYMENT.md
+
+          if git diff --cached --quiet; then
+            echo "No release metadata changes to commit"
+          else
+            git commit -m "plugin: Prepare ${RELEASE_TAG} release"
+            git push origin HEAD:main
+          fi
