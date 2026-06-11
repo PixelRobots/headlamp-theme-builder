@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultDark } from '../../src/defaults/defaultTheme';
+import { decodeSharedThemeState, encodeSharedThemeState } from '../../src/utils/shareTheme';
 import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../../src/utils/themeImport';
 import { validateThemesForUse } from '../../src/utils/themeValidation';
 
@@ -75,5 +76,20 @@ describe('theme validation', () => {
     expect(result.warnings).toContain(
       'Low ANSI (dark): ANSI black against terminal background is 1.0:1; recommended minimum is 3:1.'
     );
+  });
+});
+
+describe('shared theme links', () => {
+  it('round trips shared theme state', () => {
+    const encoded = encodeSharedThemeState({
+      active: 'dark',
+      themes: [defaultDark],
+    });
+
+    expect(decodeSharedThemeState(encoded)).toEqual({
+      version: 1,
+      active: 'dark',
+      themes: [defaultDark],
+    });
   });
 });

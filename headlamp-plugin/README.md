@@ -32,6 +32,9 @@ Planned improvements are tracked in the
 For maintainer release steps, see the
 [release guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/DEPLOYMENT.md).
 
+For installing or troubleshooting a generated theme plugin downloaded from the builder, see the
+[downloaded theme plugin guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/THEME_PLUGIN_GUIDE.md).
+
 ## Install from Headlamp Desktop
 
 1. Open Headlamp Desktop.

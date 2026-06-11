@@ -2,6 +2,9 @@
 
 This guide is for maintainers releasing a new version of the Headlamp Theme Builder plugin.
 
+For user-facing installation steps for generated theme plugins, see
+[`THEME_PLUGIN_GUIDE.md`](THEME_PLUGIN_GUIDE.md).
+
 ## Release Flow
 
 Releases are driven by `.github/workflows/plugin-release.yml`.

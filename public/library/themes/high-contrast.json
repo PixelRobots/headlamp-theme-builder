@@ -1,0 +1,118 @@
+{
+  "id": "high-contrast",
+  "name": "High Contrast",
+  "description": "Accessibility-focused light and dark themes with strong text, navigation, and terminal contrast.",
+  "tags": [
+    "light",
+    "dark",
+    "accessibility",
+    "high-contrast",
+    "terminal"
+  ],
+  "themes": [
+    {
+      "name": "High Contrast Light",
+      "base": "light",
+      "primary": "#003a70",
+      "secondary": "#e6eef8",
+      "text": {
+        "primary": "#000000"
+      },
+      "link": {
+        "color": "#003a70"
+      },
+      "background": {
+        "default": "#ffffff",
+        "surface": "#f5f7fa",
+        "muted": "#d9e2ec"
+      },
+      "sidebar": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "selectedBackground": "#ffdd00",
+        "selectedColor": "#000000",
+        "actionBackground": "#003a70"
+      },
+      "navbar": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "searchHint": "#ffdd00"
+      },
+      "terminal": {
+        "background": "#000000",
+        "foreground": "#ffffff",
+        "cursor": "#ffdd00",
+        "ansi": {
+          "black": "#767676",
+          "red": "#ff6b6b",
+          "green": "#67e480",
+          "yellow": "#ffdd00",
+          "blue": "#7db7ff",
+          "magenta": "#ff8cff",
+          "cyan": "#6ee7f9",
+          "white": "#ffffff",
+          "brightBlack": "#a6a6a6",
+          "brightRed": "#ff9b9b",
+          "brightGreen": "#9dffb0",
+          "brightYellow": "#fff176",
+          "brightBlue": "#a9d1ff",
+          "brightMagenta": "#ffb3ff",
+          "brightCyan": "#a5f3fc",
+          "brightWhite": "#ffffff"
+        }
+      }
+    },
+    {
+      "name": "High Contrast Dark",
+      "base": "dark",
+      "primary": "#ffdd00",
+      "secondary": "#1f2937",
+      "text": {
+        "primary": "#ffffff"
+      },
+      "link": {
+        "color": "#8cc8ff"
+      },
+      "background": {
+        "default": "#000000",
+        "surface": "#111827",
+        "muted": "#1f2937"
+      },
+      "sidebar": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "selectedBackground": "#ffdd00",
+        "selectedColor": "#000000",
+        "actionBackground": "#8cc8ff"
+      },
+      "navbar": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "searchHint": "#ffdd00"
+      },
+      "terminal": {
+        "background": "#000000",
+        "foreground": "#ffffff",
+        "cursor": "#ffdd00",
+        "ansi": {
+          "black": "#767676",
+          "red": "#ff6b6b",
+          "green": "#67e480",
+          "yellow": "#ffdd00",
+          "blue": "#7db7ff",
+          "magenta": "#ff8cff",
+          "cyan": "#6ee7f9",
+          "white": "#ffffff",
+          "brightBlack": "#a6a6a6",
+          "brightRed": "#ff9b9b",
+          "brightGreen": "#9dffb0",
+          "brightYellow": "#fff176",
+          "brightBlue": "#a9d1ff",
+          "brightMagenta": "#ffb3ff",
+          "brightCyan": "#a5f3fc",
+          "brightWhite": "#ffffff"
+        }
+      }
+    }
+  ]
+}

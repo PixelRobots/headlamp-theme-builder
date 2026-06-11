@@ -470,6 +470,264 @@
       ]
     },
     {
+      "id": "high-contrast",
+      "name": "High Contrast",
+      "description": "Accessibility-focused light and dark themes with strong text, navigation, and terminal contrast.",
+      "source": "bundled",
+      "tags": [
+        "light",
+        "dark",
+        "accessibility",
+        "high-contrast",
+        "terminal"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/high-contrast.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/high-contrast-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/high-contrast-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/high-contrast-dark.svg"
+      },
+      "themes": [
+        {
+          "name": "High Contrast Light",
+          "base": "light",
+          "primary": "#003a70",
+          "secondary": "#e6eef8",
+          "text": {
+            "primary": "#000000"
+          },
+          "link": {
+            "color": "#003a70"
+          },
+          "background": {
+            "default": "#ffffff",
+            "surface": "#f5f7fa",
+            "muted": "#d9e2ec"
+          },
+          "sidebar": {
+            "background": "#000000",
+            "color": "#ffffff",
+            "selectedBackground": "#ffdd00",
+            "selectedColor": "#000000",
+            "actionBackground": "#003a70"
+          },
+          "navbar": {
+            "background": "#000000",
+            "color": "#ffffff",
+            "searchHint": "#ffdd00"
+          },
+          "terminal": {
+            "background": "#000000",
+            "foreground": "#ffffff",
+            "cursor": "#ffdd00",
+            "ansi": {
+              "black": "#767676",
+              "red": "#ff6b6b",
+              "green": "#67e480",
+              "yellow": "#ffdd00",
+              "blue": "#7db7ff",
+              "magenta": "#ff8cff",
+              "cyan": "#6ee7f9",
+              "white": "#ffffff",
+              "brightBlack": "#a6a6a6",
+              "brightRed": "#ff9b9b",
+              "brightGreen": "#9dffb0",
+              "brightYellow": "#fff176",
+              "brightBlue": "#a9d1ff",
+              "brightMagenta": "#ffb3ff",
+              "brightCyan": "#a5f3fc",
+              "brightWhite": "#ffffff"
+            }
+          }
+        },
+        {
+          "name": "High Contrast Dark",
+          "base": "dark",
+          "primary": "#ffdd00",
+          "secondary": "#1f2937",
+          "text": {
+            "primary": "#ffffff"
+          },
+          "link": {
+            "color": "#8cc8ff"
+          },
+          "background": {
+            "default": "#000000",
+            "surface": "#111827",
+            "muted": "#1f2937"
+          },
+          "sidebar": {
+            "background": "#000000",
+            "color": "#ffffff",
+            "selectedBackground": "#ffdd00",
+            "selectedColor": "#000000",
+            "actionBackground": "#8cc8ff"
+          },
+          "navbar": {
+            "background": "#000000",
+            "color": "#ffffff",
+            "searchHint": "#ffdd00"
+          },
+          "terminal": {
+            "background": "#000000",
+            "foreground": "#ffffff",
+            "cursor": "#ffdd00",
+            "ansi": {
+              "black": "#767676",
+              "red": "#ff6b6b",
+              "green": "#67e480",
+              "yellow": "#ffdd00",
+              "blue": "#7db7ff",
+              "magenta": "#ff8cff",
+              "cyan": "#6ee7f9",
+              "white": "#ffffff",
+              "brightBlack": "#a6a6a6",
+              "brightRed": "#ff9b9b",
+              "brightGreen": "#9dffb0",
+              "brightYellow": "#fff176",
+              "brightBlue": "#a9d1ff",
+              "brightMagenta": "#ffb3ff",
+              "brightCyan": "#a5f3fc",
+              "brightWhite": "#ffffff"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kubernetes-classic",
+      "name": "Kubernetes Classic",
+      "description": "Kubernetes-inspired blue interface with clear operational surfaces and status-friendly terminal colours.",
+      "source": "bundled",
+      "tags": [
+        "light",
+        "dark",
+        "kubernetes",
+        "cloud",
+        "terminal"
+      ],
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/kubernetes-classic.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/kubernetes-classic-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/kubernetes-classic-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/kubernetes-classic-dark.svg"
+      },
+      "themes": [
+        {
+          "name": "Kubernetes Classic Light",
+          "base": "light",
+          "primary": "#326ce5",
+          "secondary": "#e7efff",
+          "text": {
+            "primary": "#172033"
+          },
+          "link": {
+            "color": "#174ea6"
+          },
+          "background": {
+            "default": "#f8fbff",
+            "surface": "#ffffff",
+            "muted": "#e7efff"
+          },
+          "sidebar": {
+            "background": "#172033",
+            "color": "#f8fbff",
+            "selectedBackground": "#326ce5",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#2e7d32"
+          },
+          "navbar": {
+            "background": "#172033",
+            "color": "#ffffff",
+            "searchHint": "#8bb6ff"
+          },
+          "terminal": {
+            "background": "#0f172a",
+            "foreground": "#e5edff",
+            "cursor": "#8bb6ff",
+            "ansi": {
+              "black": "#64748b",
+              "red": "#f87171",
+              "green": "#4ade80",
+              "yellow": "#facc15",
+              "blue": "#60a5fa",
+              "magenta": "#c084fc",
+              "cyan": "#22d3ee",
+              "white": "#f8fafc",
+              "brightBlack": "#94a3b8",
+              "brightRed": "#fca5a5",
+              "brightGreen": "#86efac",
+              "brightYellow": "#fde047",
+              "brightBlue": "#93c5fd",
+              "brightMagenta": "#d8b4fe",
+              "brightCyan": "#67e8f9",
+              "brightWhite": "#ffffff"
+            }
+          }
+        },
+        {
+          "name": "Kubernetes Classic Dark",
+          "base": "dark",
+          "primary": "#7fb0ff",
+          "secondary": "#1e293b",
+          "text": {
+            "primary": "#e5edff"
+          },
+          "link": {
+            "color": "#9cc3ff"
+          },
+          "background": {
+            "default": "#0f172a",
+            "surface": "#172033",
+            "muted": "#1e293b"
+          },
+          "sidebar": {
+            "background": "#080d18",
+            "color": "#e5edff",
+            "selectedBackground": "#326ce5",
+            "selectedColor": "#ffffff",
+            "actionBackground": "#4ade80"
+          },
+          "navbar": {
+            "background": "#080d18",
+            "color": "#ffffff",
+            "searchHint": "#7fb0ff"
+          },
+          "terminal": {
+            "background": "#080d18",
+            "foreground": "#e5edff",
+            "cursor": "#7fb0ff",
+            "ansi": {
+              "black": "#64748b",
+              "red": "#f87171",
+              "green": "#4ade80",
+              "yellow": "#facc15",
+              "blue": "#60a5fa",
+              "magenta": "#c084fc",
+              "cyan": "#22d3ee",
+              "white": "#f8fafc",
+              "brightBlack": "#94a3b8",
+              "brightRed": "#fca5a5",
+              "brightGreen": "#86efac",
+              "brightYellow": "#fde047",
+              "brightBlue": "#93c5fd",
+              "brightMagenta": "#d8b4fe",
+              "brightCyan": "#67e8f9",
+              "brightWhite": "#ffffff"
+            }
+          }
+        }
+      ]
+    },
+    {
       "id": "monokai",
       "name": "Monokai",
       "description": "High-energy dark editor palette with lime, pink, orange, and violet accents.",

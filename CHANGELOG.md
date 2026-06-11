@@ -4,6 +4,9 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added shareable website theme links for the current light/dark theme state.
+- Added High Contrast and Kubernetes Classic built-in theme pairs.
+- Added a downloaded theme plugin guide for install, upgrade, removal, and compatibility troubleshooting.
 - Added library search, mode/source filters, and show-more pagination.
 - Added public theme library generation and direct public-library imports.
 - Added generated public theme previews, catalog README, contributor guide, and PR validation workflow.

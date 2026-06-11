@@ -1,0 +1,88 @@
+{
+  "id": "kubernetes-classic",
+  "name": "Kubernetes Classic",
+  "description": "Kubernetes-inspired blue interface with clear operational surfaces and status-friendly terminal colours.",
+  "tags": ["light", "dark", "kubernetes", "cloud", "terminal"],
+  "themes": [
+    {
+      "name": "Kubernetes Classic Light",
+      "base": "light",
+      "primary": "#326ce5",
+      "secondary": "#e7efff",
+      "text": { "primary": "#172033" },
+      "link": { "color": "#174ea6" },
+      "background": { "default": "#f8fbff", "surface": "#ffffff", "muted": "#e7efff" },
+      "sidebar": {
+        "background": "#172033",
+        "color": "#f8fbff",
+        "selectedBackground": "#326ce5",
+        "selectedColor": "#ffffff",
+        "actionBackground": "#2e7d32"
+      },
+      "navbar": { "background": "#172033", "color": "#ffffff", "searchHint": "#8bb6ff" },
+      "terminal": {
+        "background": "#0f172a",
+        "foreground": "#e5edff",
+        "cursor": "#8bb6ff",
+        "ansi": {
+          "black": "#64748b",
+          "red": "#f87171",
+          "green": "#4ade80",
+          "yellow": "#facc15",
+          "blue": "#60a5fa",
+          "magenta": "#c084fc",
+          "cyan": "#22d3ee",
+          "white": "#f8fafc",
+          "brightBlack": "#94a3b8",
+          "brightRed": "#fca5a5",
+          "brightGreen": "#86efac",
+          "brightYellow": "#fde047",
+          "brightBlue": "#93c5fd",
+          "brightMagenta": "#d8b4fe",
+          "brightCyan": "#67e8f9",
+          "brightWhite": "#ffffff"
+        }
+      }
+    },
+    {
+      "name": "Kubernetes Classic Dark",
+      "base": "dark",
+      "primary": "#7fb0ff",
+      "secondary": "#1e293b",
+      "text": { "primary": "#e5edff" },
+      "link": { "color": "#9cc3ff" },
+      "background": { "default": "#0f172a", "surface": "#172033", "muted": "#1e293b" },
+      "sidebar": {
+        "background": "#080d18",
+        "color": "#e5edff",
+        "selectedBackground": "#326ce5",
+        "selectedColor": "#ffffff",
+        "actionBackground": "#4ade80"
+      },
+      "navbar": { "background": "#080d18", "color": "#ffffff", "searchHint": "#7fb0ff" },
+      "terminal": {
+        "background": "#080d18",
+        "foreground": "#e5edff",
+        "cursor": "#7fb0ff",
+        "ansi": {
+          "black": "#64748b",
+          "red": "#f87171",
+          "green": "#4ade80",
+          "yellow": "#facc15",
+          "blue": "#60a5fa",
+          "magenta": "#c084fc",
+          "cyan": "#22d3ee",
+          "white": "#f8fafc",
+          "brightBlack": "#94a3b8",
+          "brightRed": "#fca5a5",
+          "brightGreen": "#86efac",
+          "brightYellow": "#fde047",
+          "brightBlue": "#93c5fd",
+          "brightMagenta": "#d8b4fe",
+          "brightCyan": "#67e8f9",
+          "brightWhite": "#ffffff"
+        }
+      }
+    }
+  ]
+}

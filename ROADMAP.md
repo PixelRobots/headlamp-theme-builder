@@ -88,6 +88,7 @@ Candidates:
 - More cloud-inspired palettes.
 - More editor-inspired palettes.
 - Company/team brand starter themes.
+- **Done:** added High Contrast and Kubernetes Classic starter theme pairs.
 
 ### Library Browsing
 
@@ -107,7 +108,7 @@ Allow users to share a theme without manually downloading and uploading JSON.
 
 Possible approaches:
 
-- URL encoded theme state.
+- URL encoded theme state. **Done:** website share links restore the current light/dark theme state.
 - GitHub gist/raw URL workflow.
 - Downloadable JSON bundle with import instructions.
 
@@ -135,6 +136,7 @@ Goals:
 - Upgrade/removal steps.
 - Compatibility troubleshooting.
 - Difference between JSON export and compiled plugin download.
+- **Done:** `headlamp-plugin/THEME_PLUGIN_GUIDE.md` documents generated theme plugin installation and troubleshooting.
 
 ### Mobile Guidance
 

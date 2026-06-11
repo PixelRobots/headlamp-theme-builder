@@ -15,6 +15,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LaunchIcon from '@mui/icons-material/Launch';
+import LinkIcon from '@mui/icons-material/Link';
 import ThemePanel from './components/ThemePanel';
 import Preview from './components/Preview';
 import ThemeLibrary from './components/ThemeLibrary';
@@ -28,6 +29,7 @@ import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
 import { downloadPlugin, downloadThemeJson, type PluginMetadata } from './utils/generateCode';
 import { getImportedLogoDataUrl, getImportedThemes } from './utils/themeImport';
+import { decodeSharedThemeState, encodeSharedThemeState } from './utils/shareTheme';
 import { validateThemesForUse } from './utils/themeValidation';
 import type { HeadlampTheme } from './types/theme';
 
@@ -87,6 +89,32 @@ export default function App() {
 
   useEffect(() => {
     setWelcomeOpen(localStorage.getItem(WELCOME_DISMISSED_KEY) !== 'true');
+  }, []);
+
+  useEffect(() => {
+    const sharedTheme = new URLSearchParams(window.location.search).get('theme');
+    if (!sharedTheme) {
+      return;
+    }
+
+    try {
+      const sharedState = decodeSharedThemeState(sharedTheme);
+      const themes = getImportedThemes({ themes: sharedState.themes });
+      const sharedLight = themes.find(theme => theme.base === 'light');
+      const sharedDark = themes.find(theme => theme.base === 'dark');
+
+      if (sharedLight) {
+        setLightTheme(sharedLight);
+      }
+      if (sharedDark) {
+        setDarkTheme(sharedDark);
+      }
+      setLogoDataUrl(null);
+      setActive(sharedState.active);
+      setView('builder');
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : 'Could not load shared theme link.');
+    }
   }, []);
 
   useEffect(() => {
@@ -196,6 +224,25 @@ export default function App() {
     );
     setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
+  }
+
+  async function copyShareLink() {
+    const url = new URL(window.location.href);
+    url.searchParams.set(
+      'theme',
+      encodeSharedThemeState({
+        active,
+        themes: [lightTheme, darkTheme],
+      })
+    );
+    url.hash = '';
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      window.alert('Share link copied. It includes the current theme colours, but not uploaded logos.');
+    } catch {
+      window.prompt('Copy this share link:', url.toString());
+    }
   }
 
   return (
@@ -332,6 +379,15 @@ export default function App() {
             >
               <DownloadIcon fontSize="small" sx={{ mr: 1 }} />
               Export saved JSON
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setThemeFileMenuAnchor(null);
+                void copyShareLink();
+              }}
+            >
+              <LinkIcon fontSize="small" sx={{ mr: 1 }} />
+              Copy share link
             </MenuItem>
           </Menu>
           <input

@@ -21,6 +21,7 @@ A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in th
 ![Headlamp Theme Builder library](docs/screenshots/website-library.png)
 
 Use **Import JSON** for local theme files, **Import URL** for JSON hosted somewhere public, or **Load public library** to browse importable themes hosted by this project. URL imports run in the browser, so the host must allow CORS. GitHub file URLs and raw GitHub URLs work well.
+Use **Save / Load > Copy share link** to share the current light/dark theme state from the website.
 
 Example theme JSON files are in [examples/themes](examples/themes/).
 JSON schemas are in [schemas](schemas/).

@@ -5,6 +5,8 @@ import dracula from './themes/dracula.json';
 import eksInspired from './themes/eks-inspired.json';
 import github from './themes/github.json';
 import gkeInspired from './themes/gke-inspired.json';
+import highContrast from './themes/high-contrast.json';
+import kubernetesClassic from './themes/kubernetes-classic.json';
 import monokai from './themes/monokai.json';
 import nord from './themes/nord.json';
 import oneDarkPro from './themes/one-dark-pro.json';
@@ -42,6 +44,8 @@ const bundledThemeLibrary = [
   aksInspired,
   eksInspired,
   gkeInspired,
+  kubernetesClassic,
+  highContrast,
   github,
   dracula,
   nord,
