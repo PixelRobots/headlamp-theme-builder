@@ -16,12 +16,14 @@ Requirements:
 - Use `base: "light"` or `base: "dark"`.
 - Check readability before opening a PR.
 
-Run this before opening a PR and commit the updated catalog files under `library/`:
+Run this before opening a PR:
 
 ```bash
 npm run build:library
 npm run build
 ```
+
+Commit only your theme JSON under `library/themes/`. The workflow generates and commits the catalog README and preview images back to the PR branch.
 
 ## Themes
 

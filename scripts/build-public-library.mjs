@@ -396,12 +396,14 @@ Requirements:
 - Use \`base: "light"\` or \`base: "dark"\`.
 - Check readability before opening a PR.
 
-Run this before opening a PR and commit the updated catalog files under \`library/\`:
+Run this before opening a PR:
 
 \`\`\`bash
 npm run build:library
 npm run build
 \`\`\`
+
+Commit only your theme JSON under \`library/themes/\`. The workflow generates and commits the catalog README and preview images back to the PR branch.
 
 ## Themes
 
@@ -412,6 +414,8 @@ ${rows}
 }
 
 async function writeIfChanged(filePath, content) {
+  const normalizeLineEndings = value => value.replace(/\r\n/g, '\n');
+
   if (checkOnly) {
     let current = null;
     try {
@@ -420,9 +424,14 @@ async function writeIfChanged(filePath, content) {
       throw new Error(`${path.relative(repoRoot, filePath)} is missing. Run npm run build:library.`);
     }
 
-    if (current !== content) {
+    if (normalizeLineEndings(current) !== normalizeLineEndings(content)) {
       throw new Error(`${path.relative(repoRoot, filePath)} is stale. Run npm run build:library.`);
     }
+    return;
+  }
+
+  const current = await readFile(filePath, 'utf8').catch(() => null);
+  if (current !== null && normalizeLineEndings(current) === normalizeLineEndings(content)) {
     return;
   }
 
