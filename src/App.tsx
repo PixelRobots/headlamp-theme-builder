@@ -21,6 +21,7 @@ import ThemeLibrary from './components/ThemeLibrary';
 import ThemeValidationSummary from './components/ThemeValidationSummary';
 import HowToUseDialog from './components/HowToUseDialog';
 import InstallInstructionsDialog from './components/InstallInstructionsDialog';
+import MobileWarningDialog from './components/MobileWarningDialog';
 import PluginMetadataDialog from './components/PluginMetadataDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { defaultLight, defaultDark } from './defaults/defaultTheme';
@@ -37,6 +38,7 @@ const HEADER_BG = '#252422';   // headlamp.dev navbar / dark app sidebar
 const PANEL_BG = '#1a1a18';    // headlamp.dev hero background
 const BORDER = 'rgba(255,255,255,0.06)';
 const WELCOME_DISMISSED_KEY = 'headlamp-theme-builder-welcome-dismissed';
+const MOBILE_WARNING_DISMISSED_KEY = 'headlamp-theme-builder-mobile-warning-dismissed';
 const THEME_BUILDER_LOGO_URL = `${import.meta.env.BASE_URL}headlamp-theme-builder.png`;
 
 interface PendingPluginDownload {
@@ -68,6 +70,7 @@ export default function App() {
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
+  const [mobileWarningOpen, setMobileWarningOpen] = useState(false);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [themeFileMenuAnchor, setThemeFileMenuAnchor] = useState<null | HTMLElement>(null);
@@ -85,9 +88,24 @@ export default function App() {
     setWelcomeOpen(localStorage.getItem(WELCOME_DISMISSED_KEY) !== 'true');
   }, []);
 
+  useEffect(() => {
+    const isMobileSized = window.matchMedia('(max-width: 760px)').matches;
+    if (
+      isMobileSized &&
+      localStorage.getItem(MOBILE_WARNING_DISMISSED_KEY) !== 'true'
+    ) {
+      setMobileWarningOpen(true);
+    }
+  }, []);
+
   function closeWelcome() {
     localStorage.setItem(WELCOME_DISMISSED_KEY, 'true');
     setWelcomeOpen(false);
+  }
+
+  function closeMobileWarning() {
+    localStorage.setItem(MOBILE_WARNING_DISMISSED_KEY, 'true');
+    setMobileWarningOpen(false);
   }
 
   function showHelpFromWelcome() {
@@ -450,10 +468,16 @@ export default function App() {
                   entry,
                 ])
               }
+              onDeleteEntry={entry =>
+                setImportedLibraryEntries(entries =>
+                  entries.filter(existingEntry => existingEntry.id !== entry.id)
+                )
+              }
             />
           </Box>
         )}
 
+        <MobileWarningDialog open={mobileWarningOpen} onClose={closeMobileWarning} />
         <WelcomeDialog
           open={welcomeOpen}
           onClose={closeWelcome}

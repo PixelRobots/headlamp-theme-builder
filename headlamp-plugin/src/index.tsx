@@ -501,6 +501,11 @@ function ThemeBuilderPage() {
                   entry,
                 ])
               }
+              onDeleteEntry={entry =>
+                setImportedLibraryEntries(entries =>
+                  entries.filter(existingEntry => existingEntry.id !== entry.id)
+                )
+              }
               applyLabel="Apply"
             />
           </Box>

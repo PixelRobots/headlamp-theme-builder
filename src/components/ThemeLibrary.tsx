@@ -16,6 +16,7 @@ interface ThemeLibraryProps {
   onEdit: (entry: ThemeLibraryEntry) => void;
   onDownload: (entry: ThemeLibraryEntry) => void;
   onImportEntry?: (entry: ThemeLibraryEntry) => void;
+  onDeleteEntry?: (entry: ThemeLibraryEntry) => void;
   applyLabel?: string;
 }
 
@@ -77,6 +78,7 @@ export default function ThemeLibrary({
   onEdit,
   onDownload,
   onImportEntry,
+  onDeleteEntry,
   applyLabel = 'Apply',
 }: ThemeLibraryProps) {
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -254,6 +256,16 @@ export default function ThemeLibrary({
                 <Button size="small" variant="text" onClick={() => onDownload(entry)}>
                   Download plugin
                 </Button>
+                {onDeleteEntry && entry.tags.includes('imported') && (
+                  <Button
+                    size="small"
+                    variant="text"
+                    color="error"
+                    onClick={() => onDeleteEntry(entry)}
+                  >
+                    Delete
+                  </Button>
+                )}
               </Box>
             </Box>
           );

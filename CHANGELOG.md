@@ -4,6 +4,8 @@ All notable changes to Headlamp Theme Builder are documented here.
 
 ## Unreleased
 
+- Added delete actions for imported library themes while keeping bundled themes fixed.
+- Added a mobile warning dialog on the website to recommend desktop or the Headlamp plugin.
 - Added generated plugin metadata controls for name, version, description, and author.
 - Changed builder plugin downloads to export only the active theme being edited.
 - Added builder validation summaries and blocked apply/download when hard theme errors are present.

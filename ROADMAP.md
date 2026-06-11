@@ -72,6 +72,7 @@ Goals:
 - Add contribution rules for JSON files in `src/library/themes`.
 - Require accessible contrast checks for contributed themes.
 - Include preview screenshots or generated preview metadata where useful.
+- Let users manage imported themes separately from bundled themes. **Done:** imported entries can be deleted; bundled entries stay fixed.
 
 ### More Built-In Themes
 
@@ -118,3 +119,12 @@ Goals:
 - Upgrade/removal steps.
 - Compatibility troubleshooting.
 - Difference between JSON export and compiled plugin download.
+
+### Mobile Guidance
+
+Make the website experience clearer on small screens.
+
+Goals:
+
+- Warn mobile users that the builder is designed for desktop-sized editing. **Done:** website shows a dismissible mobile warning.
+- Recommend desktop or the Headlamp plugin for the best experience.
