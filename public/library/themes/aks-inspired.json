@@ -2,16 +2,29 @@
   "id": "aks-inspired",
   "name": "AKS Inspired",
   "description": "Azure Kubernetes Service inspired purples with clear operational contrast.",
-  "tags": ["light", "dark", "cloud", "kubernetes"],
+  "tags": [
+    "light",
+    "dark",
+    "cloud",
+    "kubernetes"
+  ],
   "themes": [
     {
       "name": "AKS Inspired Light",
       "base": "light",
       "primary": "#7b42bc",
       "secondary": "#f1e8ff",
-      "text": { "primary": "#211b2d" },
-      "link": { "color": "#5b2a86" },
-      "background": { "default": "#fbf8ff", "surface": "#ffffff", "muted": "#f1e8ff" },
+      "text": {
+        "primary": "#211b2d"
+      },
+      "link": {
+        "color": "#5b2a86"
+      },
+      "background": {
+        "default": "#fbf8ff",
+        "surface": "#ffffff",
+        "muted": "#f1e8ff"
+      },
       "sidebar": {
         "background": "#2b1747",
         "color": "#f5edff",
@@ -19,7 +32,11 @@
         "selectedColor": "#ffffff",
         "actionBackground": "#a66cff"
       },
-      "navbar": { "background": "#ffffff", "color": "#2b1747", "searchHint": "#7b42bc" },
+      "navbar": {
+        "background": "#ffffff",
+        "color": "#2b1747",
+        "searchHint": "#7b42bc"
+      },
       "terminal": {
         "background": "#1c102f",
         "foreground": "#f5edff",
@@ -39,9 +56,17 @@
       "base": "dark",
       "primary": "#a66cff",
       "secondary": "#362154",
-      "text": { "primary": "#f5edff" },
-      "link": { "color": "#c7a7ff" },
-      "background": { "default": "#140b22", "surface": "#221339", "muted": "#362154" },
+      "text": {
+        "primary": "#f5edff"
+      },
+      "link": {
+        "color": "#c7a7ff"
+      },
+      "background": {
+        "default": "#140b22",
+        "surface": "#221339",
+        "muted": "#362154"
+      },
       "sidebar": {
         "background": "#0f071a",
         "color": "#f5edff",
@@ -49,7 +74,11 @@
         "selectedColor": "#ffffff",
         "actionBackground": "#a66cff"
       },
-      "navbar": { "background": "#0f071a", "color": "#f5edff", "searchHint": "#a66cff" },
+      "navbar": {
+        "background": "#0f071a",
+        "color": "#f5edff",
+        "searchHint": "#a66cff"
+      },
       "terminal": {
         "background": "#090411",
         "foreground": "#f5edff",

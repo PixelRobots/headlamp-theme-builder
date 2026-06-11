@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="Dracula dark preview">
+  <rect width="640" height="360" rx="18" fill="#282a36"/>
+  <rect x="22" y="22" width="596" height="48" rx="10" fill="#21222c"/>
+  <rect x="44" y="40" width="96" height="12" rx="6" fill="#f8f8f2" opacity="0.9"/>
+  <rect x="456" y="38" width="116" height="16" rx="8" fill="none" stroke="#f8f8f2" opacity="0.65"/>
+  <rect x="22" y="82" width="132" height="250" rx="10" fill="#21222c"/>
+  <rect x="44" y="108" width="70" height="11" rx="5.5" fill="#f8f8f2" opacity="0.7"/>
+  <rect x="44" y="135" width="88" height="28" rx="8" fill="#6272a4"/>
+  <rect x="44" y="183" width="74" height="11" rx="5.5" fill="#f8f8f2" opacity="0.5"/>
+  <rect x="44" y="210" width="74" height="11" rx="5.5" fill="#f8f8f2" opacity="0.42"/>
+  <rect x="44" y="288" width="88" height="26" rx="8" fill="#bd93f9"/>
+  <rect x="178" y="92" width="418" height="216" rx="12" fill="#343746" stroke="#44475a"/>
+  <rect x="206" y="122" width="156" height="16" rx="8" fill="#f8f8f2" opacity="0.9"/>
+  <rect x="206" y="160" width="336" height="72" rx="10" fill="#44475a"/>
+  <rect x="230" y="186" width="250" height="12" rx="6" fill="#f8f8f2" opacity="0.5"/>
+  <rect x="230" y="208" width="112" height="18" rx="9" fill="#bd93f9"/>
+  <rect x="206" y="250" width="336" height="38" rx="10" fill="#21222c"/>
+  <rect x="230" y="264" width="210" height="10" rx="5" fill="#f8f8f2" opacity="0.9"/>
+</svg>

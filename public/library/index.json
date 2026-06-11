@@ -5,6 +5,7 @@
       "id": "aks-inspired",
       "name": "AKS Inspired",
       "description": "Azure Kubernetes Service inspired purples with clear operational contrast.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -16,6 +17,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/aks-inspired.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/aks-inspired-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/aks-inspired-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/aks-inspired-dark.svg"
+      },
       "themes": [
         {
           "name": "AKS Inspired Light",
@@ -107,6 +113,7 @@
       "id": "dracula",
       "name": "Dracula",
       "description": "Dark purple developer palette with bright pink, cyan, green, and yellow accents.",
+      "source": "bundled",
       "tags": [
         "dark",
         "developer",
@@ -116,6 +123,10 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/dracula.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/dracula-dark.svg",
+      "previews": {
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/dracula-dark.svg"
+      },
       "themes": [
         {
           "name": "Dracula",
@@ -165,6 +176,7 @@
       "id": "eks-inspired",
       "name": "EKS Inspired",
       "description": "Amazon EKS inspired slate and orange palette for cloud operations.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -176,6 +188,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/eks-inspired.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/eks-inspired-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/eks-inspired-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/eks-inspired-dark.svg"
+      },
       "themes": [
         {
           "name": "EKS Inspired Light",
@@ -267,6 +284,7 @@
       "id": "github",
       "name": "GitHub",
       "description": "Familiar GitHub-style neutrals with strong blue actions and readable surfaces.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -277,6 +295,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/github.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/github-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/github-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/github-dark.svg"
+      },
       "themes": [
         {
           "name": "GitHub Light",
@@ -342,6 +365,7 @@
       "id": "gke-inspired",
       "name": "GKE Inspired",
       "description": "Google Kubernetes Engine inspired blue with restrained Google color accents.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -353,6 +377,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/gke-inspired.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/gke-inspired-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/gke-inspired-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/gke-inspired-dark.svg"
+      },
       "themes": [
         {
           "name": "GKE Inspired Light",
@@ -444,6 +473,7 @@
       "id": "monokai",
       "name": "Monokai",
       "description": "High-energy dark editor palette with lime, pink, orange, and violet accents.",
+      "source": "bundled",
       "tags": [
         "dark",
         "developer",
@@ -453,6 +483,10 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/monokai.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/monokai-dark.svg",
+      "previews": {
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/monokai-dark.svg"
+      },
       "themes": [
         {
           "name": "Monokai",
@@ -502,6 +536,7 @@
       "id": "nord",
       "name": "Nord",
       "description": "Cool arctic blues with soft contrast and calm terminal colors.",
+      "source": "bundled",
       "tags": [
         "dark",
         "developer",
@@ -511,6 +546,10 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/nord.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/nord-dark.svg",
+      "previews": {
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/nord-dark.svg"
+      },
       "themes": [
         {
           "name": "Nord",
@@ -560,6 +599,7 @@
       "id": "one-dark-pro",
       "name": "One Dark Pro",
       "description": "VS Code-style dark palette with blue actions, green success, and warm editor accents.",
+      "source": "bundled",
       "tags": [
         "dark",
         "developer",
@@ -569,6 +609,10 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/one-dark-pro.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/one-dark-pro-dark.svg",
+      "previews": {
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/one-dark-pro-dark.svg"
+      },
       "themes": [
         {
           "name": "One Dark Pro",
@@ -618,6 +662,7 @@
       "id": "pixelrobots",
       "name": "Pixelrobots",
       "description": "Pixel Robots black and yellow palette using the site accent, #ffea00.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -629,6 +674,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/pixelrobots.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/pixelrobots-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/pixelrobots-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/pixelrobots-dark.svg"
+      },
       "themes": [
         {
           "name": "Pixelrobots Light",
@@ -722,6 +772,7 @@
       "id": "solarized",
       "name": "Solarized",
       "description": "Classic low-glare palette with balanced light and dark variants.",
+      "source": "bundled",
       "tags": [
         "light",
         "dark",
@@ -732,6 +783,11 @@
         "dark"
       ],
       "jsonUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/themes/solarized.json",
+      "previewUrl": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/solarized-light.svg",
+      "previews": {
+        "light": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/solarized-light.svg",
+        "dark": "https://pixelrobots.github.io/headlamp-theme-builder/library/previews/solarized-dark.svg"
+      },
       "themes": [
         {
           "name": "Solarized Light",

@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "vite",
     "build:library": "node scripts/build-public-library.mjs",
+    "check:library": "node scripts/build-public-library.mjs --check",
     "build": "npm run build:library && tsc && vite build",
     "build:pages": "npm run build:library && tsc && vite build --mode github-pages",
     "preview": "vite preview"

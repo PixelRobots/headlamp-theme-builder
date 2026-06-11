@@ -2,16 +2,29 @@
   "id": "gke-inspired",
   "name": "GKE Inspired",
   "description": "Google Kubernetes Engine inspired blue with restrained Google color accents.",
-  "tags": ["light", "dark", "cloud", "kubernetes"],
+  "tags": [
+    "light",
+    "dark",
+    "cloud",
+    "kubernetes"
+  ],
   "themes": [
     {
       "name": "GKE Inspired Light",
       "base": "light",
       "primary": "#1a73e8",
       "secondary": "#e8f0fe",
-      "text": { "primary": "#202124" },
-      "link": { "color": "#1a73e8" },
-      "background": { "default": "#f8fafd", "surface": "#ffffff", "muted": "#e8f0fe" },
+      "text": {
+        "primary": "#202124"
+      },
+      "link": {
+        "color": "#1a73e8"
+      },
+      "background": {
+        "default": "#f8fafd",
+        "surface": "#ffffff",
+        "muted": "#e8f0fe"
+      },
       "sidebar": {
         "background": "#202124",
         "color": "#e8eaed",
@@ -19,7 +32,11 @@
         "selectedColor": "#ffffff",
         "actionBackground": "#34a853"
       },
-      "navbar": { "background": "#ffffff", "color": "#202124", "searchHint": "#5f6368" },
+      "navbar": {
+        "background": "#ffffff",
+        "color": "#202124",
+        "searchHint": "#5f6368"
+      },
       "terminal": {
         "background": "#15171a",
         "foreground": "#e8eaed",
@@ -39,9 +56,17 @@
       "base": "dark",
       "primary": "#8ab4f8",
       "secondary": "#283447",
-      "text": { "primary": "#e8eaed" },
-      "link": { "color": "#8ab4f8" },
-      "background": { "default": "#15171a", "surface": "#202124", "muted": "#283447" },
+      "text": {
+        "primary": "#e8eaed"
+      },
+      "link": {
+        "color": "#8ab4f8"
+      },
+      "background": {
+        "default": "#15171a",
+        "surface": "#202124",
+        "muted": "#283447"
+      },
       "sidebar": {
         "background": "#111315",
         "color": "#e8eaed",
@@ -49,7 +74,11 @@
         "selectedColor": "#ffffff",
         "actionBackground": "#34a853"
       },
-      "navbar": { "background": "#111315", "color": "#e8eaed", "searchHint": "#8ab4f8" },
+      "navbar": {
+        "background": "#111315",
+        "color": "#e8eaed",
+        "searchHint": "#8ab4f8"
+      },
       "terminal": {
         "background": "#0f1113",
         "foreground": "#e8eaed",

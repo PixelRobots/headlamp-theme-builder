@@ -24,6 +24,7 @@ Use **Import JSON** for local theme files, **Import URL** for JSON hosted somewh
 
 Example theme JSON files are in [examples/themes](examples/themes/).
 JSON schemas are in [schemas](schemas/).
+The generated public catalog is in [library](library/).
 
 ## Roadmap
 

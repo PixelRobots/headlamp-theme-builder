@@ -66,13 +66,15 @@ Goals:
 
 ### Community Theme Contributions
 
-Document how to add themes to the bundled library.
+Document how to add themes to the public library.
 
 Goals:
 
-- Add contribution rules for JSON files in `src/library/themes`.
+- Add contribution rules for JSON files in `library/themes`. **Done:** `library/CONTRIBUTING.md` documents the flow.
 - Require accessible contrast checks for contributed themes.
-- Include preview screenshots or generated preview metadata where useful.
+- Include preview screenshots or generated preview metadata where useful. **Done:** generated SVG previews are included in `public/library/previews`.
+- Validate public theme PRs. **Done:** the theme library workflow checks generated output and website builds.
+- Add a repo catalog page with previews and descriptions. **Done:** `library/README.md` is generated.
 - Let users manage imported themes separately from bundled themes. **Done:** imported entries can be deleted; bundled entries stay fixed.
 - Let paired themes show both variants before editing or applying. **Done:** paired library cards can toggle the mini preview between light and dark.
 
@@ -116,8 +118,8 @@ Host curated theme JSON files in the repository so users can import them by URL.
 Goals:
 
 - Stable raw URLs for each bundled theme.
-- Index file listing available themes.
-- Clear compatibility/version notes.
+- Index file listing available themes. **Done.**
+- Clear compatibility/version notes. **Done:** contribution docs explain bundled vs public themes.
 - Direct import from the public library in the website and plugin. **Done.**
 - Generate `public/library/index.json` and copied theme JSON files during website builds. **Done.**
 

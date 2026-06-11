@@ -2,16 +2,28 @@
   "id": "dracula",
   "name": "Dracula",
   "description": "Dark purple developer palette with bright pink, cyan, green, and yellow accents.",
-  "tags": ["dark", "developer", "terminal"],
+  "tags": [
+    "dark",
+    "developer",
+    "terminal"
+  ],
   "themes": [
     {
       "name": "Dracula",
       "base": "dark",
       "primary": "#bd93f9",
       "secondary": "#44475a",
-      "text": { "primary": "#f8f8f2" },
-      "link": { "color": "#8be9fd" },
-      "background": { "default": "#282a36", "surface": "#343746", "muted": "#44475a" },
+      "text": {
+        "primary": "#f8f8f2"
+      },
+      "link": {
+        "color": "#8be9fd"
+      },
+      "background": {
+        "default": "#282a36",
+        "surface": "#343746",
+        "muted": "#44475a"
+      },
       "sidebar": {
         "background": "#21222c",
         "color": "#f8f8f2",
@@ -19,7 +31,11 @@
         "selectedColor": "#f8f8f2",
         "actionBackground": "#bd93f9"
       },
-      "navbar": { "background": "#21222c", "color": "#f8f8f2", "searchHint": "#bd93f9" },
+      "navbar": {
+        "background": "#21222c",
+        "color": "#f8f8f2",
+        "searchHint": "#bd93f9"
+      },
       "terminal": {
         "background": "#21222c",
         "foreground": "#f8f8f2",

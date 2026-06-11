@@ -2,16 +2,28 @@
   "id": "solarized",
   "name": "Solarized",
   "description": "Classic low-glare palette with balanced light and dark variants.",
-  "tags": ["light", "dark", "developer"],
+  "tags": [
+    "light",
+    "dark",
+    "developer"
+  ],
   "themes": [
     {
       "name": "Solarized Light",
       "base": "light",
       "primary": "#268bd2",
       "secondary": "#eee8d5",
-      "text": { "primary": "#586e75" },
-      "link": { "color": "#268bd2" },
-      "background": { "default": "#fdf6e3", "surface": "#eee8d5", "muted": "#e5ddc8" },
+      "text": {
+        "primary": "#586e75"
+      },
+      "link": {
+        "color": "#268bd2"
+      },
+      "background": {
+        "default": "#fdf6e3",
+        "surface": "#eee8d5",
+        "muted": "#e5ddc8"
+      },
       "sidebar": {
         "background": "#eee8d5",
         "color": "#586e75",
@@ -19,16 +31,28 @@
         "selectedColor": "#fdf6e3",
         "actionBackground": "#268bd2"
       },
-      "navbar": { "background": "#073642", "color": "#fdf6e3", "searchHint": "#93a1a1" }
+      "navbar": {
+        "background": "#073642",
+        "color": "#fdf6e3",
+        "searchHint": "#93a1a1"
+      }
     },
     {
       "name": "Solarized Dark",
       "base": "dark",
       "primary": "#268bd2",
       "secondary": "#073642",
-      "text": { "primary": "#93a1a1" },
-      "link": { "color": "#2aa198" },
-      "background": { "default": "#002b36", "surface": "#073642", "muted": "#0f3f4d" },
+      "text": {
+        "primary": "#93a1a1"
+      },
+      "link": {
+        "color": "#2aa198"
+      },
+      "background": {
+        "default": "#002b36",
+        "surface": "#073642",
+        "muted": "#0f3f4d"
+      },
       "sidebar": {
         "background": "#00212b",
         "color": "#839496",
@@ -36,7 +60,11 @@
         "selectedColor": "#002b36",
         "actionBackground": "#268bd2"
       },
-      "navbar": { "background": "#00212b", "color": "#eee8d5", "searchHint": "#839496" }
+      "navbar": {
+        "background": "#00212b",
+        "color": "#eee8d5",
+        "searchHint": "#839496"
+      }
     }
   ]
 }

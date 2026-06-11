@@ -2,16 +2,28 @@
   "id": "one-dark-pro",
   "name": "One Dark Pro",
   "description": "VS Code-style dark palette with blue actions, green success, and warm editor accents.",
-  "tags": ["dark", "developer", "terminal"],
+  "tags": [
+    "dark",
+    "developer",
+    "terminal"
+  ],
   "themes": [
     {
       "name": "One Dark Pro",
       "base": "dark",
       "primary": "#61afef",
       "secondary": "#3b4048",
-      "text": { "primary": "#abb2bf" },
-      "link": { "color": "#61afef" },
-      "background": { "default": "#282c34", "surface": "#313640", "muted": "#3b4048" },
+      "text": {
+        "primary": "#abb2bf"
+      },
+      "link": {
+        "color": "#61afef"
+      },
+      "background": {
+        "default": "#282c34",
+        "surface": "#313640",
+        "muted": "#3b4048"
+      },
       "sidebar": {
         "background": "#21252b",
         "color": "#abb2bf",
@@ -19,7 +31,11 @@
         "selectedColor": "#ffffff",
         "actionBackground": "#98c379"
       },
-      "navbar": { "background": "#21252b", "color": "#abb2bf", "searchHint": "#5c6370" },
+      "navbar": {
+        "background": "#21252b",
+        "color": "#abb2bf",
+        "searchHint": "#5c6370"
+      },
       "terminal": {
         "background": "#21252b",
         "foreground": "#abb2bf",

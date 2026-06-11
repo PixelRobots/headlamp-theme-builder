@@ -2,16 +2,29 @@
   "id": "eks-inspired",
   "name": "EKS Inspired",
   "description": "Amazon EKS inspired slate and orange palette for cloud operations.",
-  "tags": ["light", "dark", "cloud", "kubernetes"],
+  "tags": [
+    "light",
+    "dark",
+    "cloud",
+    "kubernetes"
+  ],
   "themes": [
     {
       "name": "EKS Inspired Light",
       "base": "light",
       "primary": "#ff9900",
       "secondary": "#eef1f5",
-      "text": { "primary": "#161e2d" },
-      "link": { "color": "#146eb4" },
-      "background": { "default": "#f7f8fa", "surface": "#ffffff", "muted": "#eef1f5" },
+      "text": {
+        "primary": "#161e2d"
+      },
+      "link": {
+        "color": "#146eb4"
+      },
+      "background": {
+        "default": "#f7f8fa",
+        "surface": "#ffffff",
+        "muted": "#eef1f5"
+      },
       "sidebar": {
         "background": "#232f3e",
         "color": "#f2f3f3",
@@ -19,7 +32,11 @@
         "selectedColor": "#161e2d",
         "actionBackground": "#146eb4"
       },
-      "navbar": { "background": "#232f3e", "color": "#ffffff", "searchHint": "#ff9900" },
+      "navbar": {
+        "background": "#232f3e",
+        "color": "#ffffff",
+        "searchHint": "#ff9900"
+      },
       "terminal": {
         "background": "#111827",
         "foreground": "#f2f3f3",
@@ -39,9 +56,17 @@
       "base": "dark",
       "primary": "#ff9900",
       "secondary": "#2f3b4b",
-      "text": { "primary": "#f2f3f3" },
-      "link": { "color": "#7cc7ff" },
-      "background": { "default": "#111827", "surface": "#1b2533", "muted": "#2f3b4b" },
+      "text": {
+        "primary": "#f2f3f3"
+      },
+      "link": {
+        "color": "#7cc7ff"
+      },
+      "background": {
+        "default": "#111827",
+        "surface": "#1b2533",
+        "muted": "#2f3b4b"
+      },
       "sidebar": {
         "background": "#0b111c",
         "color": "#d5dbdb",
@@ -49,7 +74,11 @@
         "selectedColor": "#111827",
         "actionBackground": "#146eb4"
       },
-      "navbar": { "background": "#0b111c", "color": "#f2f3f3", "searchHint": "#ff9900" },
+      "navbar": {
+        "background": "#0b111c",
+        "color": "#f2f3f3",
+        "searchHint": "#ff9900"
+      },
       "terminal": {
         "background": "#080d15",
         "foreground": "#f2f3f3",
