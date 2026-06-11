@@ -95,21 +95,6 @@ npx @kinvolk/headlamp-plugin install \
 Use this route for local testing or environments where you manage the Headlamp
 plugin folder yourself.
 
-## Troubleshooting Plugin Catalog visibility
-
-- Confirm the package is listed on Artifact Hub under the **Headlamp** category.
-- Confirm `artifacthub-pkg.yml` contains:
-  - `headlamp/plugin/archive-url`
-  - `headlamp/plugin/archive-checksum`
-  - `headlamp/plugin/version-compat`
-  - `headlamp/plugin/distro-compat`
-- Confirm the archive URL points to a GitHub, GitLab, or Bitbucket release asset.
-- In Headlamp Desktop, disable **Only official plugins** in the Plugin Catalog.
-- If you are developing Headlamp from source, install the Plugin Catalog plugin
-  manually; it is not installed by default in development builds.
-- Artifact Hub rescans repositories periodically, so newly pushed metadata or
-  release assets may take a few minutes to appear.
-
 ## Development
 
 ```bash

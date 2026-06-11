@@ -1,5 +1,6 @@
 version: 1.0.0
 name: headlamp-theme-builder
+category: skip-prediction
 displayName: Headlamp Theme Builder
 createdAt: "2026-06-10T00:00:00Z"
 description: >
@@ -8,9 +9,59 @@ logoURL: https://raw.githubusercontent.com/PixelRobots/headlamp-theme-builder/ma
 homeURL: https://pixelrobots.github.io/headlamp-theme-builder/
 keywords:
   - headlamp
+  - headlamp-plugin
   - theme
+  - theme-builder
   - branding
   - plugin
+links:
+  - name: Source
+    url: https://github.com/PixelRobots/headlamp-theme-builder
+  - name: Live theme builder
+    url: https://pixelrobots.github.io/headlamp-theme-builder/
+  - name: Releases
+    url: https://github.com/PixelRobots/headlamp-theme-builder/releases
+install: |
+  Install from Headlamp Desktop:
+
+  1. Open Headlamp Desktop.
+  2. Go to Plugin Catalog.
+  3. Search for Headlamp Theme Builder.
+  4. Open the plugin details page and click Install.
+  5. Restart Headlamp if prompted.
+  6. Open Theme Builder from the sidebar.
+
+  Install in-cluster with the Headlamp plugin manager:
+
+  ```yaml
+  config:
+    watchPlugins: true
+
+  pluginsManager:
+    enabled: true
+    configContent: |
+      plugins:
+        - name: headlamp-theme-builder
+          source: https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+          version: 1.0.0
+      installOptions:
+        parallel: true
+        maxConcurrent: 2
+  ```
+
+  Install with the Headlamp plugin CLI:
+
+  ```bash
+  npx @kinvolk/headlamp-plugin install https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
+  ```
+changes:
+  - kind: added
+    description: Build, preview, apply, import, export, and package Headlamp themes from inside Headlamp.
+maintainers:
+  - name: Richard Hooper
+    email: richard.hooper@pixelrobots.co.uk
+provider:
+  name: Pixelrobots
 annotations:
   headlamp/plugin/archive-url: "https://github.com/PixelRobots/headlamp-theme-builder/releases/download/v1.0.0/headlamp-theme-builder-1.0.0.tar.gz"
   headlamp/plugin/archive-checksum: "SHA256:7a3f4db1a8a91c39d85ac6a2715c5a6a3dc5ff6ab4e104c133c40ec6d13688fa"
