@@ -4,6 +4,8 @@ import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { useRef, useState, type ChangeEvent } from 'react';
 import type { ThemeLibraryEntry } from '../library/themeLibrary';
@@ -31,6 +33,13 @@ function modeLabel(themes: HeadlampTheme[]) {
 
 function getPreviewTheme(entry: ThemeLibraryEntry) {
   return entry.themes.find(theme => theme.base === 'dark') ?? entry.themes[0];
+}
+
+function getPreviewThemeForMode(entry: ThemeLibraryEntry, mode?: 'light' | 'dark') {
+  if (mode) {
+    return entry.themes.find(theme => theme.base === mode) ?? getPreviewTheme(entry);
+  }
+  return getPreviewTheme(entry);
 }
 
 function MiniPreview({ theme }: { theme: HeadlampTheme }) {
@@ -86,6 +95,7 @@ export default function ThemeLibrary({
     entry: ThemeLibraryEntry;
     anchorEl: HTMLElement;
   } | null>(null);
+  const [previewModes, setPreviewModes] = useState<Record<string, 'light' | 'dark'>>({});
   const [importUrl, setImportUrl] = useState('');
   const [importStatus, setImportStatus] = useState<string | null>(null);
 
@@ -199,7 +209,9 @@ export default function ThemeLibrary({
         }}
       >
         {entries.map(entry => {
-          const previewTheme = getPreviewTheme(entry);
+          const hasLight = entry.themes.some(theme => theme.base === 'light');
+          const hasDark = entry.themes.some(theme => theme.base === 'dark');
+          const previewTheme = getPreviewThemeForMode(entry, previewModes[entry.id]);
           return (
             <Box
               key={entry.id}
@@ -214,7 +226,44 @@ export default function ThemeLibrary({
                 gap: 1.25,
               }}
             >
-              <MiniPreview theme={previewTheme} />
+              <Box sx={{ position: 'relative' }}>
+                <MiniPreview theme={previewTheme} />
+                {hasLight && hasDark && (
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    value={previewTheme.base}
+                    onChange={(_, value: 'light' | 'dark' | null) => {
+                      if (!value) {
+                        return;
+                      }
+                      setPreviewModes(modes => ({ ...modes, [entry.id]: value }));
+                    }}
+                    aria-label={`${entry.name} preview mode`}
+                    sx={{
+                      position: 'absolute',
+                      right: 8,
+                      bottom: 8,
+                      bgcolor: 'background.paper',
+                      borderRadius: 1,
+                      boxShadow: 1,
+                      '& .MuiToggleButton-root': {
+                        px: 0.75,
+                        py: 0.25,
+                        fontSize: 11,
+                        lineHeight: 1.2,
+                      },
+                    }}
+                  >
+                    <ToggleButton value="light" aria-label="Preview light theme">
+                      Light
+                    </ToggleButton>
+                    <ToggleButton value="dark" aria-label="Preview dark theme">
+                      Dark
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                )}
+              </Box>
 
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>

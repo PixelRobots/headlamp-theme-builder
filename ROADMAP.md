@@ -73,6 +73,7 @@ Goals:
 - Require accessible contrast checks for contributed themes.
 - Include preview screenshots or generated preview metadata where useful.
 - Let users manage imported themes separately from bundled themes. **Done:** imported entries can be deleted; bundled entries stay fixed.
+- Let paired themes show both variants before editing or applying. **Done:** paired library cards can toggle the mini preview between light and dark.
 
 ### More Built-In Themes
 
