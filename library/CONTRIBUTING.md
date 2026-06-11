@@ -16,7 +16,7 @@ npm run build:library
 npm run build
 ```
 
-Commit the updated files under `library/`, including the README row and any generated preview images. Do not commit generated files under `public/library` for a community theme PR; those are updated automatically after changes are merged.
+Commit the updated files under `library/`, including the README row and any generated preview images. Do not commit generated files under `public/library`; those are build output for the website deploy.
 
 ## What CI Checks
 

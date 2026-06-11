@@ -31,10 +31,6 @@ const ANSI_LABELS = {
   brightWhite: 'bright ANSI white',
 };
 
-function compareJson(left, right) {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -370,9 +366,7 @@ function catalogReadme(entries) {
       const tags = Array.isArray(entry.tags) ? entry.tags.join(', ') : '';
       const previews = modes
         .map(mode => {
-          const previewPath = item.source === 'community'
-            ? `previews/${entry.id}-${mode}.svg`
-            : `../public/library/previews/${entry.id}-${mode}.svg`;
+          const previewPath = `previews/${entry.id}-${mode}.svg`;
           return `![${markdownEscape(entry.name)} ${mode} preview](${previewPath})`;
         })
         .join('<br>');
@@ -464,27 +458,24 @@ await mkdir(outputThemeDir, { recursive: true });
 await mkdir(outputPreviewDir, { recursive: true });
 await mkdir(catalogPreviewDir, { recursive: true });
 
-await writeIfChanged(path.join(outputDir, 'index.json'), publicIndex);
+if (!checkOnly) {
+  await writeIfChanged(path.join(outputDir, 'index.json'), publicIndex);
+}
 await writeIfChanged(catalogReadmePath, catalogReadme(sortedItems));
 
 for (const item of sortedItems) {
-  await writeIfChanged(
-    path.join(outputThemeDir, item.file),
-    `${JSON.stringify(item.entry, null, 2)}\n`
-  );
+  if (!checkOnly) {
+    await writeIfChanged(
+      path.join(outputThemeDir, item.file),
+      `${JSON.stringify(item.entry, null, 2)}\n`
+    );
+  }
 
   for (const preview of getPreviewFiles(item)) {
-    await writeIfChanged(path.join(outputPreviewDir, preview.file), preview.content);
-    if (item.source === 'community') {
-      await writeIfChanged(path.join(catalogPreviewDir, preview.file), preview.content);
+    if (!checkOnly) {
+      await writeIfChanged(path.join(outputPreviewDir, preview.file), preview.content);
     }
-  }
-}
-
-if (checkOnly) {
-  const currentIndex = JSON.parse(await readFile(path.join(outputDir, 'index.json'), 'utf8'));
-  if (!compareJson(currentIndex, { version: 1, themes: publicEntries })) {
-    throw new Error('public/library/index.json is stale. Run npm run build:library.');
+    await writeIfChanged(path.join(catalogPreviewDir, preview.file), preview.content);
   }
 }
 
