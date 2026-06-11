@@ -202,15 +202,19 @@ function catalogReadme(entries) {
   const rows = entries
     .map(item => {
       const entry = item.entry;
-      const modes = modesFor(entry).join(', ');
+      const modes = modesFor(entry);
       const tags = Array.isArray(entry.tags) ? entry.tags.join(', ') : '';
-      const previewMode = modesFor(entry)[0] ?? 'dark';
-      const previewPath = `../public/library/previews/${entry.id}-${previewMode}.svg`;
+      const previews = modes
+        .map(mode => {
+          const previewPath = `../public/library/previews/${entry.id}-${mode}.svg`;
+          return `![${markdownEscape(entry.name)} ${mode} preview](${previewPath})`;
+        })
+        .join('<br>');
       const jsonPath = item.source === 'bundled'
         ? `../src/library/themes/${item.file}`
         : `themes/${item.file}`;
 
-      return `| ![${markdownEscape(entry.name)} preview](${previewPath}) | [${markdownEscape(entry.name)}](${jsonPath}) | ${markdownEscape(entry.description)} | ${item.source} | ${markdownEscape(modes)} | ${markdownEscape(tags)} |`;
+      return `| ${previews} | \`${markdownEscape(entry.id)}\` | [${markdownEscape(entry.name)}](${jsonPath}) | ${markdownEscape(entry.description)} | ${item.source} | ${markdownEscape(modes.join(', '))} | ${markdownEscape(tags)} |`;
     })
     .join('\n');
 
@@ -241,8 +245,8 @@ npm run build
 
 ## Themes
 
-| Preview | Theme | Description | Source | Modes | Tags |
-| --- | --- | --- | --- | --- | --- |
+| Preview | ID | Theme | Description | Source | Modes | Tags |
+| --- | --- | --- | --- | --- | --- | --- |
 ${rows}
 `;
 }

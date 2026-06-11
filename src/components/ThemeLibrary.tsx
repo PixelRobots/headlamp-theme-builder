@@ -440,7 +440,7 @@ export default function ThemeLibrary({
           <MenuItem value="all">All sources</MenuItem>
           <MenuItem value="bundled">Bundled</MenuItem>
           <MenuItem value="imported">Imported</MenuItem>
-          <MenuItem value="public">Public</MenuItem>
+          <MenuItem value="public">Public Library</MenuItem>
         </TextField>
       </Box>
 
