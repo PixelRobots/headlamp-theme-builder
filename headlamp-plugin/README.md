@@ -23,6 +23,9 @@ If an older downloaded theme plugin shows as incompatible in Headlamp, download 
 
 Artifact Hub and the Headlamp Plugin Catalog can take time to refresh after a new release.
 
+Planned improvements are tracked in the
+[roadmap](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/ROADMAP.md).
+
 For maintainer release steps, see the
 [release guide](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/headlamp-plugin/DEPLOYMENT.md).
 

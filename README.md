@@ -23,6 +23,10 @@ Use **Import JSON** for local theme files, or **Import URL** for JSON hosted som
 
 Example theme JSON files are in [examples/themes](examples/themes/).
 
+## Roadmap
+
+Planned improvements are tracked in [ROADMAP.md](ROADMAP.md).
+
 ## Getting started
 
 ```bash
