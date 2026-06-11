@@ -16,10 +16,10 @@ Requirements:
 - Use `base: "light"` or `base: "dark"`.
 - Check readability before opening a PR.
 
-Run this before opening a PR:
+Run this before opening a PR and commit the updated catalog files under `library/`:
 
 ```bash
-npm run check:library
+npm run build:library
 npm run build
 ```
 
@@ -28,7 +28,7 @@ npm run build
 | Preview | ID | Theme | Description | Source | Modes | Tags |
 | --- | --- | --- | --- | --- | --- | --- |
 | ![AKS Inspired light preview](../public/library/previews/aks-inspired-light.svg)<br>![AKS Inspired dark preview](../public/library/previews/aks-inspired-dark.svg) | `aks-inspired` | [AKS Inspired](../src/library/themes/aks-inspired.json) | Azure Kubernetes Service inspired purples with clear operational contrast. | bundled | light, dark | light, dark, cloud, kubernetes |
-| ![Catppuccin Inspired dark preview](../public/library/previews/catppuccin-inspired-dark.svg) | `catppuccin-inspired` | [Catppuccin Inspired](themes/catppuccin-inspired.json) | Soft VS Code-inspired pastel dark theme with warm surfaces, readable text, and calm terminal colours. | community | dark | dark, developer, terminal, community |
+| ![Catppuccin Inspired dark preview](previews/catppuccin-inspired-dark.svg) | `catppuccin-inspired` | [Catppuccin Inspired](themes/catppuccin-inspired.json) | Soft VS Code-inspired pastel dark theme with warm surfaces, readable text, and calm terminal colours. | community | dark | dark, developer, terminal, community |
 | ![Dracula dark preview](../public/library/previews/dracula-dark.svg) | `dracula` | [Dracula](../src/library/themes/dracula.json) | Dark purple developer palette with bright pink, cyan, green, and yellow accents. | bundled | dark | dark, developer, terminal |
 | ![EKS Inspired light preview](../public/library/previews/eks-inspired-light.svg)<br>![EKS Inspired dark preview](../public/library/previews/eks-inspired-dark.svg) | `eks-inspired` | [EKS Inspired](../src/library/themes/eks-inspired.json) | Amazon EKS inspired slate and orange palette for cloud operations. | bundled | light, dark | light, dark, cloud, kubernetes |
 | ![GitHub light preview](../public/library/previews/github-light.svg)<br>![GitHub dark preview](../public/library/previews/github-dark.svg) | `github` | [GitHub](../src/library/themes/github.json) | Familiar GitHub-style neutrals with strong blue actions and readable surfaces. | bundled | light, dark | light, dark, developer |
@@ -36,6 +36,7 @@ npm run build
 | ![High Contrast light preview](../public/library/previews/high-contrast-light.svg)<br>![High Contrast dark preview](../public/library/previews/high-contrast-dark.svg) | `high-contrast` | [High Contrast](../src/library/themes/high-contrast.json) | Accessibility-focused light and dark themes with strong text, navigation, and terminal contrast. | bundled | light, dark | light, dark, accessibility, high-contrast, terminal |
 | ![Kubernetes Classic light preview](../public/library/previews/kubernetes-classic-light.svg)<br>![Kubernetes Classic dark preview](../public/library/previews/kubernetes-classic-dark.svg) | `kubernetes-classic` | [Kubernetes Classic](../src/library/themes/kubernetes-classic.json) | Kubernetes-inspired blue interface with clear operational surfaces and status-friendly terminal colours. | bundled | light, dark | light, dark, kubernetes, cloud, terminal |
 | ![Monokai dark preview](../public/library/previews/monokai-dark.svg) | `monokai` | [Monokai](../src/library/themes/monokai.json) | High-energy dark editor palette with lime, pink, orange, and violet accents. | bundled | dark | dark, developer, terminal |
+| ![Night Owl Inspired dark preview](previews/night-owl-inspired-dark.svg) | `night-owl-inspired` | [Night Owl Inspired](themes/night-owl-inspired.json) | VS Code-inspired dark blue theme with bright readable accents for late-night operations. | community | dark | dark, developer, terminal, community |
 | ![Nord dark preview](../public/library/previews/nord-dark.svg) | `nord` | [Nord](../src/library/themes/nord.json) | Cool arctic blues with soft contrast and calm terminal colors. | bundled | dark | dark, developer, terminal |
 | ![One Dark Pro dark preview](../public/library/previews/one-dark-pro-dark.svg) | `one-dark-pro` | [One Dark Pro](../src/library/themes/one-dark-pro.json) | VS Code-style dark palette with blue actions, green success, and warm editor accents. | bundled | dark | dark, developer, terminal |
 | ![Pixelrobots light preview](../public/library/previews/pixelrobots-light.svg)<br>![Pixelrobots dark preview](../public/library/previews/pixelrobots-dark.svg) | `pixelrobots` | [Pixelrobots](../src/library/themes/pixelrobots.json) | Pixel Robots black and yellow palette using the site accent, #ffea00. | bundled | light, dark | light, dark, brand, terminal |

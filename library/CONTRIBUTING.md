@@ -13,9 +13,10 @@ Public themes live in `library/themes`. They are not bundled into the plugin by 
 
 ```bash
 npm run build:library
-npm run check:library
 npm run build
 ```
+
+Commit the updated files under `library/`, including the README row and any generated preview images. Do not commit generated files under `public/library` for a community theme PR; those are updated automatically after changes are merged.
 
 ## What CI Checks
 
@@ -25,8 +26,7 @@ The theme library workflow validates that:
 - required library fields are present,
 - community filenames match their theme IDs,
 - contributed text, link, sidebar, terminal, and ANSI colours meet contrast thresholds,
-- the generated public index is current,
-- generated previews and `library/README.md` are current,
+- generated library previews and `library/README.md` are current,
 - the website still builds.
 
 ## Bundled vs Public

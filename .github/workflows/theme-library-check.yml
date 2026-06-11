@@ -45,12 +45,16 @@ jobs:
         run: npm ci
 
       - name: Generate library files
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: npm run build:library
 
-      - name: Check generated library files
+      - name: Check generated catalog files
         if: github.event_name == 'pull_request'
-        run: npm run check:library
+        run: |
+          if [ -n "$(git status --porcelain library)" ]; then
+            git status --short library
+            echo "Generated library catalog files are stale. Run npm run build:library and commit the library/ changes."
+            exit 1
+          fi
 
       - name: Build website
         run: npm run build
