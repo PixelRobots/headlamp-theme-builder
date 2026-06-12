@@ -2,7 +2,7 @@
 
 All notable changes to Headlamp Theme Builder are documented here.
 
-## Unreleased
+## v1.2.0 - 2026-06-12
 
 - Added shareable website theme links for the current light/dark theme state.
 - Added a share-link dialog and compact share-link format.
