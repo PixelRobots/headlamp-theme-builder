@@ -131,23 +131,30 @@ export function getImportedLibraryEntry(data: unknown, fallbackName = 'Imported 
           ...(Array.isArray(data.tags) ? data.tags.filter(tag => typeof tag === 'string') : []),
         ])
       ),
+      jsonUrl: typeof data.jsonUrl === 'string' ? data.jsonUrl : undefined,
       themes: data.themes,
     });
   }
 
   const themes = getImportedThemes(data);
+  const source = isRecord(data) && isRecord(data.source) ? data.source : null;
+  const sourceName = source && typeof source.name === 'string' ? source.name : undefined;
+  const sourceUrl = source && typeof source.url === 'string' ? source.url : undefined;
   const entryName =
     isRecord(data) && typeof data.name === 'string'
       ? data.name
-      : themes.length === 1
-        ? themes[0].name
-        : fallbackName;
+      : sourceName
+        ? sourceName
+        : themes.length === 1
+          ? themes[0].name
+          : fallbackName;
 
   return {
     id: `imported-${slugify(entryName)}`,
     name: entryName,
     description: 'Imported theme JSON.',
     tags: ['imported'],
+    jsonUrl: sourceUrl,
     themes,
   };
 }

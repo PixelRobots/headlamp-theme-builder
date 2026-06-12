@@ -18,6 +18,8 @@ All notable changes to Headlamp Theme Builder are documented here.
 - Added delete actions for imported library themes while keeping bundled themes fixed.
 - Added a mobile warning dialog on the website to recommend desktop or the Headlamp plugin.
 - Added generated plugin metadata controls for name, version, description, and author.
+- Added `theme-source.json` and Headlamp Theme Builder provenance metadata to generated theme plugin downloads.
+- Added a JSON schema for generated theme source exports and published schema copies with the website build.
 - Changed builder plugin downloads to export only the active theme being edited.
 - Added builder validation summaries and blocked apply/download when hard theme errors are present.
 - Added JSON schemas and runtime validation for imported themes and library entries.

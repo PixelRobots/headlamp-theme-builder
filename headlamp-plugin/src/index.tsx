@@ -9,7 +9,11 @@ import ThemeValidationSummary from '@builder/components/ThemeValidationSummary';
 import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibrary';
 import type { HeadlampTheme } from '@builder/types/theme';
-import { downloadPlugin, type PluginMetadata } from '@builder/utils/generateCode';
+import {
+  downloadPlugin,
+  type PluginMetadata,
+  type ThemeSourceMetadata,
+} from '@builder/utils/generateCode';
 import { validateThemesForUse } from '@builder/utils/themeValidation';
 import {
   AppLogoProps,
@@ -53,6 +57,7 @@ interface PendingPluginDownload {
   themes: HeadlampTheme[];
   logoDataUrl: string | null;
   initialName: string;
+  source?: ThemeSourceMetadata;
 }
 
 function readThemeState(storageKey: string): BuilderPluginState | null {
@@ -229,6 +234,10 @@ function ThemeBuilderPage() {
       themes: [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
+      source: {
+        name: currentTheme.name,
+        source: 'builder',
+      },
     });
   }
 
@@ -279,6 +288,7 @@ function ThemeBuilderPage() {
       themes: entry.themes,
       logoDataUrl: null,
       initialName: entry.name,
+      source: getThemeSourceMetadata(entry),
     });
   }
 
@@ -290,7 +300,8 @@ function ThemeBuilderPage() {
     await downloadPlugin(
       pendingPluginDownload.themes,
       pendingPluginDownload.logoDataUrl,
-      metadata
+      metadata,
+      { source: pendingPluginDownload.source }
     );
     setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
@@ -527,6 +538,19 @@ function ThemeBuilderPage() {
       </Box>
     </>
   );
+}
+
+function getThemeSourceMetadata(entry: ThemeLibraryEntry): ThemeSourceMetadata {
+  return {
+    id: entry.id,
+    name: entry.name,
+    url: entry.jsonUrl,
+    source: entry.tags.includes('imported')
+      ? 'imported'
+      : entry.jsonUrl
+        ? 'public-library'
+        : 'bundled-library',
+  };
 }
 
 const sidebarEntries = [{

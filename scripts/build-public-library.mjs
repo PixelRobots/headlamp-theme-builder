@@ -7,9 +7,11 @@ const bundledSourceDir = path.join(repoRoot, 'src', 'library', 'themes');
 const communitySourceDir = path.join(repoRoot, 'library', 'themes');
 const catalogPreviewDir = path.join(repoRoot, 'library', 'previews');
 const catalogReadmePath = path.join(repoRoot, 'library', 'README.md');
+const schemaSourceDir = path.join(repoRoot, 'schemas');
 const outputDir = path.join(repoRoot, 'public', 'library');
 const outputThemeDir = path.join(outputDir, 'themes');
 const outputPreviewDir = path.join(outputDir, 'previews');
+const outputSchemaDir = path.join(repoRoot, 'public', 'schemas');
 const pagesLibraryUrl = 'https://pixelrobots.github.io/headlamp-theme-builder/library';
 const checkOnly = process.argv.includes('--check');
 const ANSI_LABELS = {
@@ -468,6 +470,7 @@ const publicIndex = `${JSON.stringify({ version: 1, themes: publicEntries }, nul
 await mkdir(outputThemeDir, { recursive: true });
 await mkdir(outputPreviewDir, { recursive: true });
 await mkdir(catalogPreviewDir, { recursive: true });
+await mkdir(outputSchemaDir, { recursive: true });
 
 if (!checkOnly) {
   await writeIfChanged(path.join(outputDir, 'index.json'), publicIndex);
@@ -488,6 +491,11 @@ for (const item of sortedItems) {
     }
     await writeIfChanged(path.join(catalogPreviewDir, preview.file), preview.content);
   }
+}
+
+for (const file of (await readdir(schemaSourceDir)).filter(file => file.endsWith('.json')).sort()) {
+  const content = await readFile(path.join(schemaSourceDir, file), 'utf8');
+  await writeIfChanged(path.join(outputSchemaDir, file), content);
 }
 
 console.log(

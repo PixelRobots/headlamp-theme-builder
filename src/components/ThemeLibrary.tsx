@@ -270,9 +270,12 @@ export default function ThemeLibrary({
     return [lightTheme, darkTheme].filter(Boolean) as HeadlampTheme[];
   }
 
-  function importEntryFromData(data: unknown, fallbackName: string) {
+  function importEntryFromData(data: unknown, fallbackName: string, sourceUrl?: string) {
     const entry = getImportedLibraryEntry(data, fallbackName);
-    onImportEntry?.(entry);
+    onImportEntry?.({
+      ...entry,
+      jsonUrl: sourceUrl ?? entry.jsonUrl,
+    });
     setImportStatus(`Imported ${entry.name}.`);
     return entry;
   }
@@ -324,7 +327,7 @@ export default function ThemeLibrary({
       } catch {
         throw new Error('The URL did not return valid theme JSON.');
       }
-      const entry = importEntryFromData(data, importUrlFileName(normalizedImport.url));
+      const entry = importEntryFromData(data, importUrlFileName(normalizedImport.url), normalizedImport.url);
       setImportStatus(
         normalizedImport.wasConverted
           ? `Converted GitHub file URL to raw JSON.\nImported ${entry.name}.`

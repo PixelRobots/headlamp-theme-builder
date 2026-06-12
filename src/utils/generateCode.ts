@@ -37,6 +37,17 @@ export interface PluginMetadata {
   repository?: string;
 }
 
+export interface ThemeSourceMetadata {
+  id?: string;
+  name?: string;
+  url?: string;
+  source?: string;
+}
+
+export interface GeneratedThemePluginOptions {
+  source?: ThemeSourceMetadata;
+}
+
 export function generateThemesTs(themes: HeadlampTheme[]): string {
   const varNames = themes.map((_, i) => `theme${i}`);
   const declarations = themes
@@ -98,7 +109,11 @@ export function generateIndexTsx(logoDataUrl?: string | null): string {
   ].join('\n');
 }
 
-export function generatePackageJson(pluginName: string, metadata?: PluginMetadata): string {
+export function generatePackageJson(
+  pluginName: string,
+  metadata?: PluginMetadata,
+  options?: GeneratedThemePluginOptions
+): string {
   const safe = slugify(metadata?.name || pluginName);
   const packageJson: Record<string, unknown> = {
     name: safe,
@@ -107,6 +122,10 @@ export function generatePackageJson(pluginName: string, metadata?: PluginMetadat
     main: 'main.js',
     devDependencies: {
       '@kinvolk/headlamp-plugin': '^0.14.0',
+    },
+    headlampThemeBuilder: {
+      generatedBy: 'Headlamp Theme Builder',
+      source: options?.source ?? null,
     },
   };
 
@@ -200,7 +219,8 @@ ${logoCode}
 export async function downloadPlugin(
   themes: HeadlampTheme[],
   logoDataUrl?: string | null,
-  metadata?: PluginMetadata
+  metadata?: PluginMetadata,
+  options?: GeneratedThemePluginOptions
 ): Promise<void> {
   const pluginName = themes[0]?.name ?? 'my-theme';
   const safe = slugify(metadata?.name || pluginName);
@@ -208,7 +228,22 @@ export async function downloadPlugin(
   const zip = new JSZip();
   const plugin = zip.folder(safe)!;
   plugin.file('main.js', generateCompiledMainJs(themes, logoDataUrl));
-  plugin.file('package.json', generatePackageJson(pluginName, metadata));
+  plugin.file('package.json', generatePackageJson(pluginName, metadata, options));
+  plugin.file(
+    'theme-source.json',
+    JSON.stringify(
+      {
+        version: 1,
+        generatedBy: 'Headlamp Theme Builder',
+        generatedAt: new Date().toISOString(),
+        source: options?.source ?? null,
+        themes,
+        logoDataUrl: logoDataUrl ?? null,
+      },
+      null,
+      2
+    )
+  );
 
   const blob = await zip.generateAsync({ type: 'blob' });
   saveAs(blob, `${safe}-headlamp-plugin.zip`);

@@ -4,6 +4,7 @@ These schemas document the JSON formats accepted by Headlamp Theme Builder.
 
 - `headlamp-theme.schema.json`: one complete theme.
 - `theme-library-entry.schema.json`: a library card containing one or more themes.
+- `theme-source.schema.json`: the `theme-source.json` file included in generated plugin zips and accepted by the import UI.
 
 The app also accepts builder exports from **Save / Load**, which wrap themes in a `themes` array and may include `logoDataUrl`.
 

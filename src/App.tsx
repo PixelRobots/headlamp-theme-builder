@@ -30,7 +30,12 @@ import ShareLinkDialog from './components/ShareLinkDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
-import { downloadPlugin, downloadThemeJson, type PluginMetadata } from './utils/generateCode';
+import {
+  downloadPlugin,
+  downloadThemeJson,
+  type PluginMetadata,
+  type ThemeSourceMetadata,
+} from './utils/generateCode';
 import { getImportedLogoDataUrl, getImportedThemes } from './utils/themeImport';
 import { decodeSharedThemeState, encodeSharedThemeState } from './utils/shareTheme';
 import { validateThemesForUse } from './utils/themeValidation';
@@ -51,6 +56,7 @@ interface PendingPluginDownload {
   themes: HeadlampTheme[];
   logoDataUrl: string | null;
   initialName: string;
+  source?: ThemeSourceMetadata;
 }
 
 /** App shell using the headlamp.dev dark palette */
@@ -190,6 +196,10 @@ export default function App() {
       themes: [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
+      source: {
+        name: currentTheme.name,
+        source: 'builder',
+      },
     });
   }
 
@@ -214,6 +224,7 @@ export default function App() {
       themes: entry.themes,
       logoDataUrl: null,
       initialName: entry.name,
+      source: getThemeSourceMetadata(entry),
     });
   }
 
@@ -225,7 +236,8 @@ export default function App() {
     await downloadPlugin(
       pendingPluginDownload.themes,
       pendingPluginDownload.logoDataUrl,
-      metadata
+      metadata,
+      { source: pendingPluginDownload.source }
     );
     setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
@@ -586,4 +598,17 @@ export default function App() {
       </Box>
     </ThemeProvider>
   );
+}
+
+function getThemeSourceMetadata(entry: ThemeLibraryEntry): ThemeSourceMetadata {
+  return {
+    id: entry.id,
+    name: entry.name,
+    url: entry.jsonUrl,
+    source: entry.tags.includes('imported')
+      ? 'imported'
+      : entry.jsonUrl
+        ? 'public-library'
+        : 'bundled-library',
+  };
 }
