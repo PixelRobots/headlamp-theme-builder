@@ -13,12 +13,12 @@ import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibr
 import type { HeadlampTheme } from '@builder/types/theme';
 import {
   downloadPlugin,
-  slugify,
   type PluginMetadata,
+  slugify,
   type ThemeSourceMetadata,
 } from '@builder/utils/generateCode';
-import { detectOS, pluginArchiveFormat } from '@builder/utils/os';
 import { muiToHeadlampTheme } from '@builder/utils/muiToHeadlampTheme';
+import { detectOS, pluginArchiveFormat } from '@builder/utils/os';
 import { validateThemesForUse } from '@builder/utils/themeValidation';
 import {
   AppLogoProps,
@@ -37,7 +37,7 @@ import { useTheme } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const APPLIED_THEME_STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
 const BUILDER_DRAFT_STORAGE_KEY = 'headlamp-theme-builder-draft-state';
@@ -437,7 +437,7 @@ function ThemeBuilderPage() {
             }}
             title="Undo (Ctrl+Z)"
           >
-            ↩
+            Undo
           </Button>
 
           <Button
@@ -455,7 +455,7 @@ function ThemeBuilderPage() {
             }}
             title="Redo (Ctrl+Y)"
           >
-            ↪
+            Redo
           </Button>
 
           <Button
@@ -711,10 +711,8 @@ function registerThemeBuilder() {
 }
 
 class ThemeBuilderPlugin extends Plugin {
-  initialize(register: any) {
-    registerStoredBuilderTheme();
-    sidebarEntries.forEach(entry => register.registerSidebarEntry(entry));
-    register.registerRoute(themeBuilderRoute);
+  initialize() {
+    registerThemeBuilder();
     return true;
   }
 }

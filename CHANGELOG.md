@@ -2,6 +2,24 @@
 
 All notable changes to Headlamp Theme Builder are documented here.
 
+## Unreleased
+
+### Website & Plugin
+- Added undo/redo history (Ctrl+Z / Ctrl+Y) for all theme edits.
+- Added "Contrast check" collapsible panel in the theme editor showing WCAG 2.1 AA/AAA pass/fail ratings and ratios for key colour pairs.
+- Added "Submit to library" button that pre-fills a GitHub issue with the theme JSON for community library submission.
+- Added GitHub Actions workflow to automatically create a draft PR from theme submission issues.
+- Added GitHub issue form template (`theme-submission.yml`) for structured community theme submissions.
+- Changed plugin download to offer both light and dark themes in a single plugin when both are valid, with a checkbox to opt out.
+- Changed the submit-to-library dialog to choose submitted variants explicitly and removed the redundant submission preview box.
+- Changed submit-to-library GitHub issue links to pre-fill issue form fields directly.
+- Changed `loadLibraryEntry`, shared-link load, and JSON import to record a single undo history entry instead of one per field.
+
+### Plugin only
+- Added "Import current theme" button that seeds the builder from the live Headlamp palette via `useTheme()`.
+- Changed current-theme imports to convert live MUI `rgb()`/`rgba()` colours to hex colours for builder validation.
+- Changed plugin UI dialog actions to avoid generated MUI icon imports for better Headlamp runtime compatibility.
+
 ## v1.2.0 - 2026-06-12
 
 - Added shareable website theme links for the current light/dark theme state.

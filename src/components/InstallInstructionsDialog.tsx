@@ -1,12 +1,9 @@
-import CheckIcon from '@mui/icons-material/Check';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
@@ -102,9 +99,9 @@ export default function InstallInstructionsDialog({
             {pluginsPath}
           </Typography>
           <Tooltip title={copied ? 'Copied!' : 'Copy path'} placement="top">
-            <IconButton size="small" onClick={handleCopy} aria-label="Copy plugins path">
-              {copied ? <CheckIcon fontSize="small" /> : <ContentCopyIcon fontSize="small" />}
-            </IconButton>
+            <Button size="small" onClick={handleCopy} aria-label="Copy plugins path">
+              {copied ? 'Copied' : 'Copy'}
+            </Button>
           </Tooltip>
         </Box>
         <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>

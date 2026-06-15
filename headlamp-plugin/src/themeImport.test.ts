@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { defaultDark, defaultLight } from '../../src/defaults/defaultTheme';
+import { muiToHeadlampTheme } from '../../src/utils/muiToHeadlampTheme';
 import { decodeSharedThemeState, encodeSharedThemeState } from '../../src/utils/shareTheme';
 import { getImportedLibraryEntry, normalizeThemeImportUrl } from '../../src/utils/themeImport';
 import { validateThemesForUse } from '../../src/utils/themeValidation';
@@ -83,6 +84,46 @@ describe('theme validation', () => {
     expect(result.warnings).toContain(
       'Low ANSI (dark): ANSI black against terminal background is 1.0:1; recommended minimum is 3:1.'
     );
+  });
+});
+
+describe('current theme imports', () => {
+  it('normalizes MUI rgb colours to hex colours', () => {
+    const imported = muiToHeadlampTheme(
+      {
+        palette: {
+          mode: 'dark',
+          primary: {
+            main: 'rgb(81, 177, 72)',
+            contrastText: 'rgb(255 255 255)',
+          },
+          secondary: {
+            main: 'rgba(192, 255, 217, 1)',
+          },
+          text: {
+            primary: 'rgb(250, 249, 248)',
+            secondary: 'rgb(205 205 205 / 1)',
+          },
+          background: {
+            default: 'rgb(20, 20, 36)',
+            paper: '#1b1a31',
+          },
+        },
+        typography: {
+          fontFamily: 'Roboto',
+        },
+        shape: {
+          borderRadius: 8,
+        },
+      },
+      'Imported'
+    );
+
+    expect(imported.primary).toBe('#51b148');
+    expect(imported.secondary).toBe('#c0ffd9');
+    expect(imported.sidebar.color).toBe('#cdcdcd');
+    expect(imported.navbar.searchHint).toBe('#cdcdcd');
+    expect(validateThemesForUse([imported]).errors).toEqual([]);
   });
 });
 
