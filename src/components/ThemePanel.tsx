@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 import ColorField from './ColorField';
+import ContrastSummary from './ContrastSummary';
 import type { HeadlampTheme } from '../types/theme';
 import { contrastRatio, getContrastResult } from '../utils/contrast';
 
@@ -523,6 +524,10 @@ export default function ThemePanel({
             />
           </Box>
         </Box>
+      </Section>
+
+      <Section title="Contrast check" open={openSections.has('Contrast check')} onToggle={() => toggleSection('Contrast check')}>
+        <ContrastSummary theme={theme} />
       </Section>
 
       {/* Colour groups */}

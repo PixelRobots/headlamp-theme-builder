@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import type { PluginMetadata } from '../utils/generateCode';
@@ -11,8 +13,9 @@ import type { PluginMetadata } from '../utils/generateCode';
 interface Props {
   open: boolean;
   initialName: string;
+  hasBothThemes: boolean;
   onClose: () => void;
-  onConfirm: (metadata: PluginMetadata) => void;
+  onConfirm: (metadata: PluginMetadata, includeBothThemes: boolean) => void;
 }
 
 function slugify(value: string): string {
@@ -30,6 +33,7 @@ function isVersion(value: string): boolean {
 export default function PluginMetadataDialog({
   open,
   initialName,
+  hasBothThemes,
   onClose,
   onConfirm,
 }: Props) {
@@ -37,6 +41,7 @@ export default function PluginMetadataDialog({
   const [version, setVersion] = useState('0.1.0');
   const [description, setDescription] = useState('');
   const [author, setAuthor] = useState('');
+  const [includeBothThemes, setIncludeBothThemes] = useState(true);
 
   useEffect(() => {
     if (!open) {
@@ -47,6 +52,7 @@ export default function PluginMetadataDialog({
     setVersion('0.1.0');
     setDescription(`Headlamp theme plugin: ${initialName}`);
     setAuthor('');
+    setIncludeBothThemes(true);
   }, [initialName, open]);
 
   const packageName = slugify(name);
@@ -87,6 +93,17 @@ export default function PluginMetadataDialog({
           onChange={event => setAuthor(event.target.value)}
           fullWidth
         />
+        {hasBothThemes && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={includeBothThemes}
+                onChange={e => setIncludeBothThemes(e.target.checked)}
+              />
+            }
+            label="Include both light and dark themes in one plugin"
+          />
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -94,12 +111,15 @@ export default function PluginMetadataDialog({
           variant="contained"
           disabled={!canDownload}
           onClick={() =>
-            onConfirm({
-              name,
-              version,
-              description,
-              author: author || undefined,
-            })
+            onConfirm(
+              {
+                name,
+                version,
+                description,
+                author: author || undefined,
+              },
+              hasBothThemes && includeBothThemes
+            )
           }
         >
           Download plugin

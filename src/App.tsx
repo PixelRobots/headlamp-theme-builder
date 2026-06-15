@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, useCallback, type ChangeEvent } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useUndoRedo } from './hooks/useUndoRedo';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Box from '@mui/material/Box';
@@ -27,6 +28,7 @@ import InstallInstructionsDialog from './components/InstallInstructionsDialog';
 import MobileWarningDialog from './components/MobileWarningDialog';
 import PluginMetadataDialog from './components/PluginMetadataDialog';
 import ShareLinkDialog from './components/ShareLinkDialog';
+import SubmitToLibraryDialog from './components/SubmitToLibraryDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { defaultLight, defaultDark } from './defaults/defaultTheme';
 import { themeLibrary, type ThemeLibraryEntry } from './library/themeLibrary';
@@ -76,11 +78,38 @@ const appTheme = createTheme({
 
 export default function App() {
   const importInputRef = useRef<HTMLInputElement>(null);
-  const [lightTheme, setLightTheme] = useState<HeadlampTheme>(defaultLight);
-  const [darkTheme, setDarkTheme] = useState<HeadlampTheme>(defaultDark);
+
+  interface AppThemeSnapshot { lightTheme: HeadlampTheme; darkTheme: HeadlampTheme; logoDataUrl: string | null; }
+  const {
+    state: themeSnapshot,
+    set: setThemeSnapshot,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedo<AppThemeSnapshot>({
+    lightTheme: defaultLight,
+    darkTheme: defaultDark,
+    logoDataUrl: null,
+  });
+  const { lightTheme, darkTheme, logoDataUrl } = themeSnapshot;
+
+  const setLightTheme = useCallback(
+    (t: HeadlampTheme) => setThemeSnapshot({ ...themeSnapshot, lightTheme: t }),
+    [themeSnapshot, setThemeSnapshot]
+  );
+  const setDarkTheme = useCallback(
+    (t: HeadlampTheme) => setThemeSnapshot({ ...themeSnapshot, darkTheme: t }),
+    [themeSnapshot, setThemeSnapshot]
+  );
+  const setLogoDataUrl = useCallback(
+    (url: string | null) => setThemeSnapshot({ ...themeSnapshot, logoDataUrl: url }),
+    [themeSnapshot, setThemeSnapshot]
+  );
+
   const [active, setActive] = useState<'light' | 'dark'>('light');
-  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
   const [mobileWarningOpen, setMobileWarningOpen] = useState(false);
   const [welcomeOpen, setWelcomeOpen] = useState(false);
@@ -103,6 +132,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') { e.preventDefault(); undo(); }
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); redo(); }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [undo, redo]);
+
+  useEffect(() => {
     const sharedTheme = new URLSearchParams(window.location.search).get('theme');
     if (!sharedTheme) {
       return;
@@ -114,13 +152,11 @@ export default function App() {
       const sharedLight = themes.find(theme => theme.base === 'light');
       const sharedDark = themes.find(theme => theme.base === 'dark');
 
-      if (sharedLight) {
-        setLightTheme(sharedLight);
-      }
-      if (sharedDark) {
-        setDarkTheme(sharedDark);
-      }
-      setLogoDataUrl(null);
+      setThemeSnapshot({
+        lightTheme: sharedLight ?? lightTheme,
+        darkTheme: sharedDark ?? darkTheme,
+        logoDataUrl: null,
+      });
       setActive(sharedState.active);
       setView('builder');
     } catch (error) {
@@ -168,13 +204,11 @@ export default function App() {
         const importedDark = themes.find(theme => theme.base === 'dark');
         const preferredTheme = importedDark ?? importedLight ?? themes[0];
 
-        if (importedLight) {
-          setLightTheme(importedLight);
-        }
-        if (importedDark) {
-          setDarkTheme(importedDark);
-        }
-        setLogoDataUrl(getImportedLogoDataUrl(data));
+        setThemeSnapshot({
+          lightTheme: importedLight ?? lightTheme,
+          darkTheme: importedDark ?? darkTheme,
+          logoDataUrl: getImportedLogoDataUrl(data),
+        });
         setActive(preferredTheme.base);
         setView('builder');
       } catch (error) {
@@ -186,6 +220,9 @@ export default function App() {
   }
 
   async function handleDownloadPlugin() {
+    const bothValid =
+      validateThemesForUse([lightTheme]).errors.length === 0 &&
+      validateThemesForUse([darkTheme]).errors.length === 0;
     const downloadValidation = validateThemesForUse([currentTheme]);
     if (downloadValidation.errors.length > 0) {
       window.alert(`Fix theme errors before downloading:\n${downloadValidation.errors.join('\n')}`);
@@ -193,7 +230,7 @@ export default function App() {
     }
 
     setPendingPluginDownload({
-      themes: [currentTheme],
+      themes: bothValid ? [lightTheme, darkTheme] : [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
       source: {
@@ -208,13 +245,11 @@ export default function App() {
     const entryDark = entry.themes.find(theme => theme.base === 'dark');
     const preferredTheme = entryDark ?? entryLight ?? entry.themes[0];
 
-    if (entryLight) {
-      setLightTheme(entryLight);
-    }
-    if (entryDark) {
-      setDarkTheme(entryDark);
-    }
-    setLogoDataUrl(null);
+    setThemeSnapshot({
+      lightTheme: entryLight ?? lightTheme,
+      darkTheme: entryDark ?? darkTheme,
+      logoDataUrl: null,
+    });
     setActive(preferredTheme.base);
     setView('builder');
   }
@@ -228,13 +263,15 @@ export default function App() {
     });
   }
 
-  async function confirmPluginDownload(metadata: PluginMetadata) {
+  async function confirmPluginDownload(metadata: PluginMetadata, includeBothThemes: boolean) {
     if (!pendingPluginDownload) {
       return;
     }
 
+    const themes = includeBothThemes ? pendingPluginDownload.themes : [currentTheme];
+
     await downloadPlugin(
-      pendingPluginDownload.themes,
+      themes,
       pendingPluginDownload.logoDataUrl,
       metadata,
       { source: pendingPluginDownload.source }
@@ -440,6 +477,22 @@ export default function App() {
           >
             Download plugin
           </Button>
+
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setSubmitDialogOpen(true)}
+            sx={{
+              color: 'rgba(255,255,255,0.8)',
+              borderColor: 'rgba(255,255,255,0.2)',
+              '&:hover': { borderColor: 'rgba(255,255,255,0.35)', bgcolor: 'rgba(255,255,255,0.06)' },
+              fontWeight: 700,
+              fontSize: '0.78rem',
+            }}
+            title="Submit this theme to the community library via a GitHub issue"
+          >
+            Submit to library
+          </Button>
         </Box>
 
         <Box
@@ -481,6 +534,25 @@ export default function App() {
         >
           <Tab value="builder" label="Builder" />
           <Tab value="library" label="Library" />
+          <Box sx={{ flex: 1 }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, pr: 1 }}>
+            <Button
+              size="small"
+              variant="text"
+              disabled={!canUndo}
+              onClick={undo}
+              title="Undo (Ctrl+Z)"
+              sx={{ color: 'rgba(255,255,255,0.55)', fontWeight: 700, minWidth: 0, px: 1, fontSize: '0.85rem', '&:hover': { color: '#fff' } }}
+            >↩</Button>
+            <Button
+              size="small"
+              variant="text"
+              disabled={!canRedo}
+              onClick={redo}
+              title="Redo (Ctrl+Y)"
+              sx={{ color: 'rgba(255,255,255,0.55)', fontWeight: 700, minWidth: 0, px: 1, fontSize: '0.85rem', '&:hover': { color: '#fff' } }}
+            >↪</Button>
+          </Box>
         </Tabs>
 
         {/* Main split */}
@@ -576,6 +648,7 @@ export default function App() {
         <PluginMetadataDialog
           open={Boolean(pendingPluginDownload)}
           initialName={pendingPluginDownload?.initialName ?? currentTheme.name}
+          hasBothThemes={(pendingPluginDownload?.themes.length ?? 0) > 1}
           onClose={() => setPendingPluginDownload(null)}
           onConfirm={confirmPluginDownload}
         />
@@ -584,6 +657,12 @@ export default function App() {
           shareUrl={shareUrl}
           onClose={() => setShareUrl('')}
           onCopy={() => void copyTextToClipboard(shareUrl)}
+        />
+        <SubmitToLibraryDialog
+          open={submitDialogOpen}
+          onClose={() => setSubmitDialogOpen(false)}
+          lightTheme={lightTheme}
+          darkTheme={darkTheme}
         />
         <Snackbar
           open={Boolean(snackbarMessage)}

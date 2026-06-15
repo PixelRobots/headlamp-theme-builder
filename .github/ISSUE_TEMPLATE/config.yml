@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🎨 Submit a theme (recommended)
+    url: https://artifacthub.io/packages/headlamp/headlamp-hub/headlamp-theme-builder
+    about: The easiest way to submit is via the "Submit to library" button inside the Headlamp Theme Builder plugin — it pre-fills the issue form for you.

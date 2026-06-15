@@ -1,0 +1,82 @@
+name: 🎨 Theme submission
+description: Submit a theme to the public Headlamp community library.
+title: "Theme submission: "
+labels:
+  - theme-submission
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your theme! Fill in the fields below and a maintainer will review and add it to the [community library](https://pixelrobots.github.io/headlamp-theme-builder/).
+
+        > **Tip:** The easiest way to submit is via the **Submit to library** button inside the [Headlamp Theme Builder](https://artifacthub.io/packages/headlamp/headlamp-hub/headlamp-theme-builder) plugin — it pre-fills this form for you.
+
+  - type: input
+    id: name
+    attributes:
+      label: Theme name
+      description: The display name of your theme as it will appear in the library.
+      placeholder: e.g. Dracula, Solarized Light, Nord
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A short description of the theme's style, colour palette, or inspiration.
+      placeholder: A dark theme inspired by the Dracula colour palette, with high-contrast accents.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: variants
+    attributes:
+      label: Variants included
+      description: Which variants does this submission include?
+      options:
+        - Light only
+        - Dark only
+        - Both light and dark
+    validations:
+      required: true
+
+  - type: textarea
+    id: theme-json
+    attributes:
+      label: Theme JSON
+      description: |
+        Paste the full theme JSON here. Use the **Export / Download** button in the builder to get the JSON, or copy it from the generated plugin's `package.json`.
+        Must be a valid [`HeadlampTheme`](https://github.com/PixelRobots/headlamp-theme-builder/blob/main/src/types/theme.ts) object (or an array of two for light + dark).
+      render: json
+      placeholder: |
+        {
+          "id": "my-theme",
+          "name": "My Theme",
+          "description": "...",
+          "tags": [],
+          "themes": [ ... ]
+        }
+    validations:
+      required: true
+
+  - type: textarea
+    id: tags
+    attributes:
+      label: Tags (optional)
+      description: Comma-separated tags to help users discover your theme (e.g. `dark, high-contrast, minimal`).
+      placeholder: dark, minimal, high-contrast
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I have tested the theme in Headlamp and it looks correct.
+          required: true
+        - label: The theme JSON is valid and passes validation in the builder.
+          required: true
+        - label: I am the original author of this theme, or have permission to submit it.
+          required: true
+        - label: I understand this theme will be published under the repository's open-source licence.
+          required: true

@@ -3,17 +3,22 @@ import HowToUseDialog from '@builder/components/HowToUseDialog';
 import InstallInstructionsDialog from '@builder/components/InstallInstructionsDialog';
 import PluginMetadataDialog from '@builder/components/PluginMetadataDialog';
 import Preview from '@builder/components/Preview';
+import SubmitToLibraryDialog from '@builder/components/SubmitToLibraryDialog';
 import ThemeLibrary from '@builder/components/ThemeLibrary';
 import ThemePanel from '@builder/components/ThemePanel';
 import ThemeValidationSummary from '@builder/components/ThemeValidationSummary';
 import { completeTheme, defaultDark, defaultLight } from '@builder/defaults/defaultTheme';
+import { useUndoRedo } from '@builder/hooks/useUndoRedo';
 import { themeLibrary, type ThemeLibraryEntry } from '@builder/library/themeLibrary';
 import type { HeadlampTheme } from '@builder/types/theme';
 import {
   downloadPlugin,
+  slugify,
   type PluginMetadata,
   type ThemeSourceMetadata,
 } from '@builder/utils/generateCode';
+import { detectOS, pluginArchiveFormat } from '@builder/utils/os';
+import { muiToHeadlampTheme } from '@builder/utils/muiToHeadlampTheme';
 import { validateThemesForUse } from '@builder/utils/themeValidation';
 import {
   AppLogoProps,
@@ -32,7 +37,7 @@ import { useTheme } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const APPLIED_THEME_STORAGE_KEY = 'headlamp-theme-builder-plugin-state';
 const BUILDER_DRAFT_STORAGE_KEY = 'headlamp-theme-builder-draft-state';
@@ -172,14 +177,41 @@ function resetBuilderTheme() {
 function ThemeBuilderPage() {
   const headlampTheme = useTheme();
   const storedState = readBuilderDraftState();
-  const [lightTheme, setLightTheme] = useState<HeadlampTheme>(
-    storedState?.lightTheme ?? defaultLight
+  const initialSnapshot: BuilderPluginState = {
+    lightTheme: storedState?.lightTheme ?? defaultLight,
+    darkTheme: storedState?.darkTheme ?? defaultDark,
+    logoDataUrl: storedState?.logoDataUrl ?? null,
+  };
+  const {
+    state: themeSnapshot,
+    set: setThemeSnapshot,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedo<BuilderPluginState>(initialSnapshot);
+
+  const lightTheme = themeSnapshot.lightTheme;
+  const darkTheme = themeSnapshot.darkTheme;
+  const logoDataUrl = themeSnapshot.logoDataUrl;
+
+  const setLightTheme = useCallback(
+    (t: HeadlampTheme) => setThemeSnapshot({ ...themeSnapshot, lightTheme: t }),
+    [themeSnapshot, setThemeSnapshot]
   );
-  const [darkTheme, setDarkTheme] = useState<HeadlampTheme>(storedState?.darkTheme ?? defaultDark);
+  const setDarkTheme = useCallback(
+    (t: HeadlampTheme) => setThemeSnapshot({ ...themeSnapshot, darkTheme: t }),
+    [themeSnapshot, setThemeSnapshot]
+  );
+  const setLogoDataUrl = useCallback(
+    (url: string | null) => setThemeSnapshot({ ...themeSnapshot, logoDataUrl: url }),
+    [themeSnapshot, setThemeSnapshot]
+  );
   const [active, setActive] = useState<'light' | 'dark'>('light');
-  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(storedState?.logoDataUrl ?? null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [installInstructionsOpen, setInstallInstructionsOpen] = useState(false);
+  const [lastPluginFolderName, setLastPluginFolderName] = useState<string | undefined>(undefined);
   const [highlightedPath, setHighlightedPath] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [view, setView] = useState<'builder' | 'library'>('builder');
@@ -205,8 +237,25 @@ function ThemeBuilderPage() {
   }, []);
 
   useEffect(() => {
-    saveBuilderDraft({ lightTheme, darkTheme, logoDataUrl });
-  }, [lightTheme, darkTheme, logoDataUrl]);
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        undo();
+      } else if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === 'y' || (e.shiftKey && e.key === 'z'))
+      ) {
+        e.preventDefault();
+        redo();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo]);
+
+  useEffect(() => {
+    saveBuilderDraft(themeSnapshot);
+  }, [themeSnapshot]);
 
   useEffect(() => {
     localStorage.setItem(IMPORTED_LIBRARY_STORAGE_KEY, JSON.stringify(importedLibraryEntries));
@@ -223,15 +272,29 @@ function ThemeBuilderPage() {
     window.setTimeout(() => window.location.reload(), 500);
   }
 
+  function handleImportCurrentTheme() {
+    const name = active === 'light' ? 'My Light Theme' : 'My Dark Theme';
+    const imported = muiToHeadlampTheme(headlampTheme, name);
+    if (active === 'light') {
+      setLightTheme(imported);
+    } else {
+      setDarkTheme(imported);
+    }
+    setStatus(`Imported current ${active} theme colours as starting point.`);
+    setTimeout(() => setStatus(null), 3000);
+  }
+
   async function handleDownloadPlugin() {
-    const downloadValidation = validateThemesForUse([currentTheme]);
-    if (downloadValidation.errors.length > 0) {
-      setStatus(`Fix theme errors before downloading: ${downloadValidation.errors[0]}`);
+    const bothValidation = validateThemesForUse([lightTheme, darkTheme]);
+    const singleValidation = validateThemesForUse([currentTheme]);
+    if (singleValidation.errors.length > 0) {
+      setStatus(`Fix theme errors before downloading: ${singleValidation.errors[0]}`);
       return;
     }
+    const bothValid = bothValidation.errors.length === 0;
 
     setPendingPluginDownload({
-      themes: [currentTheme],
+      themes: bothValid ? [lightTheme, darkTheme] : [currentTheme],
       logoDataUrl,
       initialName: currentTheme.name,
       source: {
@@ -260,11 +323,9 @@ function ThemeBuilderPage() {
   }
 
   function loadLibraryEntry(entry: ThemeLibraryEntry) {
-    const nextState = getLibraryThemes(entry, undefined, { lightTheme, darkTheme, logoDataUrl });
+    const nextState = getLibraryThemes(entry, undefined, themeSnapshot);
 
-    setLightTheme(nextState.lightTheme);
-    setDarkTheme(nextState.darkTheme);
-    setLogoDataUrl(null);
+    setThemeSnapshot({ lightTheme: nextState.lightTheme, darkTheme: nextState.darkTheme, logoDataUrl: null });
     setActive(nextState.activeTheme);
     setView('builder');
   }
@@ -292,17 +353,21 @@ function ThemeBuilderPage() {
     });
   }
 
-  async function confirmPluginDownload(metadata: PluginMetadata) {
+  async function confirmPluginDownload(metadata: PluginMetadata, includeBothThemes: boolean) {
     if (!pendingPluginDownload) {
       return;
     }
 
+    const themes = includeBothThemes ? pendingPluginDownload.themes : [currentTheme];
+    const folderName = slugify(metadata.name || themes[0]?.name || 'my-theme');
+    const format = pluginArchiveFormat(detectOS());
     await downloadPlugin(
-      pendingPluginDownload.themes,
+      themes,
       pendingPluginDownload.logoDataUrl,
       metadata,
-      { source: pendingPluginDownload.source }
+      { source: pendingPluginDownload.source, format }
     );
+    setLastPluginFolderName(folderName);
     setPendingPluginDownload(null);
     setInstallInstructionsOpen(true);
   }
@@ -358,10 +423,65 @@ function ThemeBuilderPage() {
           <Box sx={{ flex: 1 }} />
 
           <Button
+            variant="outlined"
+            size="small"
+            disabled={!canUndo}
+            onClick={undo}
+            sx={{
+              borderColor,
+              color: subduedText,
+              '&:hover': { borderColor: primary, color: 'text.primary' },
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              minWidth: 0,
+            }}
+            title="Undo (Ctrl+Z)"
+          >
+            ↩
+          </Button>
+
+          <Button
+            variant="outlined"
+            size="small"
+            disabled={!canRedo}
+            onClick={redo}
+            sx={{
+              borderColor,
+              color: subduedText,
+              '&:hover': { borderColor: primary, color: 'text.primary' },
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              minWidth: 0,
+            }}
+            title="Redo (Ctrl+Y)"
+          >
+            ↪
+          </Button>
+
+          <Button
+            variant="text"
+            size="small"
+            onClick={handleImportCurrentTheme}
+            sx={{ color: subduedText, fontWeight: 700, fontSize: '0.78rem' }}
+            title={`Import current Headlamp ${active} theme colours as a starting point`}
+          >
+            Import current theme
+          </Button>
+
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => setSubmitDialogOpen(true)}
+            sx={{ color: subduedText, fontWeight: 700, fontSize: '0.78rem' }}
+            title="Submit this theme to the community library via a GitHub issue"
+          >
+            Submit to library
+          </Button>
+
+          <Button
             variant="text"
             size="small"
             onClick={() => setHelpOpen(true)}
-            sx={{ color: subduedText, fontWeight: 700, minWidth: 0 }}
           >
             Help
           </Button>
@@ -525,13 +645,21 @@ function ThemeBuilderPage() {
         )}
 
         <HowToUseDialog open={helpOpen} onClose={() => setHelpOpen(false)} />
+        <SubmitToLibraryDialog
+          open={submitDialogOpen}
+          onClose={() => setSubmitDialogOpen(false)}
+          lightTheme={lightTheme}
+          darkTheme={darkTheme}
+        />
         <InstallInstructionsDialog
           open={installInstructionsOpen}
           onClose={() => setInstallInstructionsOpen(false)}
+          pluginName={lastPluginFolderName}
         />
         <PluginMetadataDialog
           open={Boolean(pendingPluginDownload)}
           initialName={pendingPluginDownload?.initialName ?? currentTheme.name}
+          hasBothThemes={(pendingPluginDownload?.themes.length ?? 0) > 1}
           onClose={() => setPendingPluginDownload(null)}
           onConfirm={confirmPluginDownload}
         />

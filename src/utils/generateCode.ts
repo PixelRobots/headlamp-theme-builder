@@ -18,7 +18,7 @@ function serialize(v: unknown, indent = 2): string {
   return String(v);
 }
 
-function slugify(value: string): string {
+export function slugify(value: string): string {
   return value
     .toLowerCase()
     .trim()
@@ -46,6 +46,7 @@ export interface ThemeSourceMetadata {
 
 export interface GeneratedThemePluginOptions {
   source?: ThemeSourceMetadata;
+  format?: 'zip' | 'tar.gz';
 }
 
 export function generateThemesTs(themes: HeadlampTheme[]): string {
@@ -216,6 +217,57 @@ ${logoCode}
 `;
 }
 
+// --- tar.gz helpers (no extra dependencies, uses native CompressionStream) ---
+
+function createTarHeader(name: string, size: number): Uint8Array {
+  const header = new Uint8Array(512);
+  const enc = new TextEncoder();
+  function writeStr(offset: number, maxLen: number, value: string) {
+    header.set(enc.encode(value).slice(0, maxLen), offset);
+  }
+  writeStr(0, 100, name);
+  writeStr(100, 8, '0000755\0');
+  writeStr(108, 8, '0000000\0');
+  writeStr(116, 8, '0000000\0');
+  writeStr(124, 12, size.toString(8).padStart(11, '0') + '\0');
+  writeStr(136, 12, Math.floor(Date.now() / 1000).toString(8).padStart(11, '0') + '\0');
+  header.fill(32, 148, 156); // checksum field = spaces during calculation
+  header[156] = 48; // '0' = regular file
+  writeStr(257, 6, 'ustar\0');
+  writeStr(263, 2, '00');
+  let checksum = 0;
+  for (let i = 0; i < 512; i++) checksum += header[i];
+  writeStr(148, 8, checksum.toString(8).padStart(6, '0') + '\0 ');
+  return header;
+}
+
+async function createTarGzBlob(
+  files: { name: string; content: string }[],
+  folderName: string
+): Promise<Blob> {
+  const enc = new TextEncoder();
+  const blocks: Uint8Array[] = [];
+  for (const file of files) {
+    const data = enc.encode(file.content);
+    blocks.push(createTarHeader(`${folderName}/${file.name}`, data.length));
+    const padded = new Uint8Array(Math.ceil(data.length / 512) * 512);
+    padded.set(data);
+    blocks.push(padded);
+  }
+  blocks.push(new Uint8Array(1024)); // end-of-archive: two 512-byte zero blocks
+  const total = blocks.reduce((s, b) => s + b.length, 0);
+  const tar = new Uint8Array(total);
+  let offset = 0;
+  for (const b of blocks) { tar.set(b, offset); offset += b.length; }
+  const cs = new CompressionStream('gzip');
+  const writer = cs.writable.getWriter();
+  writer.write(tar);
+  writer.close();
+  return new Response(cs.readable).blob();
+}
+
+// -------------------------------------------------------------------------
+
 export async function downloadPlugin(
   themes: HeadlampTheme[],
   logoDataUrl?: string | null,
@@ -224,27 +276,40 @@ export async function downloadPlugin(
 ): Promise<void> {
   const pluginName = themes[0]?.name ?? 'my-theme';
   const safe = slugify(metadata?.name || pluginName);
+  const format = options?.format ?? 'zip';
 
-  const zip = new JSZip();
-  const plugin = zip.folder(safe)!;
-  plugin.file('main.js', generateCompiledMainJs(themes, logoDataUrl));
-  plugin.file('package.json', generatePackageJson(pluginName, metadata, options));
-  plugin.file(
-    'theme-source.json',
-    JSON.stringify(
-      {
-        version: 1,
-        generatedBy: 'Headlamp Theme Builder',
-        generatedAt: new Date().toISOString(),
-        source: options?.source ?? null,
-        themes,
-        logoDataUrl: logoDataUrl ?? null,
-      },
-      null,
-      2
-    )
+  const mainJs = generateCompiledMainJs(themes, logoDataUrl);
+  const packageJson = generatePackageJson(pluginName, metadata, options);
+  const themeSource = JSON.stringify(
+    {
+      version: 1,
+      generatedBy: 'Headlamp Theme Builder',
+      generatedAt: new Date().toISOString(),
+      source: options?.source ?? null,
+      themes,
+      logoDataUrl: logoDataUrl ?? null,
+    },
+    null,
+    2
   );
 
-  const blob = await zip.generateAsync({ type: 'blob' });
-  saveAs(blob, `${safe}-headlamp-plugin.zip`);
+  if (format === 'tar.gz') {
+    const blob = await createTarGzBlob(
+      [
+        { name: 'main.js', content: mainJs },
+        { name: 'package.json', content: packageJson },
+        { name: 'theme-source.json', content: themeSource },
+      ],
+      safe
+    );
+    saveAs(blob, `${safe}-headlamp-plugin.tar.gz`);
+  } else {
+    const zip = new JSZip();
+    const plugin = zip.folder(safe)!;
+    plugin.file('main.js', mainJs);
+    plugin.file('package.json', packageJson);
+    plugin.file('theme-source.json', themeSource);
+    const blob = await zip.generateAsync({ type: 'blob' });
+    saveAs(blob, `${safe}-headlamp-plugin.zip`);
+  }
 }
