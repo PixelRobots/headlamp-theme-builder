@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { detectOS, pluginArchiveFormat } from '@builder/utils/os';
+import { detectOS, pluginArchiveFormat } from '../utils/os';
 
 interface Props {
   open: boolean;
