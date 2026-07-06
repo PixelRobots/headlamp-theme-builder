@@ -73,6 +73,6 @@ npm run build
 npm run package
 ```
 
-The v1.2.0 release tarball is `headlamp-theme-builder-1.2.0.tar.gz`.
+The v1.3.0 release tarball is `headlamp-theme-builder-1.3.0.tar.gz`.
 
 Logo and project author: [Pixelrobots](https://pixelrobots.co.uk).

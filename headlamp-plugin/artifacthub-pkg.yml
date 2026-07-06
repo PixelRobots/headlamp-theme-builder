@@ -1,4 +1,4 @@
-version: 1.2.0
+version: 1.3.0
 name: headlamp-theme-builder
 category: skip-prediction
 displayName: Headlamp Theme Builder
@@ -43,7 +43,7 @@ install: |
       plugins:
         - name: headlamp-theme-builder
           source: https://artifacthub.io/packages/headlamp/headlamp-theme-builder/headlamp-theme-builder
-          version: 1.2.0
+          version: 1.3.0
       installOptions:
         parallel: true
         maxConcurrent: 2
@@ -63,7 +63,7 @@ maintainers:
 provider:
   name: Pixelrobots
 annotations:
-  headlamp/plugin/archive-url: "https://github.com/PixelRobots/headlamp-theme-builder/releases/download/v1.2.0/headlamp-theme-builder-1.2.0.tar.gz"
-  headlamp/plugin/archive-checksum: "SHA256:ffb40375b140f34843f4331ca37e68f12dedecf1fb7c69d2374781f0e56cd113"
+  headlamp/plugin/archive-url: "https://github.com/PixelRobots/headlamp-theme-builder/releases/download/v1.3.0/headlamp-theme-builder-1.3.0.tar.gz"
+  headlamp/plugin/archive-checksum: "SHA256:648f2d800a5b26c26ed3d8a5f690a55f99b59e3c3a4df717f02888c241be5148"
   headlamp/plugin/version-compat: ">=0.22"
   headlamp/plugin/distro-compat: "in-cluster,web,docker-desktop,desktop"
