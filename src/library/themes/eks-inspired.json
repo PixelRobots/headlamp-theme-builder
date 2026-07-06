@@ -16,7 +16,7 @@
         "background": "#232f3e",
         "color": "#f2f3f3",
         "selectedBackground": "#ff9900",
-        "selectedColor": "#161e2d",
+        "selectedColor": "#ff9900",
         "actionBackground": "#146eb4"
       },
       "navbar": { "background": "#232f3e", "color": "#ffffff", "searchHint": "#ff9900" },
@@ -46,7 +46,7 @@
         "background": "#0b111c",
         "color": "#d5dbdb",
         "selectedBackground": "#ff9900",
-        "selectedColor": "#111827",
+        "selectedColor": "#ff9900",
         "actionBackground": "#146eb4"
       },
       "navbar": { "background": "#0b111c", "color": "#f2f3f3", "searchHint": "#ff9900" },

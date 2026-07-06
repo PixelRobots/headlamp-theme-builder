@@ -91,7 +91,7 @@ const COLOUR_GROUPS: { group: string; fields: { label: string; path: string }[] 
       { label: 'Background', path: 'sidebar.background' },
       { label: 'Item text', path: 'sidebar.color' },
       { label: 'Selected background', path: 'sidebar.selectedBackground' },
-      { label: 'Selected text', path: 'sidebar.selectedColor' },
+      { label: 'Nested selected item', path: 'sidebar.selectedColor' },
       { label: 'Action button', path: 'sidebar.actionBackground' },
     ],
   },
@@ -158,8 +158,9 @@ const FIELD_DESCRIPTIONS: Record<string, string> = {
   'background.muted': 'Subtle background available to the generated theme for quieter UI areas.',
   'sidebar.background': 'Left navigation/sidebar background.',
   'sidebar.color': 'Default text colour for unselected sidebar items.',
-  'sidebar.selectedBackground': 'Background colour for the active sidebar item.',
-  'sidebar.selectedColor': 'Accent and text colour associated with selected sidebar states.',
+  'sidebar.selectedBackground': 'Background colour for the active top-level sidebar item.',
+  'sidebar.selectedColor':
+    'Text and indicator colour for active nested sidebar items, shown against the sidebar background.',
   'sidebar.actionBackground': 'Background colour for the create/action button in the sidebar link area.',
   'navbar.background': 'Top header and navbar background.',
   'navbar.color': 'Text and logo colour area in the top header.',
@@ -219,8 +220,8 @@ function getContrastForPath(theme: HeadlampTheme, path: string) {
     },
     'sidebar.selectedColor': {
       foreground: theme.sidebar.selectedColor,
-      background: theme.sidebar.selectedBackground,
-      against: 'selected background',
+      background: theme.sidebar.background,
+      against: 'sidebar background',
     },
     'sidebar.actionBackground': {
       foreground: theme.text.primary,

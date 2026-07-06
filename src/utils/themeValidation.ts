@@ -186,8 +186,8 @@ function addContrastWarnings(theme: HeadlampTheme, label: string, warnings: stri
     },
     {
       foreground: theme.sidebar.selectedColor,
-      background: theme.sidebar.selectedBackground,
-      label: 'selected sidebar text against selected background',
+      background: theme.sidebar.background,
+      label: 'nested selected sidebar text against sidebar background',
     },
     {
       foreground: theme.terminal?.foreground,

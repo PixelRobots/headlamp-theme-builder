@@ -33,7 +33,7 @@
         "background": "#00212b",
         "color": "#839496",
         "selectedBackground": "#b58900",
-        "selectedColor": "#002b36",
+        "selectedColor": "#b58900",
         "actionBackground": "#268bd2"
       },
       "navbar": { "background": "#00212b", "color": "#eee8d5", "searchHint": "#839496" }

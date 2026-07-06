@@ -157,7 +157,7 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                     sx={{
                       position: 'relative',
                       color: isSelected
-                        ? theme.sidebar.selectedColor
+                        ? selectedTextColor(theme.sidebar.selectedBackground)
                         : theme.sidebar.color,
                       bgcolor: isSelected
                         ? `${theme.sidebar.selectedBackground} !important`
@@ -167,7 +167,7 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                       mx: 0.5,
                       mb: 0.25,
                       ...(isSelected
-                        ? highlight(['sidebar.selectedBackground', 'sidebar.selectedColor'])
+                        ? highlight(['sidebar.selectedBackground'])
                         : {}),
                       ...highlightTransition,
                       '&:hover': {
@@ -182,6 +182,33 @@ export default function Preview({ theme, logoDataUrl, highlightedPath }: Props) 
                 );
               })}
             </List>
+            <Box
+              sx={{
+                position: 'relative',
+                mx: 0.5,
+                ml: 3,
+                mb: 0.25,
+                pl: 1.5,
+                py: 0.45,
+                color: theme.sidebar.selectedColor,
+                borderRadius: 1,
+                fontSize: '0.74rem',
+                ...highlight(['sidebar.selectedColor']),
+                ...highlightTransition,
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  top: 5,
+                  bottom: 5,
+                  width: 4,
+                  borderRadius: 1,
+                  bgcolor: theme.sidebar.selectedColor,
+                },
+              }}
+            >
+              Pods
+            </Box>
             <Button
               size="small"
               sx={{

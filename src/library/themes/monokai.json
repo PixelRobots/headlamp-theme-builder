@@ -16,7 +16,7 @@
         "background": "#1f201b",
         "color": "#f8f8f2",
         "selectedBackground": "#a6e22e",
-        "selectedColor": "#1f201b",
+        "selectedColor": "#a6e22e",
         "actionBackground": "#f92672"
       },
       "navbar": { "background": "#1f201b", "color": "#f8f8f2", "searchHint": "#fd971f" },

@@ -83,7 +83,7 @@ export function muiToHeadlampTheme(mui: MuiThemeSnapshot, name: string): Headlam
       background: normalizeImportedColour(mui.palette.background.paper),
       color: normalizeImportedColour(mui.palette.text.secondary),
       selectedBackground: normalizeImportedColour(mui.palette.primary.main),
-      selectedColor: normalizeImportedColour(mui.palette.primary.contrastText),
+      selectedColor: normalizeImportedColour(mui.palette.primary.main),
       actionBackground: normalizeImportedColour(mui.palette.primary.main),
     },
     navbar: {

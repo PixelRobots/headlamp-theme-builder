@@ -8,7 +8,8 @@ A live theme builder for [Headlamp](https://headlamp.dev) — pick colours in th
 
 ## Features
 
-- Live preview of navbar, sidebar, cards, and buttons
+- Live preview of navbar, sidebar, nested sidebar states, cards, and buttons
+- Separate controls for top-level selected sidebar background and nested selected item colour
 - Edit light and dark variants independently
 - Theme library with bundled palettes and import from JSON files or URLs
 - Downloads an installable compiled Headlamp theme plugin zip

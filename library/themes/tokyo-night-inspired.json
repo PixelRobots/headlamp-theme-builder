@@ -20,7 +20,7 @@
         "background": "#16161e",
         "color": "#c0caf5",
         "selectedBackground": "#7aa2f7",
-        "selectedColor": "#11131a",
+        "selectedColor": "#7aa2f7",
         "actionBackground": "#9ece6a"
       },
       "navbar": {

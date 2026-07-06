@@ -169,9 +169,9 @@ function themeContrastIssues(theme, themeLabel) {
   addContrastIssue(
     issues,
     themeLabel,
-    'selected sidebar text against selected background',
+    'nested selected sidebar text against sidebar background',
     theme?.sidebar?.selectedColor,
-    theme?.sidebar?.selectedBackground
+    theme?.sidebar?.background
   );
   addContrastIssue(
     issues,
@@ -296,6 +296,7 @@ function previewSvg(theme, title) {
     sidebar: sidebar.background ?? '#202020',
     sidebarText: sidebar.color ?? '#ffffff',
     selected: sidebar.selectedBackground ?? theme.primary ?? '#1976d2',
+    selectedNested: sidebar.selectedColor ?? theme.primary ?? '#1976d2',
     action: sidebar.actionBackground ?? theme.secondary ?? '#2e7d32',
     primary: theme.primary ?? '#1976d2',
     text: text.primary ?? (theme.base === 'dark' ? '#f4f4f4' : '#222222'),
@@ -311,7 +312,8 @@ function previewSvg(theme, title) {
   <rect x="22" y="82" width="132" height="250" rx="10" fill="${escapeHtml(colors.sidebar)}"/>
   <rect x="44" y="108" width="70" height="11" rx="5.5" fill="${escapeHtml(colors.sidebarText)}" opacity="0.7"/>
   <rect x="44" y="135" width="88" height="28" rx="8" fill="${escapeHtml(colors.selected)}"/>
-  <rect x="44" y="183" width="74" height="11" rx="5.5" fill="${escapeHtml(colors.sidebarText)}" opacity="0.5"/>
+  <rect x="58" y="183" width="66" height="11" rx="5.5" fill="${escapeHtml(colors.selectedNested)}" opacity="0.95"/>
+  <rect x="50" y="179" width="4" height="19" rx="2" fill="${escapeHtml(colors.selectedNested)}"/>
   <rect x="44" y="210" width="74" height="11" rx="5.5" fill="${escapeHtml(colors.sidebarText)}" opacity="0.42"/>
   <rect x="44" y="288" width="88" height="26" rx="8" fill="${escapeHtml(colors.action)}"/>
   <rect x="178" y="92" width="418" height="216" rx="12" fill="${escapeHtml(colors.surface)}" stroke="${escapeHtml(colors.muted)}"/>

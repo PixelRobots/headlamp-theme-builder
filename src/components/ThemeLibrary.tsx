@@ -147,10 +147,18 @@ function MiniPreview({ theme }: { theme: HeadlampTheme }) {
       <Box sx={{ display: 'flex', height: 'calc(100% - 24px)' }}>
         <Box sx={{ width: 54, bgcolor: theme.sidebar.background, p: 0.75 }}>
           <Box sx={{ height: 9, mb: 0.75, borderRadius: 0.5, bgcolor: theme.sidebar.color, opacity: 0.7 }} />
-          <Box sx={{ height: 14, mb: 0.75, borderRadius: 0.75, bgcolor: theme.sidebar.selectedBackground, p: '3px 5px' }}>
-            <Box sx={{ height: 8, width: '82%', borderRadius: 0.5, bgcolor: theme.sidebar.selectedColor }} />
-          </Box>
-          <Box sx={{ height: 9, mb: 0.75, borderRadius: 0.5, bgcolor: theme.sidebar.color, opacity: 0.45 }} />
+          <Box sx={{ height: 14, mb: 0.75, borderRadius: 0.75, bgcolor: theme.sidebar.selectedBackground, p: '3px 5px' }} />
+          <Box
+            sx={{
+              height: 9,
+              mb: 0.75,
+              ml: 1,
+              borderLeft: `3px solid ${theme.sidebar.selectedColor}`,
+              borderRadius: 0.5,
+              bgcolor: theme.sidebar.selectedColor,
+              opacity: 0.95,
+            }}
+          />
           <Box sx={{ height: 13, mt: 3.5, borderRadius: 0.75, bgcolor: theme.sidebar.actionBackground }} />
         </Box>
         <Box sx={{ flex: 1, p: 1, minWidth: 0 }}>

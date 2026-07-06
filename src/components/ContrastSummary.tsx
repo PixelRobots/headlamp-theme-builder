@@ -16,7 +16,7 @@ function getContrastPairs(theme: HeadlampTheme): ContrastPair[] {
     { label: 'Link / page bg', foreground: theme.link.color, background: theme.background.default },
     { label: 'Navbar text / navbar bg', foreground: theme.navbar.color, background: theme.navbar.background },
     { label: 'Sidebar text / sidebar bg', foreground: theme.sidebar.color, background: theme.sidebar.background },
-    { label: 'Selected text / selected bg', foreground: theme.sidebar.selectedColor, background: theme.sidebar.selectedBackground },
+    { label: 'Nested selected / sidebar bg', foreground: theme.sidebar.selectedColor, background: theme.sidebar.background },
     { label: 'Terminal text / terminal bg', foreground: theme.terminal?.foreground ?? theme.text.primary, background: theme.terminal?.background ?? theme.background.default },
   ];
 }

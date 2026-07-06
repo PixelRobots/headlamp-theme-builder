@@ -94,7 +94,7 @@ export const defaultDark: HeadlampTheme = {
     background: '#252423',
     color: '#cdcdcd',
     selectedBackground: '#f2e600',
-    selectedColor: '#292827',
+    selectedColor: '#f2e600',
     actionBackground: '#1b1a19',
   },
   navbar: {

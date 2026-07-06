@@ -16,7 +16,7 @@
         "background": "#242321",
         "color": "#f7f5ea",
         "selectedBackground": "#ffea00",
-        "selectedColor": "#242321",
+        "selectedColor": "#ffea00",
         "actionBackground": "#ffea00"
       },
       "navbar": { "background": "#242321", "color": "#ffffff", "searchHint": "#ffea00" },
@@ -47,7 +47,7 @@
         "background": "#1b1a17",
         "color": "#f7f5ea",
         "selectedBackground": "#ffea00",
-        "selectedColor": "#151512",
+        "selectedColor": "#ffea00",
         "actionBackground": "#ffea00"
       },
       "navbar": { "background": "#242321", "color": "#ffffff", "searchHint": "#ffea00" },

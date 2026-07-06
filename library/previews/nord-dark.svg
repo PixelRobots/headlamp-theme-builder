@@ -6,7 +6,8 @@
   <rect x="22" y="82" width="132" height="250" rx="10" fill="#242933"/>
   <rect x="44" y="108" width="70" height="11" rx="5.5" fill="#d8dee9" opacity="0.7"/>
   <rect x="44" y="135" width="88" height="28" rx="8" fill="#5e81ac"/>
-  <rect x="44" y="183" width="74" height="11" rx="5.5" fill="#d8dee9" opacity="0.5"/>
+  <rect x="58" y="183" width="66" height="11" rx="5.5" fill="#88c0d0" opacity="0.95"/>
+  <rect x="50" y="179" width="4" height="19" rx="2" fill="#88c0d0"/>
   <rect x="44" y="210" width="74" height="11" rx="5.5" fill="#d8dee9" opacity="0.42"/>
   <rect x="44" y="288" width="88" height="26" rx="8" fill="#88c0d0"/>
   <rect x="178" y="92" width="418" height="216" rx="12" fill="#3b4252" stroke="#434c5e"/>

@@ -2,7 +2,7 @@
 
 All notable changes to Headlamp Theme Builder are documented here.
 
-## Unreleased
+## v1.3.0 - 2026-07-06
 
 ### Website & Plugin
 - Added undo/redo history (Ctrl+Z / Ctrl+Y) for all theme edits.
@@ -19,6 +19,9 @@ All notable changes to Headlamp Theme Builder are documented here.
 - Added "Import current theme" button that seeds the builder from the live Headlamp palette via `useTheme()`.
 - Changed current-theme imports to convert live MUI `rgb()`/`rgba()` colours to hex colours for builder validation.
 - Changed plugin UI dialog actions to avoid generated MUI icon imports for better Headlamp runtime compatibility.
+- Changed selected top-level sidebar item text to auto-calculate contrast against its background for guaranteed readability.
+- Changed sidebar preview to show a nested "Pods" indicator item, making `sidebar.selectedColor` (the nested item accent) visually distinct from the selected root item.
+- Changed `sidebar.selectedColor` panel label and description to clarify it controls nested items and their indicator stripe.
 
 ## v1.2.0 - 2026-06-12
 
